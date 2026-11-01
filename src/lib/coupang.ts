@@ -16,7 +16,7 @@ export interface CoupangConfig {
 
 // 기본 플랫폼 쿠팡 파트너스 트래킹 ID (환경변수 또는 기본값)
 export function getCoupangTrackingId(): string {
-  return process.env.COUPANG_TRACKING_ID || process.env.NEXT_PUBLIC_COUPANG_TRACKING_ID || 'AF5918234';
+  return process.env.COUPANG_TRACKING_ID || process.env.NEXT_PUBLIC_COUPANG_TRACKING_ID || 'AF5232288';
 }
 
 /**

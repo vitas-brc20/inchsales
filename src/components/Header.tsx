@@ -114,6 +114,16 @@ export default function Header() {
                 </p>
               </div>
 
+              <div className="text-xs text-slate-600 leading-relaxed bg-amber-50/70 p-3.5 rounded-xl border border-amber-200">
+                <p className="font-bold text-amber-900 mb-1">⚖️ 공정거래위원회 필수 표기 안내:</p>
+                <p className="text-[11px] text-amber-900 leading-tight">
+                  "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+                </p>
+                <p className="text-[10px] text-amber-800/80 mt-1">
+                  모든 구매자 페이지 및 랜딩 화면에 위 법적 고지 문구가 자동으로 필수 표기됩니다.
+                </p>
+              </div>
+
               <div className="pt-2 flex justify-end">
                 <button
                   onClick={() => setModalOpen(false)}

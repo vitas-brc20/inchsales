@@ -149,8 +149,9 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
         </div>
 
         {/* Legal Disclaimer Box */}
-        <div className="mt-4 px-4 py-3 rounded-2xl bg-white/70 border border-slate-200/60 text-center text-[10px] text-slate-500 leading-tight">
-          본 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받을 수 있으며 구매자에게 추가 비용은 일체 발생하지 않습니다.
+        <div className="mt-4 px-4 py-3 rounded-2xl bg-white/80 border border-slate-200/80 text-center text-[10px] text-slate-500 leading-normal">
+          <p className="font-semibold text-slate-600">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+          <p className="text-[9px] text-slate-400 mt-0.5">공정거래위원회 심사지침 준수 • 구매자에게 추가 비용이 발생하지 않습니다.</p>
         </div>
 
       </div>

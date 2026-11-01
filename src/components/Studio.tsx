@@ -388,6 +388,36 @@ export default function Studio({ initialLinks }: StudioProps) {
                       </div>
                     </div>
 
+                    {/* FTC & Anti-Spam Compliance Guidelines */}
+                    <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/80 text-[11px] text-amber-950 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="font-extrabold flex items-center gap-1.5 text-amber-900">
+                          ⚖️ 크리에이터 필수 준수 사항 (공정위 & 스팸방지)
+                        </span>
+                        <span className="text-[10px] text-amber-700 font-semibold">필독</span>
+                      </div>
+                      <div className="bg-white p-2.5 rounded-lg border border-amber-200">
+                        <span className="text-[10px] text-slate-500 font-bold block mb-1">
+                          1. SNS 본문/캡션 필수 기재 문구 (원클릭 복사):
+                        </span>
+                        <div className="flex items-center justify-between gap-2">
+                          <code className="text-slate-800 font-medium text-[11px] select-all leading-tight">
+                            "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+                          </code>
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard('이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.', 'ftc')}
+                            className="px-2 py-1 rounded bg-amber-100 hover:bg-amber-200 text-amber-900 font-bold text-[10px] shrink-0 transition-colors"
+                          >
+                            {copiedType === 'ftc' ? '복사됨!' : '문구 복사'}
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-[10px] text-amber-900/80 leading-relaxed">
+                        <strong>2. 불법 스팸 전송 금지:</strong> 수신자의 사전 동의를 얻지 않은 무단 메신저/SNS 스팸 DM 전송은 관련 법령에 따라 과태료 및 형사 처벌 대상이 될 수 있습니다.
+                      </p>
+                    </div>
+
                     {/* Action Links */}
                     <div className="mt-3.5 flex items-center justify-between text-xs font-semibold pt-2 border-t border-emerald-200/60">
                       <Link

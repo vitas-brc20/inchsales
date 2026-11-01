@@ -122,9 +122,9 @@ export default function PhoneMockup({
             </div>
           </div>
 
-          {/* Bottom Legal Notice */}
-          <div className="px-5 text-[8px] text-slate-400 text-center leading-tight">
-            본 페이지는 쿠팡 파트너스 활동의 일환으로 일정액의 수수료를 제공받습니다.
+          {/* Bottom Legal Notice (FTC Guidelines) */}
+          <div className="px-4 text-[8px] text-slate-500 text-center leading-tight font-medium">
+            이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
           </div>
 
         </div>
