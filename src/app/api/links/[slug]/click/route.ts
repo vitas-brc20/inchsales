@@ -6,10 +6,11 @@ export async function POST(
   props: { params: Promise<{ slug: string }> }
 ) {
   const params = await props.params;
+  const decodedSlug = decodeURIComponent(params.slug);
   const { searchParams } = new URL(request.url);
   const creator = searchParams.get('creator') || 'official';
 
-  const res = await recordReferralClickAsync(params.slug, creator);
+  const res = await recordReferralClickAsync(decodedSlug, creator);
 
   return NextResponse.json({
     success: true,

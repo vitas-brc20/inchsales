@@ -10,6 +10,26 @@ const WITHDRAWALS_FILE = path.join(DATA_DIR, 'withdrawals.json');
 
 // 기본 공유 상품 카탈로그 (인플루언서들이 공통으로 가져다 쓸 수 있는 상품들)
 const INITIAL_PRODUCTS: Record<string, ProductItem> = {
+  '제로콜라': {
+    slug: '제로콜라',
+    name: '코카콜라 제로 355ml 24캔',
+    category: '식음료/음료',
+    tagline: '칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장',
+    queryOrUrl: 'https://link.coupang.com/a/ikoqLZW3zg',
+    priceHint: '19,900원 (캔당 820원)',
+    totalClicks: 345,
+    createdAt: new Date().toISOString(),
+  },
+  'coca-cola-zero': {
+    slug: 'coca-cola-zero',
+    name: '코카콜라 제로 355ml 24캔',
+    category: '식음료/음료',
+    tagline: '칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장',
+    queryOrUrl: 'https://link.coupang.com/a/ikoqLZW3zg',
+    priceHint: '19,900원 (캔당 820원)',
+    totalClicks: 345,
+    createdAt: new Date().toISOString(),
+  },
   'ddu-zon-cookie': {
     slug: 'ddu-zon-cookie',
     name: '두바이 쫀득 쿠키 (두쫀쿠)',

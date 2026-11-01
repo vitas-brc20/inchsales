@@ -6,7 +6,8 @@ export async function GET(
   props: { params: Promise<{ slug: string }> }
 ) {
   const params = await props.params;
-  const link = getLinkBySlug(params.slug);
+  const decodedSlug = decodeURIComponent(params.slug);
+  const link = getLinkBySlug(decodedSlug);
 
   if (!link) {
     return NextResponse.json(

@@ -22,12 +22,12 @@ interface StudioProps {
 
 export default function Studio({ initialLinks }: StudioProps) {
   // Form State
-  const [productName, setProductName] = useState('두바이 쫀득 쿠키 (두쫀쿠)');
-  const [category, setCategory] = useState('간식/디저트');
+  const [productName, setProductName] = useState('코카콜라 제로 355ml 24캔');
+  const [category, setCategory] = useState('식음료/음료');
   const [creatorId, setCreatorId] = useState('my_uuid_100');
-  const [tagline, setTagline] = useState('틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기');
-  const [priceHint, setPriceHint] = useState('16,900원');
-  const [queryOrUrl, setQueryOrUrl] = useState('');
+  const [tagline, setTagline] = useState('칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장');
+  const [priceHint, setPriceHint] = useState('19,900원');
+  const [queryOrUrl, setQueryOrUrl] = useState('https://link.coupang.com/a/ikoqLZW3zg');
 
   // UI State
   const [loading, setLoading] = useState(false);
@@ -36,9 +36,9 @@ export default function Studio({ initialLinks }: StudioProps) {
     creatorId: string;
     productName: string;
   } | null>({
-    slug: 'ddu-zon-cookie',
+    slug: '제로콜라',
     creatorId: 'my_uuid_100',
-    productName: '두바이 쫀득 쿠키 (두쫀쿠)',
+    productName: '코카콜라 제로',
   });
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [clicksSlider, setClicksSlider] = useState(100);
@@ -187,6 +187,13 @@ export default function Studio({ initialLinks }: StudioProps) {
                     🔥 인기 상품 템플릿 선택:
                   </span>
                   <div className="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('코카콜라 제로 355ml 24캔', '식음료/음료', '칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장', '19,900원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-900 border border-rose-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🥤 코카콜라 제로
+                    </button>
                     <button
                       type="button"
                       onClick={() => handleSelectPreset('두바이 쫀득 쿠키 (두쫀쿠)', '간식/디저트', '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기', '16,900원')}

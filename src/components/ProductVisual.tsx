@@ -13,6 +13,19 @@ export default function ProductVisual({ productName, category, className = 'w-fu
   const name = productName.toLowerCase();
   const cat = category.toLowerCase();
 
+  // 0. 콜라 / 음료
+  if (name.includes('콜라') || name.includes('coke') || name.includes('음료') || cat.includes('음료')) {
+    return (
+      <div className={`${className} rounded-2xl bg-gradient-to-br from-rose-950 via-zinc-900 to-black border border-rose-900/50 flex flex-col items-center justify-center relative overflow-hidden text-white`}>
+        <div className="w-16 h-16 rounded-2xl bg-rose-600/20 border border-rose-500/30 shadow-lg flex items-center justify-center text-3xl mb-1 transform hover:scale-105 transition-transform">
+          🥤
+        </div>
+        <span className="text-[11px] font-black text-rose-300 mt-1">코카콜라 제로 로켓배송</span>
+        <span className="text-[9px] text-zinc-400">와우회원 무료배송</span>
+      </div>
+    );
+  }
+
   // 1. 디저트 / 푸드
   if (name.includes('쿠키') || name.includes('두바이') || name.includes('빵') || cat.includes('간식') || cat.includes('디저트')) {
     return (

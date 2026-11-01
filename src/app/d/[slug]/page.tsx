@@ -10,9 +10,10 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
+  const decodedSlug = decodeURIComponent(params.slug);
   const searchParams = await props.searchParams;
   const creatorId = searchParams.ref || searchParams.id;
-  const link = getLinkBySlug(params.slug, creatorId);
+  const link = getLinkBySlug(decodedSlug, creatorId);
 
   if (!link) {
     return {
@@ -34,10 +35,11 @@ export default async function DashboardPage(
   }
 ) {
   const params = await props.params;
+  const decodedSlug = decodeURIComponent(params.slug);
   const searchParams = await props.searchParams;
   const creatorId = searchParams.ref || searchParams.id;
 
-  const link = getLinkBySlug(params.slug, creatorId);
+  const link = getLinkBySlug(decodedSlug, creatorId);
 
   if (!link) {
     notFound();
