@@ -131,21 +131,8 @@ function writeWithdrawals(data: Record<string, WithdrawalRequest>): void {
   }
 }
 
-import { generateCoupangProductLink, generateCoupangSearchLink } from './coupang';
-
-// 쿠팡 공식 subId 딥링크 생성 (파트너스 공식 게이트웨이 규격)
-export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, slug: string): string {
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const subId = `inch_${safeCreator}_${safeSlug}`;
-
-  const trimmed = queryOrUrl.trim();
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
-    return generateCoupangProductLink(trimmed, subId);
-  }
-
-  return generateCoupangSearchLink(trimmed, subId);
-}
+import { buildCoupangLinkWithRef } from './coupang';
+export { buildCoupangLinkWithRef };
 
 // --- Supabase 비동기 I/O (실패 시 로컬 파일로 자동 Fallback) ---
 

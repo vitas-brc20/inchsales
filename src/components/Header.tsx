@@ -1,13 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Sparkles, ArrowRight, TrendingUp, CheckCircle2, Settings, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Sparkles, ArrowRight, TrendingUp, CheckCircle2, Settings, ExternalLink, ShieldCheck, Key, Zap } from 'lucide-react';
 import { getCoupangTrackingId } from '@/lib/coupang';
 
 export default function Header() {
   const [modalOpen, setModalOpen] = useState(false);
   const [trackingId, setTrackingId] = useState(getCoupangTrackingId());
+  const [accessKey, setAccessKey] = useState('');
+  const [secretKey, setSecretKey] = useState('');
+  const [hasKeys, setHasKeys] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
+
+  useEffect(() => {
+    fetch('/api/coupang/keys')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.success) {
+          if (d.trackingId) setTrackingId(d.trackingId);
+          setHasKeys(d.hasAccessKey && d.hasSecretKey);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleSaveKeys = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setSaveMessage('');
+
+    try {
+      const res = await fetch('/api/coupang/keys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accessKey, secretKey, trackingId }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setHasKeys(Boolean(accessKey && secretKey));
+        setSaveMessage('✅ 쿠팡 파트너스 API 자동화가 활성화되었습니다!');
+        setTimeout(() => setSaveMessage(''), 3000);
+      }
+    } catch {
+      setSaveMessage('설정 저장에 실패했습니다.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <>
@@ -45,11 +86,12 @@ export default function Header() {
             {/* Coupang Partners Status Badge */}
             <button
               onClick={() => setModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-[#E1251B] text-xs font-semibold border border-rose-200/80 transition-colors cursor-pointer"
-              title="쿠팡 파트너스 연동 정보"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 hover:bg-rose-100 text-[#E1251B] text-xs font-semibold border border-rose-200/80 transition-colors cursor-pointer"
+              title="쿠팡 파트너스 자동화 설정"
             >
               <span className="w-2 h-2 rounded-full bg-[#E1251B] animate-ping" />
-              <span className="font-bold">쿠팡 파트너스 연동됨</span>
+              <span className="font-bold">쿠팡 파트너스 {hasKeys ? 'API 자동화 ON' : '연동됨'}</span>
+              <Settings className="w-3 h-3 ml-0.5 opacity-60" />
             </button>
 
             <a
@@ -66,15 +108,15 @@ export default function Header() {
       {/* Coupang Partners Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-xl bg-rose-50 text-[#E1251B] flex items-center justify-center font-black text-sm">
                   C
                 </div>
                 <div>
-                  <h3 className="text-base font-black text-slate-900">쿠팡 파트너스 공식 연동 상태</h3>
-                  <span className="text-[10px] text-slate-400">Coupang Partners Official Gateway</span>
+                  <h3 className="text-base font-black text-slate-900">쿠팡 파트너스 100% 자동화 설정</h3>
+                  <span className="text-[10px] text-slate-400">Official Coupang Partners Automation Engine</span>
                 </div>
               </div>
               <button
@@ -86,34 +128,81 @@ export default function Header() {
             </div>
 
             <div className="mt-5 space-y-4">
+              {/* Status Box */}
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">공식 트래킹 ID (AF코드)</span>
+                  <span className="text-slate-500 font-medium">연동 ID (AF코드)</span>
                   <span className="font-mono font-bold text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-200">
                     {trackingId}
                   </span>
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">연동 방식</span>
-                  <span className="font-semibold text-emerald-600">공식 파트너스 리디렉션 게이트웨이</span>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-slate-500 font-medium">하위 추천인 식별 (subId)</span>
-                  <span className="font-semibold text-blue-600">실시간 동적 주입</span>
+                  <span className="text-slate-500 font-medium">자동화 상태</span>
+                  <span className="font-bold text-emerald-600 flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    {hasKeys ? 'Open API 공식 단축 링크 실시간 생성' : '공식 파트너스 게이트웨이 자동 생성'}
+                  </span>
                 </div>
               </div>
 
-              <div className="text-xs text-slate-600 leading-relaxed bg-blue-50/70 p-3.5 rounded-xl border border-blue-100">
-                <p className="font-bold text-blue-900 mb-1">🔗 공식 딥링크 게이트웨이 규격 작동 원리:</p>
-                <p className="text-[11px] text-blue-800">
-                  구매자가 버튼을 누르면 <br />
-                  <code className="font-mono text-[10px] bg-white px-1 py-0.5 rounded text-blue-950 block my-1">
-                    https://link.coupang.com/re/AFFSRCH?lptag={trackingId}&subid=inch_...
-                  </code>
-                  공식 도메인을 경유하여 쿠팡 앱/웹으로 이동하므로 쿠팡 파트너스 시스템에 매출이 100% 정상 집계됩니다.
+              {/* API Key Form for Full Automation */}
+              <form onSubmit={handleSaveKeys} className="p-4 rounded-2xl bg-slate-50/70 border border-slate-200/80 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
+                    <Key className="w-3.5 h-3.5 text-blue-600" />
+                    <span>파트너스 Open API 키 등록 (선택)</span>
+                  </span>
+                  <a
+                    href="https://partners.coupang.com/#affiliate/ws/api"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[10px] text-blue-600 hover:underline flex items-center gap-0.5"
+                  >
+                    키 발급받기 <ExternalLink className="w-2.5 h-2.5" />
+                  </a>
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  쿠팡 콘솔에서 발급받은 키를 넣으시면, 수작업 복사 없이 <code>link.coupang.com/a/...</code> 공식 단축 링크를 시스템이 0.1초 만에 자동 발급합니다.
                 </p>
-              </div>
 
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Access Key</label>
+                  <input
+                    type="password"
+                    value={accessKey}
+                    onChange={(e) => setAccessKey(e.target.value)}
+                    placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono outline-none focus:border-blue-600 bg-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-semibold text-slate-600 mb-1">Secret Key</label>
+                  <input
+                    type="password"
+                    value={secretKey}
+                    onChange={(e) => setSecretKey(e.target.value)}
+                    placeholder="쿠팡 파트너스 시크릿 키"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono outline-none focus:border-blue-600 bg-white"
+                  />
+                </div>
+
+                {saveMessage && (
+                  <div className="text-xs font-bold text-emerald-600 bg-emerald-50 p-2 rounded-lg">
+                    {saveMessage}
+                  </div>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors cursor-pointer"
+                >
+                  {saving ? '저장 중...' : 'API 키 저장 및 자동화 적용'}
+                </button>
+              </form>
+
+              {/* Legal Notice */}
               <div className="text-xs text-slate-600 leading-relaxed bg-amber-50/70 p-3.5 rounded-xl border border-amber-200">
                 <p className="font-bold text-amber-900 mb-1">⚖️ 공정거래위원회 필수 표기 안내:</p>
                 <p className="text-[11px] text-amber-900 leading-tight">
@@ -127,9 +216,9 @@ export default function Header() {
               <div className="pt-2 flex justify-end">
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="w-full py-3 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition-colors"
+                  className="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-colors"
                 >
-                  확인
+                  닫기
                 </button>
               </div>
             </div>
