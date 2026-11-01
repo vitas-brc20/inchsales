@@ -1,0 +1,565 @@
+import fs from 'fs';
+import path from 'path';
+import { supabase } from './supabase';
+import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest } from './types';
+
+const DATA_DIR = path.join(process.cwd(), 'data');
+const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
+const STATS_FILE = path.join(DATA_DIR, 'creator_stats.json');
+const WITHDRAWALS_FILE = path.join(DATA_DIR, 'withdrawals.json');
+
+// 기본 공유 상품 카탈로그 (인플루언서들이 공통으로 가져다 쓸 수 있는 상품들)
+const INITIAL_PRODUCTS: Record<string, ProductItem> = {
+  'ddu-zon-cookie': {
+    slug: 'ddu-zon-cookie',
+    name: '두바이 쫀득 쿠키 (두쫀쿠)',
+    category: '간식/디저트',
+    tagline: '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기',
+    queryOrUrl: '두바이 쫀득 쿠키',
+    priceHint: '16,900원',
+    totalClicks: 231,
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
+  'desk-cleaner': {
+    slug: 'desk-cleaner',
+    name: '충전식 미니 데스크 무선 청소기',
+    category: '리빙/자취',
+    tagline: '릴스에서 문의 폭주했던 책상 위 지우개똥/먼지 청소기',
+    queryOrUrl: '미니 데스크 청소기',
+    priceHint: '12,500원',
+    totalClicks: 142,
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
+  'laptop-stand': {
+    slug: 'laptop-stand',
+    name: '원목 접이식 각도조절 노트북 거치대',
+    category: '데스크테리어',
+    tagline: '목디스크 탈출! 감성 데스크테리어 필수 아이템',
+    queryOrUrl: '접이식 노트북 거치대',
+    priceHint: '24,900원',
+    totalClicks: 88,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+};
+
+const INITIAL_STATS: Record<string, CreatorStat> = {
+  'tiktok_sweet:ddu-zon-cookie': {
+    creatorId: 'tiktok_sweet',
+    slug: 'ddu-zon-cookie',
+    productName: '두바이 쫀득 쿠키 (두쫀쿠)',
+    clicks: 142,
+    estimatedEarnings: 8900,
+    lastClickAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+  },
+  'room_makeover:desk-cleaner': {
+    creatorId: 'room_makeover',
+    slug: 'desk-cleaner',
+    productName: '충전식 미니 데스크 무선 청소기',
+    clicks: 89,
+    estimatedEarnings: 4200,
+    lastClickAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+  },
+};
+
+// --- 로컬 파일 백업/캐시 헬퍼 ---
+function readProducts(): Record<string, ProductItem> {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(PRODUCTS_FILE)) {
+      fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(INITIAL_PRODUCTS, null, 2), 'utf8');
+      return { ...INITIAL_PRODUCTS };
+    }
+    const content = fs.readFileSync(PRODUCTS_FILE, 'utf8');
+    return { ...INITIAL_PRODUCTS, ...JSON.parse(content) };
+  } catch {
+    return { ...INITIAL_PRODUCTS };
+  }
+}
+
+function writeProducts(data: Record<string, ProductItem>): void {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed to write products file:', e);
+  }
+}
+
+function readStats(): Record<string, CreatorStat> {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(STATS_FILE)) {
+      fs.writeFileSync(STATS_FILE, JSON.stringify(INITIAL_STATS, null, 2), 'utf8');
+      return { ...INITIAL_STATS };
+    }
+    const content = fs.readFileSync(STATS_FILE, 'utf8');
+    return { ...INITIAL_STATS, ...JSON.parse(content) };
+  } catch {
+    return { ...INITIAL_STATS };
+  }
+}
+
+function writeStats(data: Record<string, CreatorStat>): void {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(STATS_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed to write stats file:', e);
+  }
+}
+
+function readWithdrawals(): Record<string, WithdrawalRequest> {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(WITHDRAWALS_FILE)) {
+      fs.writeFileSync(WITHDRAWALS_FILE, JSON.stringify({}, null, 2), 'utf8');
+      return {};
+    }
+    const content = fs.readFileSync(WITHDRAWALS_FILE, 'utf8');
+    return JSON.parse(content);
+  } catch {
+    return {};
+  }
+}
+
+function writeWithdrawals(data: Record<string, WithdrawalRequest>): void {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(WITHDRAWALS_FILE, JSON.stringify(data, null, 2), 'utf8');
+  } catch (e) {
+    console.error('Failed to write withdrawals file:', e);
+  }
+}
+
+import { generateCoupangProductLink, generateCoupangSearchLink } from './coupang';
+
+// 쿠팡 공식 subId 딥링크 생성 (파트너스 공식 게이트웨이 규격)
+export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, slug: string): string {
+  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
+  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
+  const subId = `inch_${safeCreator}_${safeSlug}`;
+
+  const trimmed = queryOrUrl.trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return generateCoupangProductLink(trimmed, subId);
+  }
+
+  return generateCoupangSearchLink(trimmed, subId);
+}
+
+// --- Supabase 비동기 I/O (실패 시 로컬 파일로 자동 Fallback) ---
+
+export async function getAllProductsAsync(): Promise<ProductItem[]> {
+  try {
+    const { data, error } = await supabase
+      .from('inch_products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      return data.map((d) => ({
+        slug: d.slug,
+        name: d.name,
+        category: d.category || '트렌드/핫템',
+        tagline: d.tagline || '',
+        queryOrUrl: d.query_or_url,
+        priceHint: d.price_hint,
+        totalClicks: d.total_clicks || 0,
+        createdAt: d.created_at,
+      }));
+    }
+  } catch {
+    // Supabase fallback
+  }
+
+  return getAllProducts();
+}
+
+export function getAllProducts(): ProductItem[] {
+  const products = readProducts();
+  return Object.values(products).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+export async function getProductBySlugOrQueryAsync(slugOrQuery: string): Promise<ProductItem | null> {
+  const normalized = slugOrQuery.trim().toLowerCase();
+
+  try {
+    const { data, error } = await supabase
+      .from('inch_products')
+      .select('*')
+      .or(`slug.eq.${normalized},name.ilike.%${normalized}%,query_or_url.ilike.%${normalized}%`)
+      .limit(1)
+      .maybeSingle();
+
+    if (!error && data) {
+      return {
+        slug: data.slug,
+        name: data.name,
+        category: data.category || '트렌드/핫템',
+        tagline: data.tagline || '',
+        queryOrUrl: data.query_or_url,
+        priceHint: data.price_hint,
+        totalClicks: data.total_clicks || 0,
+        createdAt: data.created_at,
+      };
+    }
+  } catch {
+    // Fallback
+  }
+
+  return getProductBySlugOrQuery(slugOrQuery);
+}
+
+export function getProductBySlugOrQuery(slugOrQuery: string): ProductItem | null {
+  const products = readProducts();
+  const normalized = slugOrQuery.trim().toLowerCase();
+
+  if (products[normalized]) return products[normalized];
+
+  for (const item of Object.values(products)) {
+    if (
+      item.slug.toLowerCase() === normalized ||
+      item.name.toLowerCase().includes(normalized) ||
+      item.queryOrUrl.toLowerCase() === normalized
+    ) {
+      return item;
+    }
+  }
+
+  return null;
+}
+
+export async function upsertProductAsync(payload: {
+  name: string;
+  category?: string;
+  tagline?: string;
+  queryOrUrl?: string;
+  priceHint?: string;
+  customSlug?: string;
+}): Promise<ProductItem> {
+  const localItem = upsertProduct(payload);
+
+  try {
+    await supabase.from('inch_products').upsert({
+      slug: localItem.slug,
+      name: localItem.name,
+      category: localItem.category,
+      tagline: localItem.tagline,
+      query_or_url: localItem.queryOrUrl,
+      price_hint: localItem.priceHint,
+      total_clicks: localItem.totalClicks,
+      created_at: localItem.createdAt,
+    });
+  } catch {
+    // ignore
+  }
+
+  return localItem;
+}
+
+export function upsertProduct(payload: {
+  name: string;
+  category?: string;
+  tagline?: string;
+  queryOrUrl?: string;
+  priceHint?: string;
+  customSlug?: string;
+}): ProductItem {
+  const products = readProducts();
+
+  let slug = (payload.customSlug || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '-');
+  if (!slug) {
+    const matched = getProductBySlugOrQuery(payload.name);
+    if (matched) return matched;
+    slug = payload.name.trim().toLowerCase().replace(/[^a-z0-9가-힣_-]/g, '-');
+    if (!slug) {
+      slug = 'item-' + Math.random().toString(36).substring(2, 8);
+    }
+  }
+
+  if (products[slug]) {
+    return products[slug];
+  }
+
+  const newProduct: ProductItem = {
+    slug,
+    name: payload.name.trim(),
+    category: payload.category || '트렌드/핫템',
+    tagline: payload.tagline?.trim() || `SNS에서 화제된 '${payload.name}' 최저가 구매 좌표`,
+    queryOrUrl: payload.queryOrUrl?.trim() || payload.name.trim(),
+    priceHint: payload.priceHint?.trim() || '쿠팡 최저가',
+    totalClicks: 0,
+    createdAt: new Date().toISOString(),
+  };
+
+  products[slug] = newProduct;
+  writeProducts(products);
+
+  return newProduct;
+}
+
+// 클릭 기록 (Supabase + Local 동기화)
+export async function recordReferralClickAsync(slugOrQuery: string, creatorId: string) {
+  const res = recordReferralClick(slugOrQuery, creatorId);
+
+  try {
+    // Supabase inch_products total_clicks 증가
+    await supabase
+      .from('inch_products')
+      .update({ total_clicks: res.product.totalClicks })
+      .eq('slug', res.product.slug);
+
+    // Supabase inch_creator_stats upsert
+    const statKey = `${res.creatorStat.creatorId}:${res.product.slug}`;
+    await supabase.from('inch_creator_stats').upsert({
+      id: statKey,
+      creator_id: res.creatorStat.creatorId,
+      slug: res.product.slug,
+      product_name: res.product.name,
+      clicks: res.creatorStat.clicks,
+      estimated_earnings: res.creatorStat.estimatedEarnings,
+      last_click_at: res.creatorStat.lastClickAt,
+    });
+  } catch {
+    // fallback
+  }
+
+  return res;
+}
+
+export function recordReferralClick(slugOrQuery: string, creatorId: string): {
+  product: ProductItem;
+  creatorStat: CreatorStat;
+  redirectUrl: string;
+} {
+  let product = getProductBySlugOrQuery(slugOrQuery);
+  if (!product) {
+    product = upsertProduct({ name: slugOrQuery });
+  }
+
+  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'anonymous';
+  const statKey = `${safeCreator}:${product.slug}`;
+
+  const products = readProducts();
+  if (products[product.slug]) {
+    products[product.slug].totalClicks += 1;
+    writeProducts(products);
+  }
+
+  const stats = readStats();
+  const current = stats[statKey] || {
+    creatorId: safeCreator,
+    slug: product.slug,
+    productName: product.name,
+    clicks: 0,
+    estimatedEarnings: 0,
+    lastClickAt: new Date().toISOString(),
+  };
+
+  current.clicks += 1;
+  current.estimatedEarnings = Math.round(current.clicks * 35);
+  current.lastClickAt = new Date().toISOString();
+
+  stats[statKey] = current;
+  writeStats(stats);
+
+  const redirectUrl = buildCoupangLinkWithRef(product.queryOrUrl, safeCreator, product.slug);
+
+  return { product, creatorStat: current, redirectUrl };
+}
+
+// 출금 신청 (Supabase + Local)
+export async function createWithdrawalRequestAsync(params: {
+  creatorId: string;
+  slug: string;
+  productName: string;
+  amount: number;
+  accountInfo: string;
+}): Promise<WithdrawalRequest> {
+  const req = createWithdrawalRequest(params);
+
+  try {
+    await supabase.from('inch_withdrawals').insert({
+      id: req.id,
+      creator_id: req.creatorId,
+      slug: req.slug,
+      product_name: req.productName,
+      amount: req.amount,
+      account_info: req.accountInfo,
+      status: req.status,
+      created_at: req.createdAt,
+    });
+  } catch {
+    // fallback
+  }
+
+  return req;
+}
+
+export function createWithdrawalRequest(params: {
+  creatorId: string;
+  slug: string;
+  productName: string;
+  amount: number;
+  accountInfo: string;
+}): WithdrawalRequest {
+  const withdrawals = readWithdrawals();
+  const id = `wd_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`;
+
+  const request: WithdrawalRequest = {
+    id,
+    creatorId: params.creatorId,
+    slug: params.slug,
+    productName: params.productName,
+    amount: params.amount,
+    accountInfo: params.accountInfo.trim(),
+    status: 'PENDING',
+    createdAt: new Date().toISOString(),
+  };
+
+  withdrawals[id] = request;
+  writeWithdrawals(withdrawals);
+
+  return request;
+}
+
+export async function getWithdrawalsByCreatorAsync(creatorId: string): Promise<WithdrawalRequest[]> {
+  try {
+    const { data, error } = await supabase
+      .from('inch_withdrawals')
+      .select('*')
+      .eq('creator_id', creatorId)
+      .order('created_at', { ascending: false });
+
+    if (!error && data && data.length > 0) {
+      return data.map((d) => ({
+        id: d.id,
+        creatorId: d.creator_id,
+        slug: d.slug,
+        productName: d.product_name,
+        amount: d.amount,
+        accountInfo: d.account_info,
+        status: d.status,
+        createdAt: d.created_at,
+        processedAt: d.processed_at,
+      }));
+    }
+  } catch {
+    // fallback
+  }
+
+  return getWithdrawalsByCreator(creatorId);
+}
+
+export function getWithdrawalsByCreator(creatorId: string): WithdrawalRequest[] {
+  const withdrawals = readWithdrawals();
+  const safeCreator = (creatorId || '').replace(/[^a-zA-Z0-9_-]/g, '');
+  return Object.values(withdrawals)
+    .filter((w) => w.creatorId === safeCreator)
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export function getAllWithdrawals(): WithdrawalRequest[] {
+  const withdrawals = readWithdrawals();
+  return Object.values(withdrawals).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
+// 인터페이스 호환 래퍼들
+export function getAllLinks(): ProductLink[] {
+  const products = getAllProducts();
+  const stats = readStats();
+
+  return products.map((p) => {
+    const stat = Object.values(stats).find((s) => s.slug === p.slug);
+    const creatorId = stat?.creatorId || 'official';
+    return {
+      slug: p.slug,
+      productName: p.name,
+      category: p.category,
+      creatorId,
+      tagline: p.tagline,
+      originalQueryOrUrl: p.queryOrUrl,
+      coupangUrl: buildCoupangLinkWithRef(p.queryOrUrl, creatorId, p.slug),
+      subId: `inch_${creatorId}_${p.slug}`,
+      clicks: p.totalClicks,
+      estimatedEarnings: stat?.estimatedEarnings || Math.round(p.totalClicks * 35),
+      priceHint: p.priceHint,
+      createdAt: p.createdAt,
+    };
+  });
+}
+
+export function getLinkBySlug(slug: string, refCreator?: string): ProductLink | null {
+  const product = getProductBySlugOrQuery(slug);
+  if (!product) return null;
+
+  const creatorId = refCreator || 'official';
+  const statKey = `${creatorId}:${product.slug}`;
+  const stats = readStats();
+  const stat = stats[statKey];
+
+  return {
+    slug: product.slug,
+    productName: product.name,
+    category: product.category,
+    creatorId,
+    tagline: product.tagline,
+    originalQueryOrUrl: product.queryOrUrl,
+    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug),
+    subId: `inch_${creatorId}_${product.slug}`,
+    clicks: stat?.clicks || product.totalClicks,
+    estimatedEarnings: stat?.estimatedEarnings || Math.round(product.totalClicks * 35),
+    priceHint: product.priceHint,
+    createdAt: product.createdAt,
+  };
+}
+
+export function createProductLink(payload: CreateLinkPayload): ProductLink {
+  const product = upsertProduct({
+    name: payload.productName,
+    category: payload.category,
+    tagline: payload.tagline,
+    queryOrUrl: payload.queryOrUrl,
+    priceHint: payload.priceHint,
+    customSlug: payload.customSlug,
+  });
+
+  const creatorId = (payload.creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'creator';
+
+  return {
+    slug: product.slug,
+    productName: product.name,
+    category: product.category,
+    creatorId,
+    tagline: product.tagline,
+    originalQueryOrUrl: product.queryOrUrl,
+    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug),
+    subId: `inch_${creatorId}_${product.slug}`,
+    clicks: 0,
+    estimatedEarnings: 0,
+    priceHint: product.priceHint,
+    createdAt: product.createdAt,
+  };
+}
+
+export function recordClick(slug: string, creatorId?: string): ProductLink | null {
+  const res = recordReferralClick(slug, creatorId || 'official');
+  return {
+    slug: res.product.slug,
+    productName: res.product.name,
+    category: res.product.category,
+    creatorId: res.creatorStat.creatorId,
+    tagline: res.product.tagline,
+    originalQueryOrUrl: res.product.queryOrUrl,
+    coupangUrl: res.redirectUrl,
+    subId: `inch_${res.creatorStat.creatorId}_${res.product.slug}`,
+    clicks: res.creatorStat.clicks,
+    estimatedEarnings: res.creatorStat.estimatedEarnings,
+    priceHint: res.product.priceHint,
+    createdAt: res.product.createdAt,
+  };
+}

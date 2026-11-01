@@ -1,0 +1,65 @@
+'use client';
+
+import React from 'react';
+import { ShoppingBag, Sparkles, Laptop, Coffee, Home, Heart, Smartphone } from 'lucide-react';
+
+interface ProductVisualProps {
+  productName: string;
+  category: string;
+  className?: string;
+}
+
+export default function ProductVisual({ productName, category, className = 'w-full h-44' }: ProductVisualProps) {
+  const name = productName.toLowerCase();
+  const cat = category.toLowerCase();
+
+  // 1. 디저트 / 푸드
+  if (name.includes('쿠키') || name.includes('두바이') || name.includes('빵') || cat.includes('간식') || cat.includes('디저트')) {
+    return (
+      <div className={`${className} rounded-2xl bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/70 border border-amber-200/60 flex flex-col items-center justify-center relative overflow-hidden`}>
+        <div className="w-16 h-16 rounded-2xl bg-white shadow-md shadow-amber-900/5 flex items-center justify-center text-3xl mb-1 transform hover:scale-105 transition-transform">
+          🍪
+        </div>
+        <span className="text-[11px] font-bold text-amber-900 mt-1">두바이 디저트 특가</span>
+        <span className="text-[9px] text-amber-700/80">쿠팡 공식 로켓프레시/배송</span>
+      </div>
+    );
+  }
+
+  // 2. 청소기 / 리빙
+  if (name.includes('청소기') || name.includes('리빙') || cat.includes('자취') || cat.includes('리빙') || cat.includes('주방')) {
+    return (
+      <div className={`${className} rounded-2xl bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50/70 border border-blue-200/60 flex flex-col items-center justify-center relative overflow-hidden`}>
+        <div className="w-16 h-16 rounded-2xl bg-white shadow-md shadow-blue-900/5 flex items-center justify-center text-3xl mb-1 transform hover:scale-105 transition-transform">
+          🧹
+        </div>
+        <span className="text-[11px] font-bold text-slate-800 mt-1">자취/살림 꿀템</span>
+        <span className="text-[9px] text-slate-500">실시간 재고 연동</span>
+      </div>
+    );
+  }
+
+  // 3. 거치대 / IT / 데스크테리어
+  if (name.includes('거치대') || name.includes('노트북') || cat.includes('데스크') || cat.includes('전자')) {
+    return (
+      <div className={`${className} rounded-2xl bg-gradient-to-br from-slate-100 via-zinc-100 to-slate-200/80 border border-slate-300/60 flex flex-col items-center justify-center relative overflow-hidden`}>
+        <div className="w-16 h-16 rounded-2xl bg-white shadow-md shadow-slate-900/5 flex items-center justify-center text-3xl mb-1 transform hover:scale-105 transition-transform">
+          💻
+        </div>
+        <span className="text-[11px] font-bold text-slate-900 mt-1">데스크테리어 필수템</span>
+        <span className="text-[9px] text-slate-500">로켓배송 가능 상품</span>
+      </div>
+    );
+  }
+
+  // 기본 세련된 쇼핑백 룩
+  return (
+    <div className={`${className} rounded-2xl bg-gradient-to-br from-slate-50 via-slate-100 to-blue-50/50 border border-slate-200/80 flex flex-col items-center justify-center relative overflow-hidden`}>
+      <div className="w-16 h-16 rounded-2xl bg-white shadow-md shadow-slate-900/5 flex items-center justify-center text-blue-600 mb-1">
+        <ShoppingBag className="w-8 h-8" />
+      </div>
+      <span className="text-[11px] font-bold text-slate-800 mt-1">SNS 화제의 추천템</span>
+      <span className="text-[9px] text-slate-400">쿠팡 공식 최저가 연동</span>
+    </div>
+  );
+}
