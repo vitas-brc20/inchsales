@@ -26,6 +26,8 @@ interface CampaignItem {
     creatorHandle: string;
     creatorName: string;
     creatorCategory: string;
+    targetVideoUrl?: string;
+    videoTitle?: string;
     ytUrl: string;
     instaUrl: string;
     tiktokUrl?: string;
@@ -443,12 +445,13 @@ export default function CampaignsPage() {
                               type="button"
                               onClick={() => {
                                 handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`);
-                                window.open(`https://www.youtube.com/@${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}/videos`, '_blank');
+                                const ytUrl = camp.targetedCreatorOutreach?.targetVideoUrl || (camp.targetedCreatorOutreach?.creatorHandle ? `https://www.youtube.com/@${encodeURIComponent(camp.targetedCreatorOutreach.creatorHandle)}/videos` : 'https://www.youtube.com');
+                                window.open(ytUrl, '_blank');
                               }}
                               className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-0.5"
-                              title="댓글 복사 + 유튜브 새 탭 열기"
+                              title="댓글 복사 + 첫 영상 바로 열기"
                             >
-                              <span>🚀 열기</span>
+                              <span>🚀 영상 열기</span>
                               <ExternalLink className="w-2.5 h-2.5" />
                             </button>
                           </div>

@@ -1,8 +1,12 @@
 import fs from 'fs';
 import path from 'path';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { createClient } from '@supabase/supabase-js';
 import { publishYouTubeComment, publishInstagramComment, publishTikTokComment } from '../src/lib/sns-api';
 import { dispatchBrowserOutreach } from '../src/lib/browser-automation';
+
+const execAsync = promisify(exec);
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://srimeahesuhiakdlxhwr.supabase.co';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaW1lYWhlc3VoaWFrZGx4aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1Mzc1MzksImV4cCI6MjEwOTExMzUzOX0.1RBDeIhNyJlpyYTSoJZv0CH0a3NZOK2ifwnX5y3M6b0';
@@ -515,7 +519,12 @@ export const PRODUCT_VIDEO_CONTEXTS: Record<string, { shortName: string; sampleV
 };
 
 // 매칭된 크리에이터 전용 댓글 및 제안문 생성기 (영상 제목 & 자연스러운 상품명 인용 융합)
-export function generateCreatorCommentBundle(creator: VerifiedCreator, targetProduct: any, specificVideoTitle?: string) {
+export function generateCreatorCommentBundle(
+  creator: VerifiedCreator,
+  targetProduct: any,
+  specificVideoTitle?: string,
+  specificVideoUrl?: string
+) {
   const baseDomain = BASE_URL;
   const ytUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=youtube`;
   const instaUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=insta`;
@@ -557,6 +566,7 @@ export function generateCreatorCommentBundle(creator: VerifiedCreator, targetPro
     creatorTier: creator.tier || 'mega',
     creatorCategory: creator.category,
     videoTitle,
+    targetVideoUrl: specificVideoUrl,
     productDisplayName,
     targetProductSlug: targetProduct.slug,
     targetProductName: targetProduct.name,
@@ -569,6 +579,45 @@ export function generateCreatorCommentBundle(creator: VerifiedCreator, targetPro
     tiktokComment,
     instaDm,
   };
+}
+
+/**
+ * YouTube 검색 결과에서 가장 최신의 실제 첫 번째 영상(/watch?v=...)과 제목을 자동 추출합니다.
+ * (단순 검색 결과 페이지 대신 100% 실제 영상 시청 페이지 직행 및 영상 제목 정밀 인용 보장)
+ */
+export async function resolveFirstYouTubeVideo(
+  query: string
+): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string } | null> {
+  try {
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+    const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
+    const { stdout } = await execAsync(cmd);
+    const match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    if (!match || !match[1]) return null;
+
+    const videoId = match[1];
+    const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
+
+    // 실제 첫 영상 제목 파싱 시도
+    let videoTitle: string | undefined;
+    try {
+      const titleCmd = `curl -s -L --max-time 4 -A "Mozilla/5.0" "${videoUrl}" | grep -o "<title>[^<]*</title>" | head -n 1`;
+      const { stdout: tOut } = await execAsync(titleCmd);
+      const titleMatch = tOut.match(/<title>([^<]+)<\/title>/);
+      if (titleMatch && titleMatch[1]) {
+        videoTitle = titleMatch[1].replace(/\s*-\s*YouTube\s*$/i, '').trim();
+      }
+    } catch {}
+
+    return {
+      videoId,
+      videoUrl,
+      videoTitle,
+    };
+  } catch (err) {
+    console.warn('resolveFirstYouTubeVideo error:', err);
+    return null;
+  }
 }
 
 // 1. 기존 검증된 핵심 상품 풀
@@ -929,7 +978,23 @@ export async function runMarketingCycle() {
   let browserTaskResult: any = null;
 
   if (matchedCreator) {
-    creatorOutreachBundle = generateCreatorCommentBundle(matchedCreator, target);
+    // 유튜브 플랫폼일 경우 단순 검색창(search_query)이 아닌, '실제 첫 번째 영상(/watch?v=...)'을 실시간 파싱하여 직행 타깃팅!
+    let resolvedVideo: { videoUrl: string; videoTitle?: string; videoId?: string } | null = null;
+    if (matchedCreator.platform === 'all' || matchedCreator.platform === 'youtube') {
+      const cleanProductName = target.name.replace(/\(.*\)/g, '').trim();
+      const ytQuery = `${matchedCreator.channelName} ${cleanProductName}`;
+      resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
+      if (resolvedVideo?.videoTitle) {
+        console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
+      }
+    }
+
+    creatorOutreachBundle = generateCreatorCommentBundle(
+      matchedCreator,
+      target,
+      resolvedVideo?.videoTitle,
+      resolvedVideo?.videoUrl
+    );
 
     // 4-2. 공식 API (YouTube Data API v3 / Meta Graph / TikTok) 백그라운드 직접 전송 시도 (옵션 B)
     try {
@@ -955,10 +1020,10 @@ export async function runMarketingCycle() {
       let targetUrl = '';
       let commentText = '';
       if (selectedPlatform === 'youtube') {
-        const ytHandle = matchedCreator.youtubeHandle || matchedCreator.handle;
-        targetUrl = matchedCreator.youtubeHandle
-          ? `https://www.youtube.com/@${encodeURIComponent(ytHandle)}/videos`
-          : `https://www.youtube.com/results?search_query=${encodeURIComponent(matchedCreator.searchKeyword + ' ' + (creatorOutreachBundle.videoTitle || ''))}`;
+        // [중요] 단순 검색 결과 페이지(results?search_query)가 아닌, 실제 첫 번째 영상(/watch?v=...) 페이지로 100% 직행!
+        targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
+          ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
+          : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
         commentText = creatorOutreachBundle.ytComment;
       } else if (selectedPlatform === 'instagram') {
         targetUrl = `https://www.instagram.com/${encodeURIComponent(matchedCreator.handle)}/`;
