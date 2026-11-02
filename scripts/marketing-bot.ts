@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { createClient } from '@supabase/supabase-js';
 import { publishYouTubeComment, publishInstagramComment, publishTikTokComment } from '../src/lib/sns-api';
+import { dispatchBrowserOutreach } from '../src/lib/browser-automation';
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://srimeahesuhiakdlxhwr.supabase.co';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaW1lYWhlc3VoaWFrZGx4aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1Mzc1MzksImV4cCI6MjEwOTExMzUzOX0.1RBDeIhNyJlpyYTSoJZv0CH0a3NZOK2ifwnX5y3M6b0';
@@ -687,6 +688,7 @@ export async function runMarketingCycle() {
   const matchedCreator = matchCreatorSafely(target.slug, target.category);
   let creatorOutreachBundle: any = null;
   let apiPublishStatus: any = null;
+  let browserTaskResult: any = null;
 
   if (matchedCreator) {
     creatorOutreachBundle = generateCreatorCommentBundle(matchedCreator, target);
@@ -706,6 +708,37 @@ export async function runMarketingCycle() {
       console.warn('API direct publish check error:', e);
     }
     
+    // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화 (브라우저 새 탭 열기 & 클립보드 자동 복사 & 알림 배너)
+    try {
+      const selectedPlatform = matchedCreator.platform === 'tiktok'
+        ? 'tiktok'
+        : (matchedCreator.platform === 'insta' ? 'instagram' : 'youtube');
+
+      let targetUrl = '';
+      let commentText = '';
+      if (selectedPlatform === 'youtube') {
+        targetUrl = `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`;
+        commentText = creatorOutreachBundle.ytComment;
+      } else if (selectedPlatform === 'instagram') {
+        targetUrl = `https://www.instagram.com/${encodeURIComponent(matchedCreator.handle)}/`;
+        commentText = creatorOutreachBundle.instaComment;
+      } else {
+        targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.handle)}`;
+        commentText = creatorOutreachBundle.tiktokComment;
+      }
+
+      browserTaskResult = await dispatchBrowserOutreach({
+        platform: selectedPlatform,
+        creatorHandle: matchedCreator.handle,
+        creatorName: matchedCreator.channelName,
+        targetUrl,
+        commentText,
+        productName: creatorOutreachBundle.productDisplayName || target.name,
+      });
+    } catch (e) {
+      console.warn('Browser outreach dispatch error:', e);
+    }
+
     // outreach-queue.json 에도 추가/갱신
     try {
       let currentOutreach: any = { targets: [] };
@@ -716,6 +749,7 @@ export async function runMarketingCycle() {
       currentOutreach.latestAutoMatch = {
         ...creatorOutreachBundle,
         apiPublishStatus,
+        browserTaskResult,
       };
       if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
       // 중복 방지 후 선두에 추가
@@ -723,6 +757,7 @@ export async function runMarketingCycle() {
         {
           ...creatorOutreachBundle,
           apiPublishStatus,
+          browserTaskResult,
         },
         ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== matchedCreator.handle),
       ].slice(0, 20);
@@ -797,8 +832,8 @@ export async function runMarketingCycle() {
     console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment.slice(0, 80)}..."`);
     console.log(`[${timestamp}] 💬 [인스타 댓글] "${creatorOutreachBundle.instaComment}"`);
     console.log(`[${timestamp}] 💬 [틱톡 댓글] "${creatorOutreachBundle.tiktokComment}"`);
-    if (apiPublishStatus) {
-      console.log(`[${timestamp}] 📡 [공식 API 직접 전송 상태] YT: ${apiPublishStatus.youtube.status} | IG: ${apiPublishStatus.instagram.status} | TT: ${apiPublishStatus.tiktok.status}`);
+    if (browserTaskResult) {
+      console.log(`[${timestamp}] 🖥️ [로컬 Chrome 브라우저 자동화] ${browserTaskResult.details}`);
     }
   }
   return campaignData;
