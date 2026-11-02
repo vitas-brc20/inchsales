@@ -251,6 +251,34 @@ export default function Studio({ initialLinks }: StudioProps) {
                     >
                       💇‍♀️ 물미역 헤어에센스
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)', '뷰티/스킨케어', '딸기코 탈출! 모공 속 묵은 블랙헤드와 피지를 뿌리째 뽑아주는 3단 코팩', '7,100원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-900 border border-red-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🐽 돼지코팩 (블랙헤드)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)', '홈/인테리어', '올겨울 완벽한 연말 분위기! 풍성하고 고급스러운 프리미엄 전나무 크리스마스 트리', '48,900원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-green-50 hover:bg-green-100 text-green-900 border border-green-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🎄 크리스마스 트리
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('스타벅스 SS 블랙 데비 콜드컵 보온 보냉 텀블러 473ml (한정판)', '리빙/텀블러', '품절 대란 스타벅스 한정판 텀블러! 압도적인 보온 보냉력과 고급스러운 감성', '32,900원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      ☕ 스타벅스 한정판
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰', '디지털/가전', 'Apple 공식 정품! 압도적인 액티브 노이즈 캔슬링과 공간 음향', '195,020원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🍏 Apple 에어팟
+                    </button>
                   </div>
                 </div>
 
