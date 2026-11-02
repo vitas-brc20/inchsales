@@ -19,10 +19,15 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
 
     try {
       // 추천인(creatorId) 및 채널(channel) 정보를 함께 넘겨 실시간 실적 집계
+      // sendBeacon 및 keepalive: true를 통해 페이지 이동 시에도 네트워크 요청이 100% 손실 없이 서버에 도달하도록 보장
       const channelParam = link.channel ? `&channel=${encodeURIComponent(link.channel)}` : '';
-      fetch(`/api/links/${encodeURIComponent(link.slug)}/click?creator=${encodeURIComponent(link.creatorId)}${channelParam}`, {
-        method: 'POST',
-      });
+      const clickUrl = `/api/links/${encodeURIComponent(link.slug)}/click?creator=${encodeURIComponent(link.creatorId)}${channelParam}`;
+
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        navigator.sendBeacon(clickUrl);
+      } else {
+        fetch(clickUrl, { method: 'POST', keepalive: true }).catch(() => {});
+      }
     } catch {
       // 무시
     }

@@ -96,18 +96,35 @@ export async function requestCoupangDeepLinkApi(targetUrl: string, subId: string
 }
 
 /**
+ * 쿠팡 파트너스 subId 포맷터
+ * - 영문/숫자 핸들은 그대로 보존
+ * - 한글 핸들(@미소학개론 등)은 deterministic 8자리 해시(c_xxxxxxxx)로 변환하여 쿠팡 파트너스 정산 규격 100% 준수
+ */
+export function formatCoupangSubId(creatorId: string, slug: string, channel?: string): string {
+  const cleanAscii = (creatorId || '').replace(/^@+/, '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  let safeCreator = cleanAscii;
+  if (!safeCreator) {
+    const hash = crypto.createHash('md5').update(creatorId || 'anonymous').digest('hex').substring(0, 8);
+    safeCreator = `c_${hash}`;
+  }
+
+  const safeChannel = (channel || '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 8);
+  const cleanSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  const safeSlug = cleanSlug || `s_${crypto.createHash('md5').update(slug || 'item').digest('hex').substring(0, 6)}`;
+
+  return safeChannel && safeChannel !== 'general'
+    ? `inch_${safeCreator}_${safeChannel}_${safeSlug}`
+    : `inch_${safeCreator}_${safeSlug}`;
+}
+
+/**
  * 100% 완전 자동 링크 생성 메인 함수
  * - API Key가 있으면: 쿠팡 Open API를 호출해 link.coupang.com/a/XXXXX 단축 링크를 0.1초 만에 발급
  * - API Key가 없으면: 공식 게이트웨이 link.coupang.com/re/AFF... 주소를 즉시 자동 조합
  */
 export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: string, slug: string, channel?: string): Promise<string> {
   const trackingId = getCoupangTrackingId();
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
-  const safeChannel = (channel || '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 8);
-  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
-  const subId = safeChannel && safeChannel !== 'general'
-    ? `inch_${safeCreator}_${safeChannel}_${safeSlug}`
-    : `inch_${safeCreator}_${safeSlug}`;
+  const subId = formatCoupangSubId(creatorId, slug, channel);
 
   const trimmed = queryOrUrl.trim();
 
@@ -157,12 +174,7 @@ export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: str
 // 동기 호환 래퍼
 export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, slug: string, channel?: string): string {
   const trackingId = getCoupangTrackingId();
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
-  const safeChannel = (channel || '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 8);
-  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
-  const subId = safeChannel && safeChannel !== 'general'
-    ? `inch_${safeCreator}_${safeChannel}_${safeSlug}`
-    : `inch_${safeCreator}_${safeSlug}`;
+  const subId = formatCoupangSubId(creatorId, slug, channel);
 
   const trimmed = queryOrUrl.trim();
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
