@@ -3,6 +3,7 @@
 import React from 'react';
 import { ExternalLink, ShieldCheck, ShoppingCart, Zap, Heart } from 'lucide-react';
 import ProductVisual from './ProductVisual';
+import { inferCategory } from '@/lib/categories';
 
 interface PhoneMockupProps {
   productName: string;
@@ -24,7 +25,7 @@ export default function PhoneMockup({
   slug,
 }: PhoneMockupProps) {
   const displayTitle = productName || '두바이 쫀득 쿠키 (두쫀쿠)';
-  const displayCategory = category || '간식/디저트';
+  const displayCategory = category || inferCategory(displayTitle);
   const displayCreator = creatorId ? `@${creatorId}` : '@tiktok_sweet';
   const displayTagline = tagline || '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기';
   const displayPrice = priceHint || '16,900원';

@@ -5,6 +5,7 @@ import PhoneMockup from './PhoneMockup';
 import { Sparkles, Copy, Check, ExternalLink, ArrowRight, DollarSign, BarChart3, Users, Zap, CheckCircle2, Link2, Share2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Link from 'next/link';
+import { STANDARD_CATEGORIES, inferCategory } from '@/lib/categories';
 
 interface StudioProps {
   initialLinks: Array<{
@@ -54,15 +55,24 @@ export default function Studio({ initialLinks }: StudioProps) {
   });
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [clicksSlider, setClicksSlider] = useState(100);
+  const [isCategoryManual, setIsCategoryManual] = useState(false);
 
-  const categories = ['간식/디저트', '리빙/자취', '데스크테리어', '뷰티/패션', '주방/생활', '전자기기'];
+  const categories = Array.from(new Set([...STANDARD_CATEGORIES, category]));
 
   const handleSelectPreset = (name: string, cat: string, tag: string, price: string) => {
     setProductName(name);
     setCategory(cat);
+    setIsCategoryManual(true);
     setTagline(tag);
     setPriceHint(price);
     setQueryOrUrl(name);
+  };
+
+  const handleProductNameChange = (value: string) => {
+    setProductName(value);
+    if (!isCategoryManual && value.trim()) {
+      setCategory(inferCategory(value));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -384,7 +394,7 @@ export default function Studio({ initialLinks }: StudioProps) {
                       type="text"
                       required
                       value={productName}
-                      onChange={(e) => setProductName(e.target.value)}
+                      onChange={(e) => handleProductNameChange(e.target.value)}
                       placeholder="예: 두바이 쫀득 쿠키 (두쫀쿠)"
                       className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm transition-all bg-slate-50/50 focus:bg-white"
                     />
@@ -393,12 +403,22 @@ export default function Studio({ initialLinks }: StudioProps) {
                   {/* Category & Price */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        카테고리
-                      </label>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <label className="block text-xs font-bold text-slate-700">
+                          카테고리
+                        </label>
+                        {!isCategoryManual && productName.trim() && (
+                          <span className="text-[10px] text-blue-600 font-semibold bg-blue-50 px-1.5 py-0.5 rounded">
+                            ✨ 자동 매핑됨
+                          </span>
+                        )}
+                      </div>
                       <select
                         value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        onChange={(e) => {
+                          setCategory(e.target.value);
+                          setIsCategoryManual(true);
+                        }}
                         className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-blue-600 outline-none text-sm bg-slate-50/50 focus:bg-white"
                       >
                         {categories.map((c) => (

@@ -134,6 +134,18 @@ const AUTO_DISCOVERY_QUEUE = [
     description: '바르고 10초 방치 후 헹구면 끝! 고농축 미세 단백질이 큐티클 사이사이 침투해 즉각적인 실크 머릿결을 선사합니다.',
   },
   {
+    slug: '물미역트리트먼트',
+    name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
+    category: '헤어/바디',
+    priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
+    shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
+    tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
+    hook: '💇‍♀️ [개털탈출] 빗자루 모발도 10초 만에 찰랑이는 물미역 머릿결! 모레모 미라클 10',
+    description: '바르고 10초 방치 후 헹구면 끝! 고농축 미세 단백질이 큐티클 사이사이 침투해 즉각적인 실크 머릿결을 선사합니다.',
+  },
+  {
     slug: '블랙헤드제거',
     name: '미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)',
     category: '뷰티/스킨케어',

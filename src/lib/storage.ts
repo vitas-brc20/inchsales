@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { supabase } from './supabase';
 import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest } from './types';
+import { inferCategory } from './categories';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
@@ -131,6 +132,39 @@ const INITIAL_PRODUCTS: Record<string, ProductItem> = {
   },
   '미역헤어에센스': {
     slug: '미역헤어에센스',
+    name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
+    category: '헤어/바디',
+    tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
+    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
+    totalClicks: 35,
+    createdAt: new Date().toISOString(),
+  },
+  '물미역트리트먼트': {
+    slug: '물미역트리트먼트',
+    name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
+    category: '헤어/바디',
+    tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
+    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
+    totalClicks: 35,
+    createdAt: new Date().toISOString(),
+  },
+  '물미역헤어에센스': {
+    slug: '물미역헤어에센스',
+    name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
+    category: '헤어/바디',
+    tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
+    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
+    totalClicks: 35,
+    createdAt: new Date().toISOString(),
+  },
+  '모레모': {
+    slug: '모레모',
     name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
     category: '헤어/바디',
     tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
@@ -415,15 +449,40 @@ export async function getProductBySlugOrQueryAsync(slugOrQuery: string): Promise
 export function getProductBySlugOrQuery(slugOrQuery: string): ProductItem | null {
   const products = readProducts();
   const normalized = slugOrQuery.trim().toLowerCase();
+  const cleanInput = normalized.replace(/[\s\-_/]/g, '');
 
   if (products[normalized]) return products[normalized];
+  if (products[cleanInput]) return products[cleanInput];
 
+  // 1. 단순 포함 및 정규화 매칭
   for (const item of Object.values(products)) {
+    const itemSlugClean = item.slug.toLowerCase().replace(/[\s\-_/]/g, '');
+    const itemNameClean = item.name.toLowerCase().replace(/[\s\-_/]/g, '');
     if (
-      item.slug.toLowerCase() === normalized ||
-      item.name.toLowerCase().includes(normalized) ||
-      item.queryOrUrl.toLowerCase() === normalized
+      itemSlugClean === cleanInput ||
+      itemNameClean.includes(cleanInput) ||
+      cleanInput.includes(itemSlugClean)
     ) {
+      return item;
+    }
+  }
+
+  // 2. 키워드 기반 스마트 매핑 (예: 물미역 + 트리트먼트/헤어)
+  for (const item of Object.values(products)) {
+    const itemNameClean = item.name.toLowerCase().replace(/[\s\-_/]/g, '');
+    if ((cleanInput.includes('물미역') || cleanInput.includes('트리트먼트')) && itemNameClean.includes('트리트먼트')) {
+      return item;
+    }
+    if (cleanInput.includes('두쫀쿠') && itemNameClean.includes('두쫀쿠')) {
+      return item;
+    }
+    if ((cleanInput.includes('아이폰') || cleanInput.includes('iphone')) && itemNameClean.includes('아이폰')) {
+      return item;
+    }
+    if ((cleanInput.includes('아이패드') || cleanInput.includes('ipad')) && itemNameClean.includes('아이패드')) {
+      return item;
+    }
+    if ((cleanInput.includes('맥북') || cleanInput.includes('macbook')) && itemNameClean.includes('맥북')) {
       return item;
     }
   }
@@ -483,10 +542,14 @@ export function upsertProduct(payload: {
     return products[slug];
   }
 
+  const resolvedCategory = payload.category && payload.category !== '트렌드/핫템'
+    ? payload.category
+    : inferCategory(payload.name);
+
   const newProduct: ProductItem = {
     slug,
     name: payload.name.trim(),
-    category: payload.category || '트렌드/핫템',
+    category: resolvedCategory,
     tagline: payload.tagline?.trim() || `SNS에서 화제된 '${payload.name}' 최저가 구매 좌표`,
     queryOrUrl: payload.queryOrUrl?.trim() || payload.name.trim(),
     priceHint: payload.priceHint?.trim() || '쿠팡 최저가',
@@ -727,7 +790,7 @@ export function getLinkBySlug(slug: string, refCreator?: string, channelInput?: 
     // 요청된 상품명이 카탈로그에 없는 경우, 실시간 온디맨드로 바로 생성
     product = upsertProduct({
       name: slug,
-      category: '트렌드/핫템',
+      category: inferCategory(slug),
       tagline: `${slug} - 쿠팡 최저가 로켓배송 실시간 재고 확인`,
       queryOrUrl: slug,
     });
