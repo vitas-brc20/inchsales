@@ -57,6 +57,7 @@ export default function Studio({ initialLinks }: StudioProps) {
   const [clicksSlider, setClicksSlider] = useState(100);
   const [isCategoryManual, setIsCategoryManual] = useState(false);
   const [targetHandle, setTargetHandle] = useState<string>('');
+  const [targetVideoTitle, setTargetVideoTitle] = useState<string>('');
 
   const categories = Array.from(new Set([...STANDARD_CATEGORIES, category]));
 
@@ -589,13 +590,16 @@ export default function Studio({ initialLinks }: StudioProps) {
                       const tiktokLink = getPathUrl(createdInfo.slug, activeHandle, 'tiktok');
                       const statsLink = `${getBaseOrigin()}?id=${encodeURIComponent(activeHandle)}`;
                       
-                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+                      const videoMention = targetVideoTitle.trim() ? `'${targetVideoTitle.trim()}' 영상 보구` : '영상 보신';
+                      const productInVideo = targetVideoTitle.trim() ? `'${targetVideoTitle.trim()}' 영상 속 [${createdInfo.productName}]` : `영상 속 [${createdInfo.productName}]`;
 
-                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
+                      const ytComment = `안녕하세요 @${activeHandle}님! 이번 ${videoMention} 팬분들이 [${createdInfo.productName}] 구매처 물어보시는 분들이 많아서, @${activeHandle}님 채널 전용 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
 
-                      const tiktokComment = `@${activeHandle} 틱톡 보고 [${createdInfo.productName}] 어디서 사는지 물어보는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokLink} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+                      const instaComment = `@${activeHandle} 이번 ${productInVideo} 어디서 사는지 문의하시는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
 
-                      const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! 멋진 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+                      const tiktokComment = `@${activeHandle} 틱톡 ${productInVideo} 어디서 사는지 물어보는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokLink} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+
+                      const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! ${targetVideoTitle.trim() ? `'${targetVideoTitle.trim()}' 콘텐츠 ` : ''}항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
 
                       return (
                         <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/90 via-purple-50/70 to-pink-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3">
@@ -608,27 +612,49 @@ export default function Studio({ initialLinks }: StudioProps) {
                             </span>
                           </div>
                           <p className="text-[11px] text-indigo-900/80 leading-relaxed">
-                            유튜브, 인스타, 틱톡을 보다가 마음에 드는 크리에이터 계정 아이디를 입력하세요. <strong>가입을 기다리지 않고 해당 계정 전용 정산 링크를 즉시 발급</strong>하여 바로 복사 가능한 협업 제안문을 만듭니다.
+                            유튜브, 인스타, 틱톡을 보다가 마음에 드는 크리에이터 계정 아이디와 <strong>영상 제목</strong>을 입력하세요. <strong>영상 제목과 상품명이 자연스럽게 인용된 맞춤 제안문</strong>을 즉시 만듭니다.
                           </p>
 
-                          <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-200">
-                            <span className="text-xs font-bold text-slate-500 pl-1">타겟 계정 @</span>
-                            <input
-                              type="text"
-                              placeholder="예: mukbang_jin, 침착맨, chuu_official"
-                              value={targetHandle}
-                              onChange={(e) => setTargetHandle(e.target.value)}
-                              className="flex-1 text-xs font-bold text-indigo-900 bg-transparent outline-none placeholder:text-slate-400"
-                            />
-                            {targetHandle && (
-                              <button
-                                type="button"
-                                onClick={() => setTargetHandle('')}
-                                className="text-[10px] text-slate-400 hover:text-slate-600 px-1"
-                              >
-                                초기화
-                              </button>
-                            )}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-200">
+                              <span className="text-xs font-bold text-slate-500 pl-1">타겟 계정 @</span>
+                              <input
+                                type="text"
+                                placeholder="예: mukbang_jin, 침착맨"
+                                value={targetHandle}
+                                onChange={(e) => setTargetHandle(e.target.value)}
+                                className="flex-1 text-xs font-bold text-indigo-900 bg-transparent outline-none placeholder:text-slate-400"
+                              />
+                              {targetHandle && (
+                                <button
+                                  type="button"
+                                  onClick={() => setTargetHandle('')}
+                                  className="text-[10px] text-slate-400 hover:text-slate-600 px-1"
+                                >
+                                  초기화
+                                </button>
+                              )}
+                            </div>
+
+                            <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-200">
+                              <span className="text-xs font-bold text-slate-500 pl-1">🎬 영상 제목:</span>
+                              <input
+                                type="text"
+                                placeholder="예: 두바이 쫀득 쿠키 먹방"
+                                value={targetVideoTitle}
+                                onChange={(e) => setTargetVideoTitle(e.target.value)}
+                                className="flex-1 text-xs font-medium text-slate-800 bg-transparent outline-none placeholder:text-slate-400"
+                              />
+                              {targetVideoTitle && (
+                                <button
+                                  type="button"
+                                  onClick={() => setTargetVideoTitle('')}
+                                  className="text-[10px] text-slate-400 hover:text-slate-600 px-1"
+                                >
+                                  초기화
+                                </button>
+                              )}
+                            </div>
                           </div>
 
                           <div className="space-y-2">

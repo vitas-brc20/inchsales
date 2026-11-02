@@ -213,30 +213,112 @@ export function matchCreatorSafely(targetSlug: string, targetCategory: string): 
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
-// 매칭된 크리에이터 전용 댓글 및 제안문 생성기 (70% 같은 수치 완전 제거 & 틱톡 추가)
-export function generateCreatorCommentBundle(creator: VerifiedCreator, targetProduct: any) {
+// ============================================================================
+// 상품별 영상 제목(Video Title) & 자연스러운 구어체 상품명 매핑 맵
+// (크리에이터의 영상 제목을 직접 인용하여 거부감을 없애고 클릭 전환율 극대화)
+// ============================================================================
+export const PRODUCT_VIDEO_CONTEXTS: Record<string, { shortName: string; sampleVideoTitles: string[] }> = {
+  '두쫀쿠': {
+    shortName: '두바이 쫀득 쿠키 (두쫀쿠)',
+    sampleVideoTitles: ['두바이 쫀득 쿠키 드디어 먹어봤습니다', '카다이프 피스타치오 두쫀쿠 디저트 먹방', 'SNS 대란 두바이 쿠키 솔직 리뷰'],
+  },
+  '카다이프두쫀쿠': {
+    shortName: '카다이프 두바이 쿠키',
+    sampleVideoTitles: ['카다이프 피스타치오 쫀득 쿠키 먹방', '틱톡 200만뷰 두바이 쿠키 실물 리뷰'],
+  },
+  '물미역트리트먼트': {
+    shortName: '10초 물미역 헤어 트리트먼트',
+    sampleVideoTitles: ['10초 만에 개털 머리 물미역 되는 트리트먼트 추천', '올영세일 손상모 구원템 물미역 트리트먼트'],
+  },
+  '물광피부로션': {
+    shortName: '달바 프리미엄 물광세럼',
+    sampleVideoTitles: ['승무원 원조 물광 스프레이 세럼 스킨케어 루틴', '뿌리자마자 꿀광 도자기 피부 완성'],
+  },
+  '미백치약': {
+    shortName: '오스템 뷰센 28 미백치약',
+    sampleVideoTitles: ['누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기', '치아 착색 관리 홈케어 추천'],
+  },
+  '미백크림': {
+    shortName: '코스노리 톤업 미백크림',
+    sampleVideoTitles: ['옷에 묻어남 없는 24시간 톤업 미백크림 추천', '학생/직장인 쌩얼 메이크업 종결템'],
+  },
+  '블랙헤드제거': {
+    shortName: '미팩토리 3단 돼지 코팩',
+    sampleVideoTitles: ['피지/블랙헤드 뿌리뽑는 3단 코팩 피르가즘', '모공 청소 블랙헤드 완벽 제거'],
+  },
+  '애플아이폰': {
+    shortName: '아이폰 17 Pro Max',
+    sampleVideoTitles: ['아이폰 17 프로 맥스 자급제 언박싱 솔직후기', '새로 바꾼 아이폰 17 Pro 카메라 테스트'],
+  },
+  '애플맥북': {
+    shortName: '맥북 프로 14 M5',
+    sampleVideoTitles: ['M5 맥북 프로 14인치 전문가 작업 성능 테스트', '새로 산 맥북 프로 언박싱 및 세팅'],
+  },
+  '애플아이패드': {
+    shortName: '아이패드 에어 11 M3',
+    sampleVideoTitles: ['대학생/직장인 아이패드 에어 M3 갓성비 활용법', '아이패드 언박싱 및 필수 앱 세팅'],
+  },
+  '굽네닭가슴살': {
+    shortName: '굽네 오븐 통 닭가슴살',
+    sampleVideoTitles: ['퍽퍽함 제로 촉촉한 닭가슴살 식단 다이어트', '맛있는 다이어트 식단 통 닭가슴살 추천'],
+  },
+  '제로콜라': {
+    shortName: '코카콜라 제로',
+    sampleVideoTitles: ['다이어터 필수 코카콜라 제로 24캔 쟁이기', '치킨 먹방엔 무조건 코카콜라 제로'],
+  },
+  '펩시제로': {
+    shortName: '펩시 제로 라임',
+    sampleVideoTitles: ['탄산 종결 펩시 제로 라임 대량 구매 후기', '야식 먹방에 빠질 수 없는 펩시 제로 라임'],
+  },
+  '샥즈오픈핏': {
+    shortName: '샥즈 오픈핏 무선 이어폰',
+    sampleVideoTitles: ['귀 안 아픈 러닝용 오픈형 무선 이어폰 종결', '운동할 때 최고 샥즈 오픈핏 솔직 사용기'],
+  },
+  '치이카와': {
+    shortName: '치이카와 정품 인형 & 키링',
+    sampleVideoTitles: ['귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱', '내 가방에 달고 다니는 치이카와 키링'],
+  },
+  '크리스마스트리': {
+    shortName: '전나무 크리스마스 트리 풀세트',
+    sampleVideoTitles: ['연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기', '겨울 홈인테리어 감성 크리스마스 트리'],
+  },
+};
+
+// 매칭된 크리에이터 전용 댓글 및 제안문 생성기 (영상 제목 & 자연스러운 상품명 인용 융합)
+export function generateCreatorCommentBundle(creator: VerifiedCreator, targetProduct: any, specificVideoTitle?: string) {
   const baseDomain = BASE_URL;
   const ytUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=youtube`;
   const instaUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=insta`;
   const tiktokUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=tiktok`;
   const statsUrl = `${baseDomain}/?id=${encodeURIComponent(creator.handle)}`;
 
-  // 유튜브 댓글 제안문 (70% 수치 제외, 자연스러운 수익화 안내)
-  const ytComment = `안녕하세요 @${creator.handle} (${creator.channelName})님! 영상 보신 팬분들이 [${targetProduct.name}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+  // 상품의 자연스러운 간결명 및 영상 제목 컨텍스트 추출
+  const context = PRODUCT_VIDEO_CONTEXTS[targetProduct.slug] || {
+    shortName: targetProduct.name.replace(/\(.*\)/g, '').trim(),
+    sampleVideoTitles: [`${targetProduct.name} 솔직 후기`],
+  };
 
-  // 인스타그램 릴스/피드 댓글 제안문 (70% 수치 제외)
-  const instaComment = `@${creator.handle} 영상 속 [${targetProduct.name}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
+  const productDisplayName = context.shortName;
+  const videoTitle = specificVideoTitle || context.sampleVideoTitles[Math.floor(Math.random() * context.sampleVideoTitles.length)];
 
-  // 틱톡 숏폼 댓글 제안문 (70% 수치 제외, 틱톡 특화)
-  const tiktokComment = `@${creator.handle} 틱톡 보고 [${targetProduct.name}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+  // 유튜브 댓글 제안문 (영상 제목 직접 인용 & 70% 수치 제외)
+  const ytComment = `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
 
-  // 인스타그램 DM 협업 제안 전문
-  const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 알찬 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n콘텐츠에 소개해주신 [${targetProduct.name}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+  // 인스타그램 릴스/피드 댓글 제안문 (영상 제목 직접 인용)
+  const instaComment = `@${creator.handle} 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
+
+  // 틱톡 숏폼 댓글 제안문 (영상 제목 직접 인용)
+  const tiktokComment = `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+
+  // 인스타그램 DM 협업 제안 전문 (영상 제목 직접 인용)
+  const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 '${videoTitle}' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${productDisplayName}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
 
   return {
     creatorHandle: creator.handle,
     creatorName: creator.channelName,
     creatorCategory: creator.category,
+    videoTitle,
+    productDisplayName,
     targetProductSlug: targetProduct.slug,
     targetProductName: targetProduct.name,
     ytUrl,
