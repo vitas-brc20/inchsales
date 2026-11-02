@@ -1,15 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ShoppingBag, Sparkles, Laptop, Coffee, Home, Heart, Smartphone } from 'lucide-react';
 
 interface ProductVisualProps {
   productName: string;
   category: string;
+  imageUrl?: string;
   className?: string;
 }
 
-export default function ProductVisual({ productName, category, className = 'w-full h-44' }: ProductVisualProps) {
+export default function ProductVisual({ productName, category, imageUrl, className = 'w-full h-44' }: ProductVisualProps) {
+  const [imgError, setImgError] = useState(false);
+
+  // 실제 쿠팡 CDN 이미지가 있는 경우 우선 렌더링
+  if (imageUrl && !imgError) {
+    return (
+      <div className={`${className} rounded-2xl bg-white border border-slate-200/80 flex items-center justify-center relative overflow-hidden p-2 group`}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imageUrl}
+          alt={productName}
+          onError={() => setImgError(true)}
+          className="w-full h-full object-contain rounded-xl transform group-hover:scale-105 transition-transform duration-300"
+          loading="lazy"
+        />
+        <div className="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-xs text-[9px] font-bold text-white">
+          쿠팡 실물
+        </div>
+      </div>
+    );
+  }
+
   const name = productName.toLowerCase();
   const cat = category.toLowerCase();
 

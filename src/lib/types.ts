@@ -5,6 +5,8 @@ export interface ProductItem {
   tagline: string;
   queryOrUrl: string;
   priceHint?: string;
+  imageUrl?: string;
+  iframeUrl?: string;
   totalClicks: number;
   createdAt: string;
 }
@@ -42,6 +44,8 @@ export interface ProductLink {
   clicks: number;
   estimatedEarnings: number;
   priceHint?: string;
+  imageUrl?: string;
+  iframeUrl?: string;
   createdAt: string;
 }
 
@@ -52,5 +56,7 @@ export interface CreateLinkPayload {
   tagline?: string;
   queryOrUrl?: string;
   priceHint?: string;
+  imageUrl?: string;
+  iframeUrl?: string;
   customSlug?: string;
 }

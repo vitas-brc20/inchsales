@@ -86,7 +86,7 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
 
           {/* Product Visual Area */}
           <div className="mt-5 relative">
-            <ProductVisual productName={link.productName} category={link.category} className="w-full h-52" />
+            <ProductVisual productName={link.productName} category={link.category} imageUrl={link.imageUrl} className="w-full h-52" />
             <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full shadow-xs flex items-center gap-1">
               <Zap className="w-3 h-3 text-rose-500 fill-rose-500" />
               <span className="text-[10px] font-bold text-slate-800">화제의 템</span>
