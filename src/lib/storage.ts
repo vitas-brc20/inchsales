@@ -54,46 +54,6 @@ const INITIAL_PRODUCTS: Record<string, ProductItem> = {
     totalClicks: 231,
     createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
-  'desk-cleaner': {
-    slug: 'desk-cleaner',
-    name: '충전식 미니 데스크 무선 청소기',
-    category: '리빙/자취',
-    tagline: '릴스에서 문의 폭주했던 책상 위 지우개똥/먼지 청소기',
-    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?lptag=AF5232288&pageKey=6904818789&itemId=16618581786',
-    priceHint: '12,500원',
-    totalClicks: 142,
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-  '데스크청소기': {
-    slug: '데스크청소기',
-    name: '충전식 미니 데스크 무선 청소기',
-    category: '리빙/자취',
-    tagline: '릴스에서 문의 폭주했던 책상 위 지우개똥/먼지 청소기',
-    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?lptag=AF5232288&pageKey=6904818789&itemId=16618581786',
-    priceHint: '12,500원',
-    totalClicks: 142,
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-  },
-  'laptop-stand': {
-    slug: 'laptop-stand',
-    name: '원목 접이식 각도조절 노트북 거치대',
-    category: '데스크테리어',
-    tagline: '목디스크 탈출! 감성 데스크테리어 필수 아이템',
-    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?lptag=AF5232288&pageKey=7454921932&itemId=19416599182',
-    priceHint: '24,900원',
-    totalClicks: 88,
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-  },
-  '노트북거치대': {
-    slug: '노트북거치대',
-    name: '원목 접이식 각도조절 노트북 거치대',
-    category: '데스크테리어',
-    tagline: '목디스크 탈출! 감성 데스크테리어 필수 아이템',
-    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?lptag=AF5232288&pageKey=7454921932&itemId=19416599182',
-    priceHint: '24,900원',
-    totalClicks: 88,
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-  },
 };
 
 const INITIAL_STATS: Record<string, CreatorStat> = {
@@ -104,14 +64,6 @@ const INITIAL_STATS: Record<string, CreatorStat> = {
     clicks: 142,
     estimatedEarnings: 8900,
     lastClickAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
-  'room_makeover:desk-cleaner': {
-    creatorId: 'room_makeover',
-    slug: 'desk-cleaner',
-    productName: '충전식 미니 데스크 무선 청소기',
-    clicks: 89,
-    estimatedEarnings: 4200,
-    lastClickAt: new Date(Date.now() - 3600000 * 5).toISOString(),
   },
 };
 
