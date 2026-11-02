@@ -225,17 +225,31 @@ export default function Studio({ initialLinks }: StudioProps) {
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleSelectPreset('충전식 미니 데스크 무선 청소기', '리빙/자취', '릴스에서 문의 폭주했던 책상 위 지우개똥/먼지 청소기', '12,500원')}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 transition-colors font-medium flex items-center gap-1"
+                      onClick={() => handleSelectPreset('오스템파마 뷰센 28 전문 치아미백제 80g', '덴탈/미백', '커피·흡연 치아 착색 종결! 오스템임플란트 연구진 개발 전문 치아미백제', '11,000원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
                     >
-                      🧹 미니 청소기
+                      🦷 뷰센 미백치약
                     </button>
                     <button
                       type="button"
-                      onClick={() => handleSelectPreset('원목 접이식 노트북 거치대', '데스크테리어', '목디스크 탈출! 감성 데스크테리어 필수템', '24,900원')}
-                      className="text-xs px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/80 transition-colors font-medium flex items-center gap-1"
+                      onClick={() => handleSelectPreset('달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml', '뷰티/스킨케어', '뿌리는 즉시 도자기 물광 피부 완성! 3,000만병 돌파 승무원 필수 보습 세럼', '16,880원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
                     >
-                      💻 접이식 거치대
+                      ✨ 달바 물광세럼
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('코스노리 화이트닝 드레스 톤업크림 50ml 2개', '뷰티/메이크업', '옷에 묻어남 없이 24시간 맑고 투명한 피부톤! 올리브영 1위 미백 톤업크림', '29,520원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-pink-50 hover:bg-pink-100 text-pink-900 border border-pink-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🌸 코스노리 미백크림
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)', '헤어/바디', '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어', '21,500원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      💇‍♀️ 물미역 헤어에센스
                     </button>
                   </div>
                 </div>
