@@ -544,9 +544,10 @@ export function generateCreatorCommentBundle(
   const isMicro = creator.tier === 'micro';
 
   // 유튜브 댓글 제안문 (영상 제목 직접 인용 & 70% 수치 제외 & 소형/대형 맞춤 톤앤매너)
+  // [중요] 유튜브에서 파란색 클릭 가능 하이퍼링크로 자동 변환되도록 단독 라인으로 깔끔하게 배치
   const ytComment = isMicro
-    ? `안녕하세요 @${creator.channelName}님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '${videoTitle}' 영상 보구 [${productDisplayName}] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)`
-    : `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+    ? `안녕하세요 @${creator.handle} (${creator.channelName})님! 방금 영상 구독 누르고 너무 유익하게 잘 챙겨보고 있습니다 😊\n이번 '${videoTitle}' 영상 보구 [${productDisplayName}] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n\n${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)`
+    : `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n\n${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
 
   // 인스타그램 릴스/피드 댓글 제안문 (영상 제목 직접 인용)
   const instaComment = isMicro
@@ -590,10 +591,21 @@ export async function resolveFirstYouTubeVideo(
   query: string
 ): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string; channelName?: string; channelHandle?: string } | null> {
   try {
-    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-    const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
-    const { stdout } = await execAsync(cmd);
-    const match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    // 1차: 일반 롱폼 동영상 우선 탐색 (sp=EgIQAQ%253D%253D : 댓글 하이퍼링크 100% 클릭 가능)
+    const urlLong = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=EgIQAQ%253D%253D`;
+    const cmdLong = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${urlLong}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
+    let { stdout } = await execAsync(cmdLong);
+    let match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+
+    // 2차: 롱폼이 없을 경우 전체(숏폼 포함)에서 첫 영상 폴백 탐색
+    if (!match || !match[1]) {
+      const urlAny = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+      const cmdAny = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${urlAny}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
+      const resAny = await execAsync(cmdAny);
+      stdout = resAny.stdout;
+      match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    }
+
     if (!match || !match[1]) return null;
 
     const videoId = match[1];
@@ -998,9 +1010,15 @@ export async function runMarketingCycle() {
     // 유튜브 플랫폼일 경우 단순 검색창(search_query)이 아닌, '실제 첫 번째 영상(/watch?v=...)'을 실시간 파싱하여 직행 타깃팅!
     let resolvedVideo: { videoUrl: string; videoTitle?: string; videoId?: string } | null = null;
     if (matchedCreator.platform === 'all' || matchedCreator.platform === 'youtube') {
-      const cleanProductName = target.name.replace(/\(.*\)/g, '').trim();
-      const ytQuery = `${matchedCreator.channelName} ${cleanProductName}`;
+      const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
+      const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;
       resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
+      if (!resolvedVideo) {
+        resolvedVideo = await resolveFirstYouTubeVideo(`${matchedCreator.channelName} ${target.slug}`);
+      }
+      if (!resolvedVideo && matchedCreator.searchKeyword) {
+        resolvedVideo = await resolveFirstYouTubeVideo(matchedCreator.searchKeyword);
+      }
       if (resolvedVideo) {
         // [핵심] 영상 시청 페이지에서 파싱된 실제 크리에이터 핸들과 채널명으로 즉시 갱신!
         if (resolvedVideo.channelHandle) {

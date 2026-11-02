@@ -52,6 +52,34 @@ export async function postYouTubeCommentViaAppleScript(
     // 2. YouTube 페이지 로드 대기 (4초)
     await delay(4000);
 
+    // 2-1. [구독 먼저 누르기] 채널 구독 버튼 자동 확인 및 클릭 (미구독 상태일 때만 '구독' 클릭)
+    const jsSubscribe = `
+      (function() {
+        const subBtn = document.querySelector("#subscribe-button button") || 
+                       document.querySelector("ytd-subscribe-button-renderer button") ||
+                       document.querySelector("#subscribe-button yt-button-shape button");
+        if (!subBtn) return JSON.stringify({ subscribed: false, reason: "구독 버튼 미발견" });
+        
+        const text = subBtn.innerText.trim();
+        const aria = subBtn.getAttribute("aria-label") || "";
+        
+        // 아직 구독 중이 아닐 때만 클릭하여 구독 진행
+        if (text === "구독" || aria.includes("구독합니다")) {
+          subBtn.click();
+          return JSON.stringify({ subscribed: true, action: "newly_subscribed" });
+        }
+        return JSON.stringify({ subscribed: true, action: "already_subscribed" });
+      })()
+    `;
+    await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          execute javascript ${JSON.stringify(jsSubscribe)}
+        end tell
+      end tell
+    `).catch(() => {});
+    await delay(1500);
+
     // 3. 댓글 섹션 활성화를 위한 스크롤 다운
     const jsScroll = 'window.scrollTo(0, 600);';
     await runAppleScript(`
