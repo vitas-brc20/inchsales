@@ -281,6 +281,27 @@ export default function Studio({ initialLinks }: StudioProps) {
                     </button>
                     <button
                       type="button"
+                      onClick={() => handleSelectPreset('Apple 정품 아이폰 17 Pro Max 자급제 (512GB)', '디지털/애플', 'Apple 최신 플래그십! A19 Pro 칩셋과 5배 광학 줌 티타늄 디자인 쿠팡 공식 로켓배송', '1,900,000원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-300 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      📱 아이폰 17 Pro
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('Apple 정품 2024 아이패드 10세대 10.9 Wi-Fi (64GB)', '디지털/애플', '인강·필기·영상 감상 가성비 원탑! 올 스크린 디자인 Liquid Retina 로켓배송', '529,000원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🖊️ 아이패드 10세대
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('Apple 정품 맥북 프로 14 M5 (512GB 스페이스 블랙)', '디지털/애플', '전문가를 위한 압도적인 연산 퍼포먼스! M5 칩 탑재 Liquid Retina XDR 로켓배송', '2,390,000원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-900 border border-neutral-300 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      💻 맥북 프로 14
+                    </button>
+                    <button
+                      type="button"
                       onClick={() => handleSelectPreset('치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션', '캐릭터/완구', 'SNS 품절 대란! 말랑쫀득 심쿵 비주얼 치이카와 먼작귀 빅사이즈 인형 쿠션', '18,900원')}
                       className="text-xs px-3 py-1.5 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-900 border border-yellow-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
                     >
