@@ -69,13 +69,17 @@ export default function Header() {
 
           {/* Navigation Items */}
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <a href="#simulator" className="hover:text-slate-900 transition-colors">
+            <Link href="/campaigns" className="hover:text-blue-700 transition-colors flex items-center gap-1.5 font-bold text-blue-600 bg-blue-50/80 px-2.5 py-1 rounded-lg">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>로컬 마케팅 런처</span>
+            </Link>
+            <a href="/#simulator" className="hover:text-slate-900 transition-colors">
               수익 계산기
             </a>
-            <a href="#how-it-works" className="hover:text-slate-900 transition-colors">
+            <a href="/#how-it-works" className="hover:text-slate-900 transition-colors">
               정산 방식
             </a>
-            <a href="#trending" className="hover:text-slate-900 transition-colors flex items-center gap-1.5">
+            <a href="/#trending" className="hover:text-slate-900 transition-colors flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-rose-500" />
               화제의 템
             </a>
