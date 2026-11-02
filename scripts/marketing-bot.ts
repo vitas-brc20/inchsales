@@ -25,9 +25,9 @@ const VIRAL_TARGET_POOL = [
     slug: '두쫀쿠',
     name: '두바이 쫀득 쿠키 (두쫀쿠)',
     category: '간식/디저트',
-    priceHint: '16,900원',
-    hook: '🍪 틱톡 150만뷰 두바이 초콜릿 쫀득 쿠키 품절 풀렸습니다!',
-    description: '아직도 두바이 쿠키 못 드셔보신 분? 카다이프 피스타치오 가득 들어간 화제의 그 두쫀쿠 쿠팡에 소량 재입고됐어요!',
+    priceHint: '15,280원 (43% 특가 로켓배송)',
+    hook: '🍪 틱톡 150만뷰 두바이 초콜릿 쫀득 쿠키 15,280원 로켓배송 특가!',
+    description: '아직도 두바이 쿠키 못 드셔보신 분? 카다이프 피스타치오 가득 들어간 화제의 그 두쫀쿠 쿠팡 43% 특가로 풀렸습니다!',
   },
   {
     slug: '데스크청소기',
@@ -101,6 +101,8 @@ export async function runMarketingCycle() {
   const localUrl = `${LOCAL_BASE_URL}/p/${encodeURIComponent(target.slug)}?ref=local_${campaignId}`;
   const directCoupangUrl = target.slug === '제로콜라' 
     ? `https://link.coupang.com/a/ikoqLZW3zg?subid=inch_local_${campaignId}`
+    : target.slug === '두쫀쿠'
+    ? `https://link.coupang.com/a/ik36itDSai?subid=inch_local_${campaignId}`
     : `https://link.coupang.com/re/AFFSRCH?lptag=${TRACKING_ID}&subid=inch_local_${campaignId}&keyword=${encodeURIComponent(target.name)}`;
 
   // 3. 캠페인 포스팅 번들 저장
