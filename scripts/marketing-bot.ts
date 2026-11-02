@@ -12,6 +12,209 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const LOG_FILE = path.join(process.cwd(), 'logs', 'marketing-activity.log');
 const CAMPAIGN_DIR = path.join(process.cwd(), 'logs', 'campaigns');
+const OUTREACH_FILE = path.join(process.cwd(), 'logs', 'outreach-queue.json');
+
+// ============================================================================
+// 유명 크리에이터 검증 풀 및 카테고리 엄격 매핑 정의 (불일치 제품 댓글 원천 차단)
+// ============================================================================
+export interface VerifiedCreator {
+  channelName: string;
+  handle: string;
+  platform: 'youtube' | 'insta' | 'both';
+  category: '먹방/디저트' | '뷰티/헤어' | '스킨케어/덴탈' | 'IT/테크' | '헬스/식단' | '캐릭터/키덜트' | '크리스마스/홈파티';
+  allowedSlugs: string[];
+  relevanceKeywords: string[];
+}
+
+export const VERIFIED_CREATORS: VerifiedCreator[] = [
+  // 1. 먹방 / 디저트 분야 (간식, 음료, 디저트만 엄격 매핑)
+  {
+    channelName: '입짧은햇님',
+    handle: 'haetnim_mukbang',
+    platform: 'both',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
+    relevanceKeywords: ['디저트', '쿠키', '먹방', '간식', '초콜릿', '음료'],
+  },
+  {
+    channelName: '쯔양',
+    handle: 'tzuyang_official',
+    platform: 'both',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
+    relevanceKeywords: ['먹방', '간식', '디저트', '음료', '쿠키'],
+  },
+  {
+    channelName: '여수언니 정혜영',
+    handle: 'yeosu_unnie',
+    platform: 'both',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie'],
+    relevanceKeywords: ['디저트', '약과', '쿠키', '빵', '베이커리'],
+  },
+  {
+    channelName: '나도Nado',
+    handle: 'nado_eat',
+    platform: 'both',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['디저트', '쿠키', '먹방', '초콜릿'],
+  },
+
+  // 2. 뷰티 / 헤어 / 스킨케어 분야 (헤어, 미백, 톤업, 피지제거만 엄격 매핑)
+  {
+    channelName: '회사원A',
+    handle: 'office_worker_a',
+    platform: 'both',
+    category: '뷰티/헤어',
+    allowedSlugs: ['물미역트리트먼트', '물미역헤어에센스', '미역헤어에센스', '물광피부로션', '미백치약', '미백크림', '블랙헤드제거'],
+    relevanceKeywords: ['머릿결', '트리트먼트', '스킨케어', '올영', '뷰티'],
+  },
+  {
+    channelName: '이사배',
+    handle: 'risabae_art',
+    platform: 'both',
+    category: '뷰티/헤어',
+    allowedSlugs: ['미백크림', '물광피부로션', '블랙헤드제거', '물미역트리트먼트'],
+    relevanceKeywords: ['메이크업', '피부표현', '톤업', '베이스', '스킨케어'],
+  },
+  {
+    channelName: '레오제이',
+    handle: 'leojmakeup',
+    platform: 'both',
+    category: '뷰티/헤어',
+    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '미백치약'],
+    relevanceKeywords: ['피부관리', '물광', '스킨케어', '모공케어', '미백'],
+  },
+  {
+    channelName: '유트루',
+    handle: 'yootrue_beauty',
+    platform: 'both',
+    category: '뷰티/헤어',
+    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '물미역트리트먼트'],
+    relevanceKeywords: ['기초케어', '물광', '진정세럼', '보습'],
+  },
+
+  // 3. 덴탈 / 모공 전문 분야
+  {
+    channelName: '피부임상연구소',
+    handle: 'dr_skin_lab',
+    platform: 'both',
+    category: '스킨케어/덴탈',
+    allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
+    relevanceKeywords: ['피부과', '치아미백', '블랙헤드', '모공청소'],
+  },
+
+  // 4. IT / 테크 / 전자기기 분야 (애플 정품, 음향기기만 엄격 매핑)
+  {
+    channelName: '잇섭 (ITSub)',
+    handle: 'itsub_official',
+    platform: 'both',
+    category: 'IT/테크',
+    allowedSlugs: ['애플아이폰', '아이폰', '애플맥북', '맥북', '애플아이패드', '아이패드', '애플에어팟', '샥즈오픈핏'],
+    relevanceKeywords: ['아이폰', '맥북', '아이패드', '애플', '전자기기', '테크'],
+  },
+  {
+    channelName: '주연 (ZUYONI)',
+    handle: 'juyeon_tech',
+    platform: 'both',
+    category: 'IT/테크',
+    allowedSlugs: ['애플아이폰', '아이폰', '애플아이패드', '아이패드', '애플맥북', '맥북', '애플에어팟'],
+    relevanceKeywords: ['아이패드', '애플신제품', '맥북에어', '자급제'],
+  },
+  {
+    channelName: '테크몽',
+    handle: 'techmong_it',
+    platform: 'both',
+    category: 'IT/테크',
+    allowedSlugs: ['애플아이패드', '아이패드', '애플맥북', '맥북', '애플아이폰', '아이폰'],
+    relevanceKeywords: ['아이패드활용법', '맥북프로', '태블릿추천'],
+  },
+  {
+    channelName: '뻘짓연구소',
+    handle: 'bboljit_lab',
+    platform: 'both',
+    category: 'IT/테크',
+    allowedSlugs: ['애플맥북', '맥북', '애플아이폰', '아이폰', '애플에어팟', '샥즈오픈핏'],
+    relevanceKeywords: ['M5맥북', '오픈핏이어폰', '하드웨어'],
+  },
+
+  // 5. 헬스 / 식단 분야 (닭가슴살, 제로음료, 운동기기만 엄격 매핑)
+  {
+    channelName: '핏블리 (FITVELY)',
+    handle: 'fitvely_diet',
+    platform: 'both',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로', '샥즈오픈핏'],
+    relevanceKeywords: ['식단관리', '닭가슴살', '다이어트', '단백질', '운동'],
+  },
+  {
+    channelName: '피지컬갤러리 (김계란)',
+    handle: 'physical_gallery',
+    platform: 'both',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['운동이어폰', '단백질식단', '헬스', '닭가슴살'],
+  },
+
+  // 6. 캐릭터 / 키덜트 분야 (먼작귀 치이카와만 엄격 매핑)
+  {
+    channelName: '치이카와 굿즈룸',
+    handle: 'chii_goods_collector',
+    platform: 'both',
+    category: '캐릭터/키덜트',
+    allowedSlugs: ['치이카와'],
+    relevanceKeywords: ['치이카와', '먼작귀', '인형', '키링', '소품샵'],
+  },
+
+  // 7. 크리스마스 / 홈파티 / 시즌선물 분야
+  {
+    channelName: '오늘의 감성홈',
+    handle: 'home_interior_cafe',
+    platform: 'both',
+    category: '크리스마스/홈파티',
+    allowedSlugs: ['크리스마스트리', '한정판스타벅스'],
+    relevanceKeywords: ['크리스마스', '오르골', '홈파티', '연말선물', '트리', '스타벅스'],
+  },
+];
+
+// 크리에이터-상품 매칭 엄격 안전 검증기
+export function matchCreatorSafely(targetSlug: string, targetCategory: string): VerifiedCreator | null {
+  const eligible = VERIFIED_CREATORS.filter((creator) => {
+    return creator.allowedSlugs.includes(targetSlug);
+  });
+
+  if (eligible.length === 0) return null;
+  return eligible[Math.floor(Math.random() * eligible.length)];
+}
+
+// 매칭된 크리에이터 전용 댓글 및 제안문 생성기
+export function generateCreatorCommentBundle(creator: VerifiedCreator, targetProduct: any) {
+  const baseDomain = BASE_URL;
+  const ytUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=youtube`;
+  const instaUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=insta`;
+  const statsUrl = `${baseDomain}/?id=${encodeURIComponent(creator.handle)}`;
+
+  const ytComment = `안녕하세요 @${creator.handle} (${creator.channelName})님! 영상 보신 팬분들이 [${targetProduct.name}] 구매처를 정말 많이 물어보셔서, 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+
+  const instaComment = `@${creator.handle} 영상 속 [${targetProduct.name}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨`;
+
+  const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 알찬 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n콘텐츠에 소개해주신 [${targetProduct.name}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료 70% 크리에이터 지급 (업계 최고 수준)\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+
+  return {
+    creatorHandle: creator.handle,
+    creatorName: creator.channelName,
+    creatorCategory: creator.category,
+    targetProductSlug: targetProduct.slug,
+    targetProductName: targetProduct.name,
+    ytUrl,
+    instaUrl,
+    statsUrl,
+    ytComment,
+    instaComment,
+    instaDm,
+  };
+}
 
 // 1. 기존 검증된 핵심 상품 풀
 const INITIAL_TARGET_POOL = [
@@ -363,6 +566,34 @@ export async function runMarketingCycle() {
 
   // 4. 캠페인 포스팅 번들 저장 (다채널 6대 홍보 채널 자동 생성)
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
+
+  // 4-1. 유명 크리에이터 맞춤 댓글 홍보 매칭 (카테고리/제목 어울림 엄격 검증)
+  const matchedCreator = matchCreatorSafely(target.slug, target.category);
+  let creatorOutreachBundle: any = null;
+  if (matchedCreator) {
+    creatorOutreachBundle = generateCreatorCommentBundle(matchedCreator, target);
+    
+    // outreach-queue.json 에도 추가/갱신
+    try {
+      let currentOutreach: any = { targets: [] };
+      if (fs.existsSync(OUTREACH_FILE)) {
+        currentOutreach = JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8'));
+      }
+      currentOutreach.generatedAt = timestamp;
+      currentOutreach.latestAutoMatch = creatorOutreachBundle;
+      if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
+      // 중복 방지 후 선두에 추가
+      currentOutreach.targets = [
+        creatorOutreachBundle,
+        ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== matchedCreator.handle),
+      ].slice(0, 20);
+
+      fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
+    } catch (e) {
+      console.warn('Failed to update outreach queue:', e);
+    }
+  }
+
   const campaignData = {
     campaignId,
     generatedAt: timestamp,
@@ -373,6 +604,14 @@ export async function runMarketingCycle() {
     landingUrl,
     localLandingUrl: landingUrl,
     directCoupangUrl,
+    matchedCreator: creatorOutreachBundle
+      ? {
+          name: creatorOutreachBundle.creatorName,
+          handle: creatorOutreachBundle.creatorHandle,
+          category: creatorOutreachBundle.creatorCategory,
+        }
+      : null,
+    targetedCreatorOutreach: creatorOutreachBundle,
     socialPosts: {
       naverBlog: {
         title: `[솔직후기] ${target.name} 실사용 장단점 & 쿠팡 로켓배송 최저가 혜택 총정리`,
@@ -402,10 +641,19 @@ export async function runMarketingCycle() {
   fs.writeFileSync(campaignFile, JSON.stringify(campaignData, null, 2), 'utf8');
 
   // 5. 마케팅 활동 로그 기록
-  const logMessage = `[${timestamp}] [정기 사이클] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
+  const creatorLog = creatorOutreachBundle
+    ? ` | 🎯크리에이터 댓글홍보: @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${creatorOutreachBundle.creatorCategory})`
+    : '';
+  const logMessage = `[${timestamp}] [정기 사이클] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl}${creatorLog} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
   fs.appendFileSync(LOG_FILE, logMessage, 'utf8');
 
   console.log(`[${timestamp}] ✅ 마케팅 캠페인 번들 생성 완료: ${target.name} (${landingUrl})`);
+  if (creatorOutreachBundle) {
+    console.log(`[${timestamp}] 🎯 [크리에이터 맞춤 댓글 홍보 매칭] @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
+    console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment.slice(0, 80)}..."`);
+    console.log(`[${timestamp}] 💬 [인스타 댓글] "${creatorOutreachBundle.instaComment}"`);
+  }
+  return campaignData;
   return campaignData;
 }
 

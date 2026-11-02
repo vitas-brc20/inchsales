@@ -50,6 +50,8 @@ export async function GET() {
             landingUrl,
             localLandingUrl: landingUrl,
             directCoupangUrl: raw.directCoupangUrl || '',
+            matchedCreator: raw.matchedCreator || null,
+            targetedCreatorOutreach: raw.targetedCreatorOutreach ? sanitizeUrls(raw.targetedCreatorOutreach) : null,
             socialPosts: sanitizeUrls(raw.socialPosts || {}),
             systemStats: {
               totalClicks: raw.systemStats?.totalClicks || 0,

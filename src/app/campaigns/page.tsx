@@ -17,6 +17,22 @@ interface CampaignItem {
   trackingId: string;
   localLandingUrl: string;
   directCoupangUrl: string;
+  matchedCreator?: {
+    name: string;
+    handle: string;
+    category: string;
+  } | null;
+  targetedCreatorOutreach?: {
+    creatorHandle: string;
+    creatorName: string;
+    creatorCategory: string;
+    ytUrl: string;
+    instaUrl: string;
+    statsUrl: string;
+    ytComment: string;
+    instaComment: string;
+    instaDm: string;
+  } | null;
   socialPosts: {
     naverBlog?: { title: string; content: string } | string;
     youtubeShorts?: { script: string; pinnedComment: string } | string;
@@ -383,6 +399,66 @@ export default function CampaignsPage() {
                     </a>
                   </div>
                 </div>
+
+                {/* 30-min Target Creator Matched Outreach Section */}
+                {camp.targetedCreatorOutreach && (
+                  <div className="mt-4 p-3.5 rounded-xl bg-gradient-to-r from-purple-50 via-indigo-50 to-pink-50 border border-purple-200/90 shadow-2xs space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-black text-purple-950 flex items-center gap-1.5">
+                        <span>🎯 30분 사이클 타겟 크리에이터 매칭:</span>
+                        <span className="text-indigo-600 bg-white px-2 py-0.5 rounded-md border border-purple-200 font-bold">
+                          @{camp.targetedCreatorOutreach.creatorHandle} ({camp.targetedCreatorOutreach.creatorName})
+                        </span>
+                        <span className="text-[10px] text-purple-700 font-semibold bg-purple-100/70 px-1.5 py-0.5 rounded">
+                          {camp.targetedCreatorOutreach.creatorCategory} 카테고리 엄격 매칭
+                        </span>
+                      </span>
+                      <span className="text-[10px] font-mono text-purple-600 font-bold">선발급 70% ref 자동 연동</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                      {/* YouTube Comment */}
+                      <div className="bg-white p-2.5 rounded-lg border border-red-100 flex flex-col justify-between gap-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-red-900 flex items-center gap-1">
+                            <span>🎬</span> 유튜브 댓글 (고정/답글용)
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-50 hover:bg-red-100 text-red-700 transition-colors flex items-center gap-1"
+                          >
+                            {copiedKey === `yt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                            <span>{copiedKey === `yt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                          </button>
+                        </div>
+                        <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
+                          {camp.targetedCreatorOutreach.ytComment}
+                        </p>
+                      </div>
+
+                      {/* Instagram Comment */}
+                      <div className="bg-white p-2.5 rounded-lg border border-pink-100 flex flex-col justify-between gap-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-pink-900 flex items-center gap-1">
+                            <span>📸</span> 인스타그램 릴스/피드 댓글
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.instaComment || '', `insta_out_${camp.campaignId}`)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-pink-50 hover:bg-pink-100 text-pink-700 transition-colors flex items-center gap-1"
+                          >
+                            {copiedKey === `insta_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                            <span>{copiedKey === `insta_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                          </button>
+                        </div>
+                        <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
+                          {camp.targetedCreatorOutreach.instaComment}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Viral Posts Grid - 6 Major Channels */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
