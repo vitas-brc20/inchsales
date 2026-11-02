@@ -56,6 +56,7 @@ export default function Studio({ initialLinks }: StudioProps) {
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [clicksSlider, setClicksSlider] = useState(100);
   const [isCategoryManual, setIsCategoryManual] = useState(false);
+  const [targetHandle, setTargetHandle] = useState<string>('');
 
   const categories = Array.from(new Set([...STANDARD_CATEGORIES, category]));
 
@@ -579,6 +580,149 @@ export default function Studio({ initialLinks }: StudioProps) {
                         })}
                       </div>
                     </div>
+
+                    {/* Target Influencer Auto-Outreach Section */}
+                    {(() => {
+                      const activeHandle = (targetHandle.trim() || createdInfo.creatorId).replace(/^@+/, '');
+                      const ytLink = getPathUrl(createdInfo.slug, activeHandle, 'youtube');
+                      const instaLink = getPathUrl(createdInfo.slug, activeHandle, 'insta');
+                      const statsLink = `${getBaseOrigin()}?id=${encodeURIComponent(activeHandle)}`;
+                      
+                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 70% 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수수료의 70%가 @${activeHandle}님 지갑에 자동으로 누적됩니다! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)`;
+
+                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 70% 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70%가 바로 적립돼요 ✨`;
+
+                      const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! 멋진 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+
+                      return (
+                        <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/90 via-purple-50/70 to-pink-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="font-extrabold flex items-center gap-1.5 text-indigo-950 text-xs">
+                              <span>🎯</span> 타겟 크리에이터 맞춤 링크 & 협업 제안문 (댓글/DM 원클릭)
+                            </span>
+                            <span className="text-[10px] bg-indigo-600 text-white font-bold px-2 py-0.5 rounded-full shadow-2xs">
+                              선발급 ref 자동 매핑
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-indigo-900/80 leading-relaxed">
+                            유튜브나 인스타를 보다가 마음에 드는 크리에이터 계정 아이디를 입력하세요. <strong>가입을 기다리지 않고 해당 계정 전용 정산 링크를 즉시 발급</strong>하여 바로 복사 가능한 협업 제안문을 만듭니다.
+                          </p>
+
+                          <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-200">
+                            <span className="text-xs font-bold text-slate-500 pl-1">타겟 계정 @</span>
+                            <input
+                              type="text"
+                              placeholder="예: mukbang_jin, 침착맨, chuu_official"
+                              value={targetHandle}
+                              onChange={(e) => setTargetHandle(e.target.value)}
+                              className="flex-1 text-xs font-bold text-indigo-900 bg-transparent outline-none placeholder:text-slate-400"
+                            />
+                            {targetHandle && (
+                              <button
+                                type="button"
+                                onClick={() => setTargetHandle('')}
+                                className="text-[10px] text-slate-400 hover:text-slate-600 px-1"
+                              >
+                                초기화
+                              </button>
+                            )}
+                          </div>
+
+                          <div className="space-y-2">
+                            {/* YouTube Comment */}
+                            <div className="bg-white p-3 rounded-xl border border-red-100 shadow-2xs space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
+                                  <span>🎬</span> 유튜브 댓글 제안문 (고정댓글/답글용)
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(ytComment, 'outreach_yt')}
+                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    copiedType === 'outreach_yt'
+                                      ? 'bg-red-600 text-white'
+                                      : 'bg-red-50 hover:bg-red-100 text-red-700'
+                                  }`}
+                                >
+                                  {copiedType === 'outreach_yt' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                  <span>{copiedType === 'outreach_yt' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                </button>
+                              </div>
+                              <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
+                                {ytComment}
+                              </pre>
+                            </div>
+
+                            {/* Instagram Comment */}
+                            <div className="bg-white p-3 rounded-xl border border-pink-100 shadow-2xs space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
+                                  <span>📸</span> 인스타그램 릴스/피드 댓글 제안문
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(instaComment, 'outreach_insta')}
+                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    copiedType === 'outreach_insta'
+                                      ? 'bg-pink-600 text-white'
+                                      : 'bg-pink-50 hover:bg-pink-100 text-pink-700'
+                                  }`}
+                                >
+                                  {copiedType === 'outreach_insta' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                  <span>{copiedType === 'outreach_insta' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                </button>
+                              </div>
+                              <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
+                                {instaComment}
+                              </pre>
+                            </div>
+
+                            {/* Instagram DM Full Letter */}
+                            <div className="bg-white p-3 rounded-xl border border-indigo-100 shadow-2xs space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
+                                  <span>📩</span> 인스타그램 협업 제안 DM 전문
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(instaDm, 'outreach_dm')}
+                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    copiedType === 'outreach_dm'
+                                      ? 'bg-indigo-600 text-white'
+                                      : 'bg-indigo-50 hover:bg-indigo-100 text-indigo-700'
+                                  }`}
+                                >
+                                  {copiedType === 'outreach_dm' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                  <span>{copiedType === 'outreach_dm' ? '복사됨!' : 'DM 전문 복사'}</span>
+                                </button>
+                              </div>
+                              <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed max-h-36 overflow-y-auto select-all">
+                                {instaDm}
+                              </pre>
+                            </div>
+
+                            {/* Creator Dashboard Direct Link */}
+                            <div className="bg-white/80 p-2.5 rounded-lg border border-indigo-100 flex items-center justify-between text-[11px]">
+                              <span className="text-slate-600 font-medium">
+                                📊 크리에이터 실시간 정산 확인 링크:
+                              </span>
+                              <div className="flex items-center gap-1.5">
+                                <code className="text-indigo-700 font-mono text-[10px] bg-indigo-50 px-1.5 py-0.5 rounded">
+                                  ?id={activeHandle}
+                                </code>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(statsLink, 'outreach_stats')}
+                                  className="px-2 py-0.5 rounded bg-indigo-100 hover:bg-indigo-200 text-indigo-900 font-bold text-[10px] transition-colors"
+                                >
+                                  {copiedType === 'outreach_stats' ? '복사됨' : '복사'}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
 
                     {/* FTC & Anti-Spam Compliance Guidelines */}
                     <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/80 text-[11px] text-amber-950 space-y-2">
