@@ -227,14 +227,15 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     relevanceKeywords: ['피부과', '치아미백', '블랙헤드', '모공청소'],
   },
   {
-    channelName: '덴탈 홈케어 일상',
-    handle: 'dental_homecare',
+    channelName: '유경쌤의 미소학개론',
+    handle: '미소학개론',
+    youtubeHandle: '미소학개론',
     tier: 'micro',
-    searchKeyword: '치과위생사 치아미백 뷰센28 솔직후기',
+    searchKeyword: '미소학개론 치과의사 미백템 치아미백',
     platform: 'all',
     category: '스킨케어/덴탈',
     allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
-    relevanceKeywords: ['치아미백', '미백치약', '뷰센', '구강관리'],
+    relevanceKeywords: ['치아미백', '미백치약', '뷰센', '구강관리', '미소학개론'],
   },
 
   // 4. IT / 테크 / 전자기기 분야 (애플 정품, 음향기기만 엄격 매핑)
@@ -582,12 +583,12 @@ export function generateCreatorCommentBundle(
 }
 
 /**
- * YouTube 검색 결과에서 가장 최신의 실제 첫 번째 영상(/watch?v=...)과 제목을 자동 추출합니다.
- * (단순 검색 결과 페이지 대신 100% 실제 영상 시청 페이지 직행 및 영상 제목 정밀 인용 보장)
+ * YouTube 검색 결과에서 가장 최신의 실제 첫 번째 영상(/watch?v=...)과 실제 채널명/핸들을 자동 추출합니다.
+ * (단순 검색 결과 페이지 대신 100% 실제 영상 시청 페이지 직행 및 영상 제목/실제 크리에이터 핸들 정밀 인용 보장)
  */
 export async function resolveFirstYouTubeVideo(
   query: string
-): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string } | null> {
+): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string; channelName?: string; channelHandle?: string } | null> {
   try {
     const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
     const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
@@ -598,14 +599,28 @@ export async function resolveFirstYouTubeVideo(
     const videoId = match[1];
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
-    // 실제 첫 영상 제목 파싱 시도
+    // 실제 첫 영상 제목 및 채널 정보 파싱 시도
     let videoTitle: string | undefined;
+    let channelName: string | undefined;
+    let channelHandle: string | undefined;
+
     try {
-      const titleCmd = `curl -s -L --max-time 4 -A "Mozilla/5.0" "${videoUrl}" | grep -o "<title>[^<]*</title>" | head -n 1`;
-      const { stdout: tOut } = await execAsync(titleCmd);
+      const titleCmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36" "${videoUrl}"`;
+      const { stdout: tOut } = await execAsync(titleCmd, { maxBuffer: 10 * 1024 * 1024 });
+
       const titleMatch = tOut.match(/<title>([^<]+)<\/title>/);
       if (titleMatch && titleMatch[1]) {
         videoTitle = titleMatch[1].replace(/\s*-\s*YouTube\s*$/i, '').trim();
+      }
+
+      const authorMatch = tOut.match(/"author":"([^"]+)"/);
+      if (authorMatch && authorMatch[1]) {
+        channelName = authorMatch[1].trim();
+      }
+
+      const handleMatch = tOut.match(/"canonicalBaseUrl":"\/@([^"]+)"/) || tOut.match(/"\/@([^"/]+)"/);
+      if (handleMatch && handleMatch[1]) {
+        channelHandle = decodeURIComponent(handleMatch[1].split('/')[0]).trim();
       }
     } catch {}
 
@@ -613,6 +628,8 @@ export async function resolveFirstYouTubeVideo(
       videoId,
       videoUrl,
       videoTitle,
+      channelName,
+      channelHandle,
     };
   } catch (err) {
     console.warn('resolveFirstYouTubeVideo error:', err);
@@ -984,8 +1001,16 @@ export async function runMarketingCycle() {
       const cleanProductName = target.name.replace(/\(.*\)/g, '').trim();
       const ytQuery = `${matchedCreator.channelName} ${cleanProductName}`;
       resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
-      if (resolvedVideo?.videoTitle) {
-        console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
+      if (resolvedVideo) {
+        // [핵심] 영상 시청 페이지에서 파싱된 실제 크리에이터 핸들과 채널명으로 즉시 갱신!
+        if (resolvedVideo.channelHandle) {
+          matchedCreator.handle = resolvedVideo.channelHandle;
+          matchedCreator.youtubeHandle = resolvedVideo.channelHandle;
+        }
+        if (resolvedVideo.channelName) {
+          matchedCreator.channelName = resolvedVideo.channelName;
+        }
+        console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] 채널: @${matchedCreator.handle} (${matchedCreator.channelName}) / 영상: "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
       }
     }
 
