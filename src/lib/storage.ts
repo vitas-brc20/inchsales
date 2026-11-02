@@ -563,6 +563,14 @@ export function upsertProduct(payload: {
   return newProduct;
 }
 
+export function normalizeCreatorHandle(handle?: string | null): string {
+  if (!handle) return 'anonymous';
+  const trimmed = handle.trim();
+  // 골뱅이(@)를 제거한 순수 핸들 (한글, 영문, 숫자, 하이픈, 언더바 허용)
+  const clean = trimmed.replace(/^@+/, '').replace(/[^a-zA-Z0-9_\-\uAC00-\uD7A3]/g, '');
+  return clean || 'anonymous';
+}
+
 export function normalizeChannel(raw?: string): string {
   if (!raw) return 'general';
   const c = raw.trim().toLowerCase();
@@ -616,7 +624,7 @@ export function recordReferralClick(slugOrQuery: string, creatorId: string, chan
     product = upsertProduct({ name: slugOrQuery });
   }
 
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'anonymous';
+  const safeCreator = normalizeCreatorHandle(creatorId);
   const channel = normalizeChannel(channelInput);
   const statKey = `${safeCreator}:${product.slug}`;
 
@@ -747,9 +755,9 @@ export async function getWithdrawalsByCreatorAsync(creatorId: string): Promise<W
 
 export function getWithdrawalsByCreator(creatorId: string): WithdrawalRequest[] {
   const withdrawals = readWithdrawals();
-  const safeCreator = (creatorId || '').replace(/[^a-zA-Z0-9_-]/g, '');
+  const safeCreator = normalizeCreatorHandle(creatorId);
   return Object.values(withdrawals)
-    .filter((w) => w.creatorId === safeCreator)
+    .filter((w) => normalizeCreatorHandle(w.creatorId) === safeCreator)
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 }
 
@@ -837,7 +845,7 @@ export function createProductLink(payload: CreateLinkPayload): ProductLink {
     customSlug: payload.customSlug,
   });
 
-  const creatorId = (payload.creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'creator';
+  const creatorId = normalizeCreatorHandle(payload.creatorId);
   const channel = normalizeChannel(payload.channel);
 
   const subId = channel && channel !== 'general'
@@ -881,5 +889,65 @@ export function recordClick(slug: string, creatorId?: string, channelInput?: str
     priceHint: res.product.priceHint,
     channelStats: res.creatorStat.channelStats,
     createdAt: res.product.createdAt,
+  };
+}
+
+export interface CreatorOverview {
+  creatorId: string;
+  totalClicks: number;
+  totalEarnings: number;
+  withdrawableEarnings: number;
+  withdrawnAmount: number;
+  links: Array<{
+    slug: string;
+    productName: string;
+    clicks: number;
+    estimatedEarnings: number;
+    lastClickAt?: string;
+  }>;
+}
+
+export function getCreatorOverview(handle: string): CreatorOverview {
+  const norm = normalizeCreatorHandle(handle);
+  const stats = readStats();
+  const withdrawals = readWithdrawals();
+
+  let totalClicks = 0;
+  let totalEarnings = 0;
+  const links: CreatorOverview['links'] = [];
+
+  for (const stat of Object.values(stats)) {
+    const statNorm = normalizeCreatorHandle(stat.creatorId);
+    if (statNorm === norm || stat.creatorId === handle || stat.creatorId === `@${norm}`) {
+      totalClicks += stat.clicks;
+      totalEarnings += stat.estimatedEarnings;
+      links.push({
+        slug: stat.slug,
+        productName: stat.productName,
+        clicks: stat.clicks,
+        estimatedEarnings: stat.estimatedEarnings,
+        lastClickAt: stat.lastClickAt,
+      });
+    }
+  }
+
+  // 출금 완료 및 신청 중 금액 계산
+  let withdrawnAmount = 0;
+  for (const w of Object.values(withdrawals)) {
+    const wNorm = normalizeCreatorHandle(w.creatorId);
+    if (wNorm === norm || w.creatorId === handle) {
+      withdrawnAmount += w.amount;
+    }
+  }
+
+  const withdrawableEarnings = Math.max(0, totalEarnings - withdrawnAmount);
+
+  return {
+    creatorId: norm,
+    totalClicks,
+    totalEarnings,
+    withdrawableEarnings,
+    withdrawnAmount,
+    links,
   };
 }

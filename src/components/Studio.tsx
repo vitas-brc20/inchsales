@@ -87,7 +87,7 @@ export default function Studio({ initialLinks }: StudioProps) {
     setLoading(true);
 
     try {
-      const activeCreator = creatorId.trim() || 'creator_' + Math.floor(Math.random() * 8999 + 1000);
+      const activeCreator = (creatorId.trim().replace(/^@+/, '')) || 'creator_' + Math.floor(Math.random() * 8999 + 1000);
       const res = await fetch('/api/links', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
