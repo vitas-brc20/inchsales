@@ -1,5 +1,6 @@
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
+import { isCDPAvailable, postYouTubeCommentViaCDP } from './cdp-automation';
 
 const execAsync = promisify(exec);
 
@@ -28,12 +29,12 @@ function copyToMacClipboard(text: string): Promise<void> {
 
 /**
  * 사용자가 이미 로그인해 둔 로컬 Chrome 브라우저를 백그라운드로 안전하게 연동합니다.
- * - [중요] activate 및 화면 전환 강탈을 완전히 제거하여, 작업 중인 모니터/스페이스가 휙휙 바뀌지 않습니다.
- * - macOS 'open -g' 플래그를 통해 사용자의 작업 흐름을 1%도 방해하지 않는 완전 무간섭 백그라운드 실행을 보장합니다.
+ * - [우선순위 1] Chrome 원격 디버깅 포트(9222)가 켜져 있으면, 화면 간섭 0%로 실제 댓글 작성 및 [댓글] 등록 버튼까지 100% 무인 자동 완료
+ * - [우선순위 2] 미연결 시 백그라운드 탭 열기 & 클립보드 복사(반자동) 안전 폴백
  */
 export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promise<{
   success: boolean;
-  method: 'BACKGROUND_CHROME' | 'SILENT_QUEUE' | 'FALLBACK_OPEN';
+  method: 'CDP_FULL_AUTO' | 'BACKGROUND_CHROME' | 'SILENT_QUEUE' | 'FALLBACK_OPEN';
   details: string;
 }> {
   try {
@@ -41,6 +42,26 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
 
     // 1. 맥OS 클립보드에 댓글 텍스트 100% 안전 복사 (spawn pbcopy)
     await copyToMacClipboard(task.commentText);
+
+    // 2. [CDP 완전 자동화 시도] 포트 9222 활성화 상태인지 실시간 점검
+    const cdpReady = await isCDPAvailable();
+    if (cdpReady && task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
+      const cdpRes = await postYouTubeCommentViaCDP(task.targetUrl, task.commentText);
+      if (cdpRes.success) {
+        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
+        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
+        const notifScript = `
+          display notification "댓글 자동 등록 완료!" with title "✅ [CDP 무인 완료] @${cleanHandle}" subtitle "${cleanProduct}"
+        `;
+        await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
+
+        return {
+          success: true,
+          method: 'CDP_FULL_AUTO',
+          details: `[CDP 100% 무인 전송] @${task.creatorHandle} 첫 영상에 댓글 입력 및 등록 버튼 클릭까지 무인 완료!`,
+        };
+      }
+    }
 
     if (isSilent) {
       return {
@@ -50,27 +71,25 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
       };
     }
 
-    // 2. Google Chrome에 완전 백그라운드(-g) 새 탭으로 타깃 URL 열기 (화면 전환 및 포커스 탈취 0%)
-    // -g 플래그: Do not bring the application to the foreground
+    // 3. Google Chrome에 완전 백그라운드(-g) 새 탭으로 타깃 URL 열기 (화면 전환 및 포커스 탈취 0%)
     try {
       await execAsync(`open -g -a "Google Chrome" "${task.targetUrl}"`);
     } catch {
-      // Chrome 지정 실패 시 기본 브라우저 백그라운드 오픈
       await execAsync(`open -g "${task.targetUrl}"`);
     }
 
-    // 3. 저방해 맥OS 시스템 알림 배너 (작업 방해 없는 조용한 안내)
+    // 4. 저방해 맥OS 시스템 알림 배너
     const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
     const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
     const notifScript = `
-      display notification "백그라운드 탭 준비 완료 (화면 유지)! Cmd+V 로 등록 가능" with title "🎯 [${task.platform.toUpperCase()}] @${cleanHandle}" subtitle "${cleanProduct}"
+      display notification "백그라운드 탭 준비 완료! Cmd+V 로 등록 가능" with title "🎯 [${task.platform.toUpperCase()}] @${cleanHandle}" subtitle "${cleanProduct}"
     `;
     await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
     return {
       success: true,
       method: 'BACKGROUND_CHROME',
-      details: `[백그라운드 무간섭 모드] 작업 화면 유지한 채 @${task.creatorHandle} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료`,
+      details: `[백그라운드 반자동 모드] @${task.creatorHandle} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료 (CDP 미연결 상태)`,
     };
   } catch (err: any) {
     try {
