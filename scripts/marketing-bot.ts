@@ -50,7 +50,7 @@ const AUTO_DISCOVERY_QUEUE = [
     description: '구하기 하늘의 별 따기였던 카다이프 피스타치오 쫀득 쿠키! 지금 쿠팡 로켓배송으로 품절 전 주문 가능합니다.',
   },
   {
-    slug: '단백질음료',
+    slug: '굽네닭가슴살',
     name: '굽네 오븐구이 통 닭가슴살 40팩',
     category: '헬스/단백질',
     priceHint: '38,900원 (팩당 970원대 특가)',
