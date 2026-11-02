@@ -27,7 +27,19 @@ export async function GET() {
           const landingUrl = (raw.landingUrl || raw.localLandingUrl || raw.directLandingUrl || `https://inchsales.vercel.app/p/${encodeURIComponent(targetSlug)}?ref=pub_${campaignId}`)
             .replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
 
-          const replaceLocalhost = (str: string) => (str || '').replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+          const sanitizeUrls = (val: any): any => {
+            if (typeof val === 'string') {
+              return val.replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+            }
+            if (val && typeof val === 'object') {
+              const res: Record<string, any> = {};
+              for (const [k, v] of Object.entries(val)) {
+                res[k] = sanitizeUrls(v);
+              }
+              return res;
+            }
+            return val;
+          };
 
           return {
             campaignId,
@@ -38,12 +50,7 @@ export async function GET() {
             landingUrl,
             localLandingUrl: landingUrl,
             directCoupangUrl: raw.directCoupangUrl || '',
-            socialPosts: {
-              threads: replaceLocalhost(raw.socialPosts?.threads),
-              twitterX: replaceLocalhost(raw.socialPosts?.twitterX),
-              instagramCaption: replaceLocalhost(raw.socialPosts?.instagramCaption || raw.socialPosts?.instagramStoryText),
-              kakaoTalkShare: replaceLocalhost(raw.socialPosts?.kakaoTalkShare),
-            },
+            socialPosts: sanitizeUrls(raw.socialPosts || {}),
             systemStats: {
               totalClicks: raw.systemStats?.totalClicks || 0,
               totalWithdrawals: raw.systemStats?.totalWithdrawals || 0,

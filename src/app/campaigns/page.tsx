@@ -18,10 +18,14 @@ interface CampaignItem {
   localLandingUrl: string;
   directCoupangUrl: string;
   socialPosts: {
-    threads: string;
-    twitterX: string;
-    instagramCaption: string;
-    kakaoTalkShare: string;
+    naverBlog?: { title: string; content: string } | string;
+    youtubeShorts?: { script: string; pinnedComment: string } | string;
+    community?: { title: string; content: string } | string;
+    telegramChannel?: string;
+    threads?: string;
+    twitterX?: string;
+    instagramCaption?: string;
+    kakaoTalkShare?: string;
   };
   systemStats: {
     totalClicks: number;
@@ -148,6 +152,24 @@ export default function CampaignsPage() {
     setTimeout(() => setCopiedKey(null), 2000);
   };
 
+  const getBlogText = (post?: { title: string; content: string } | string) => {
+    if (!post) return '';
+    if (typeof post === 'string') return post;
+    return `[제목] ${post.title}\n\n${post.content}`;
+  };
+
+  const getYoutubeText = (post?: { script: string; pinnedComment: string } | string) => {
+    if (!post) return '';
+    if (typeof post === 'string') return post;
+    return `🎬 [15초 숏폼 영상 대본]\n${post.script}\n\n📌 [고정 댓글]\n${post.pinnedComment}`;
+  };
+
+  const getCommunityText = (post?: { title: string; content: string } | string) => {
+    if (!post) return '';
+    if (typeof post === 'string') return post;
+    return `[제목] ${post.title}\n\n${post.content}`;
+  };
+
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center font-sans">
@@ -256,6 +278,62 @@ export default function CampaignsPage() {
           </div>
         </div>
 
+        {/* Multi-Channel Distribution Status Banner */}
+        <div className="mb-8 p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <span>🌐 가동 중인 6대 공식 다채널 홍보 엔진</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                  30분 주기 자동 생성 중
+                </span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                채널별(블로그, 숏폼, 커뮤니티, 메신저 등) 최적화된 바이럴 카피와 실시간 성과 추적 파라미터(&amp;ch=...)가 자동 발급됩니다.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+            <div className="p-3 rounded-2xl bg-emerald-50/50 border border-emerald-100 flex flex-col justify-between">
+              <span className="text-xl mb-1">📝</span>
+              <span className="text-xs font-black text-slate-900">네이버 블로그</span>
+              <span className="text-[10px] text-slate-500">SEO 후기 &amp; 정보성 원고</span>
+              <span className="text-[9px] font-mono text-emerald-700 font-bold mt-1">&amp;ch=blog</span>
+            </div>
+            <div className="p-3 rounded-2xl bg-rose-50/50 border border-rose-100 flex flex-col justify-between">
+              <span className="text-xl mb-1">🎬</span>
+              <span className="text-xs font-black text-slate-900">유튜브 쇼츠 &amp; 틱톡</span>
+              <span className="text-[10px] text-slate-500">15초 영상 대본 &amp; 고정댓글</span>
+              <span className="text-[9px] font-mono text-rose-700 font-bold mt-1">&amp;ch=youtube</span>
+            </div>
+            <div className="p-3 rounded-2xl bg-purple-50/50 border border-purple-100 flex flex-col justify-between">
+              <span className="text-xl mb-1">⚡</span>
+              <span className="text-xs font-black text-slate-900">핫딜 커뮤니티</span>
+              <span className="text-[10px] text-slate-500">뽐뿌·펨코·당근마켓</span>
+              <span className="text-[9px] font-mono text-purple-700 font-bold mt-1">&amp;ch=community</span>
+            </div>
+            <div className="p-3 rounded-2xl bg-amber-50/50 border border-amber-100 flex flex-col justify-between">
+              <span className="text-xl mb-1">📢</span>
+              <span className="text-xs font-black text-slate-900">카톡 &amp; 텔레그램</span>
+              <span className="text-[10px] text-slate-500">오픈채팅 실시간 특가알림</span>
+              <span className="text-[9px] font-mono text-amber-700 font-bold mt-1">&amp;ch=kakao</span>
+            </div>
+            <div className="p-3 rounded-2xl bg-pink-50/50 border border-pink-100 flex flex-col justify-between">
+              <span className="text-xl mb-1">📸</span>
+              <span className="text-xs font-black text-slate-900">인스타그램</span>
+              <span className="text-[10px] text-slate-500">릴스 캡션 &amp; 스토리 스티커</span>
+              <span className="text-[9px] font-mono text-pink-700 font-bold mt-1">&amp;ch=insta</span>
+            </div>
+            <div className="p-3 rounded-2xl bg-slate-100/70 border border-slate-200 flex flex-col justify-between">
+              <span className="text-xl mb-1">🧵</span>
+              <span className="text-xs font-black text-slate-900">스레드 &amp; 𝕏</span>
+              <span className="text-[10px] text-slate-500">바이럴 썰 &amp; 숏폼 피드</span>
+              <span className="text-[9px] font-mono text-slate-800 font-bold mt-1">&amp;ch=threads</span>
+            </div>
+          </div>
+        </div>
+
         {/* Campaign List */}
         {campaigns.length === 0 ? (
           <div className="p-12 text-center bg-white rounded-3xl border border-slate-200">
@@ -306,62 +384,125 @@ export default function CampaignsPage() {
                   </div>
                 </div>
 
-                {/* Viral Posts Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                  {/* Threads Post */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                {/* Viral Posts Grid - 6 Major Channels */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                  {/* 1. Naver Blog / Cafe */}
+                  <div className="p-4 rounded-2xl bg-emerald-50/30 border border-emerald-100 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                          <span>🧵 Threads (스레드) 바이럴 본문</span>
+                        <span className="text-xs font-black text-emerald-950 flex items-center gap-1">
+                          <span>📝 네이버 블로그/카페 포스팅 원고</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-emerald-700 bg-emerald-100/70 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=blog
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts?.threads || ''}
+                        {getBlogText(camp.socialPosts?.naverBlog) || '블로그 원고 자동 생성 완료'}
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-slate-200/60">
+                    <div className="pt-3 mt-3 border-t border-emerald-100">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts?.threads || '', `${camp.campaignId}_threads`)}
-                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                        onClick={() => handleCopy(getBlogText(camp.socialPosts?.naverBlog), `${camp.campaignId}_blog`)}
+                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                       >
-                        {copiedKey === `${camp.campaignId}_threads` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedKey === `${camp.campaignId}_threads` ? '복사 완료!' : '스레드 본문 복사'}</span>
+                        {copiedKey === `${camp.campaignId}_blog` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedKey === `${camp.campaignId}_blog` ? '복사 완료!' : '블로그 포스팅 복사'}</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Twitter / X Post */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                  {/* 2. YouTube Shorts / TikTok */}
+                  <div className="p-4 rounded-2xl bg-rose-50/30 border border-rose-100 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                          <span>𝕏 트위터/X 빠른 공유</span>
+                        <span className="text-xs font-black text-rose-950 flex items-center gap-1">
+                          <span>🎬 유튜브 쇼츠 / 틱톡 대본 &amp; 댓글</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-rose-700 bg-rose-100/70 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=youtube
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts?.twitterX || ''}
+                        {getYoutubeText(camp.socialPosts?.youtubeShorts) || '쇼츠 대본 자동 생성 완료'}
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-slate-200/60">
+                    <div className="pt-3 mt-3 border-t border-rose-100">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts?.twitterX || '', `${camp.campaignId}_x`)}
-                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                        onClick={() => handleCopy(getYoutubeText(camp.socialPosts?.youtubeShorts), `${camp.campaignId}_yt`)}
+                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-rose-50 border border-rose-200 text-rose-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                       >
-                        {copiedKey === `${camp.campaignId}_x` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedKey === `${camp.campaignId}_x` ? '복사 완료!' : 'X 포스팅 복사'}</span>
+                        {copiedKey === `${camp.campaignId}_yt` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedKey === `${camp.campaignId}_yt` ? '복사 완료!' : '쇼츠 대본+댓글 복사'}</span>
                       </button>
                     </div>
                   </div>
 
-                  {/* Instagram Story / Caption */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                  {/* 3. Hot Deals Community */}
+                  <div className="p-4 rounded-2xl bg-purple-50/30 border border-purple-100 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                          <span>📸 인스타그램 스토리/피드 캡션</span>
+                        <span className="text-xs font-black text-purple-950 flex items-center gap-1">
+                          <span>⚡ 뽐뿌·펨코·당근 핫딜 포맷</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-purple-700 bg-purple-100/70 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=community
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
+                        {getCommunityText(camp.socialPosts?.community) || '커뮤니티 핫딜 자동 생성 완료'}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 mt-3 border-t border-purple-100">
+                      <button
+                        onClick={() => handleCopy(getCommunityText(camp.socialPosts?.community), `${camp.campaignId}_community`)}
+                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-purple-50 border border-purple-200 text-purple-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                      >
+                        {copiedKey === `${camp.campaignId}_community` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedKey === `${camp.campaignId}_community` ? '복사 완료!' : '커뮤니티 핫딜 복사'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 4. KakaoTalk & Telegram Alert */}
+                  <div className="p-4 rounded-2xl bg-amber-50/30 border border-amber-100 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-black text-amber-950 flex items-center gap-1">
+                          <span>📢 카톡 단톡방 &amp; 텔레그램 알림</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=kakao
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
+                        {camp.socialPosts?.telegramChannel || camp.socialPosts?.kakaoTalkShare || ''}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 mt-3 border-t border-amber-100">
+                      <button
+                        onClick={() => handleCopy(camp.socialPosts?.telegramChannel || camp.socialPosts?.kakaoTalkShare || '', `${camp.campaignId}_kakao`)}
+                        className="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black transition-colors flex items-center justify-center gap-1.5"
+                      >
+                        {copiedKey === `${camp.campaignId}_kakao` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedKey === `${camp.campaignId}_kakao` ? '복사 완료!' : '실시간 알림톡 복사'}</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* 5. Instagram Story / Caption */}
+                  <div className="p-4 rounded-2xl bg-pink-50/30 border border-pink-100 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-black text-pink-950 flex items-center gap-1">
+                          <span>📸 인스타그램 릴스/스토리 캡션</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-pink-700 bg-pink-100/70 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=insta
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
@@ -369,10 +510,10 @@ export default function CampaignsPage() {
                       </p>
                     </div>
 
-                    <div className="pt-3 mt-3 border-t border-slate-200/60">
+                    <div className="pt-3 mt-3 border-t border-pink-100">
                       <button
                         onClick={() => handleCopy(camp.socialPosts?.instagramCaption || '', `${camp.campaignId}_insta`)}
-                        className="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-pink-50 border border-pink-200 text-pink-900 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                       >
                         {copiedKey === `${camp.campaignId}_insta` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                         <span>{copiedKey === `${camp.campaignId}_insta` ? '복사 완료!' : '인스타 캡션 복사'}</span>
@@ -380,26 +521,29 @@ export default function CampaignsPage() {
                     </div>
                   </div>
 
-                  {/* KakaoTalk Share */}
-                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col justify-between">
+                  {/* 6. Threads & X */}
+                  <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-black text-slate-800 flex items-center gap-1">
-                          <span>💬 카카오톡 단톡방 공유용</span>
+                          <span>🧵 Threads &amp; 𝕏 바이럴 피드</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-700 bg-slate-200/80 px-1.5 py-0.5 rounded font-bold">
+                          &amp;ch=threads
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts?.kakaoTalkShare || ''}
+                        {camp.socialPosts?.threads || camp.socialPosts?.twitterX || ''}
                       </p>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-slate-200/60">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts?.kakaoTalkShare || '', `${camp.campaignId}_kakao`)}
-                        className="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black transition-colors flex items-center justify-center gap-1.5"
+                        onClick={() => handleCopy(camp.socialPosts?.threads || camp.socialPosts?.twitterX || '', `${camp.campaignId}_threads`)}
+                        className="w-full py-2 px-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5 shadow-xs"
                       >
-                        {copiedKey === `${camp.campaignId}_kakao` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{copiedKey === `${camp.campaignId}_kakao` ? '복사 완료!' : '카톡 공유문구 복사'}</span>
+                        {copiedKey === `${camp.campaignId}_threads` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        <span>{copiedKey === `${camp.campaignId}_threads` ? '복사 완료!' : '스레드/X 복사'}</span>
                       </button>
                     </div>
                   </div>

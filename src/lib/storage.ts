@@ -571,7 +571,8 @@ export function normalizeChannel(raw?: string): string {
   if (['youtube', 'yt', 'shorts'].includes(c)) return 'youtube';
   if (['threads', 'th', 'twitter', 'x'].includes(c)) return 'threads';
   if (['blog', 'cafe', 'naver'].includes(c)) return 'blog';
-  if (['kakao', 'kakaotalk', 'chat'].includes(c)) return 'kakao';
+  if (['kakao', 'kakaotalk', 'chat', 'telegram'].includes(c)) return 'kakao';
+  if (['community', 'fmkorea', 'ppomppu', 'clien', 'daangn', 'dc'].includes(c)) return 'community';
   return 'general';
 }
 
