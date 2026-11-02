@@ -175,6 +175,17 @@ const INITIAL_PRODUCTS: Record<string, ProductItem> = {
     totalClicks: 56,
     createdAt: new Date().toISOString(),
   },
+  '치이카와': {
+    slug: '치이카와',
+    name: '치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션',
+    category: '캐릭터/완구',
+    tagline: 'SNS 품절 대란! 말랑쫀득 심쿵 비주얼 치이카와 먼작귀 빅사이즈 인형 쿠션',
+    queryOrUrl: 'https://link.coupang.com/a/ifZPWVBdHE',
+    priceHint: '18,900원 (SNS 품절대란 먼작귀 모찌 쿠션 로켓배송)',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/vendor_inventory/a933/bceb3ea0f058cfeb774e1d51a660a5d21469e7f82e1858a2e1d7494a44a1.jpg',
+    totalClicks: 64,
+    createdAt: new Date().toISOString(),
+  },
 };
 
 const INITIAL_STATS: Record<string, CreatorStat> = {

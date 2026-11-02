@@ -279,6 +279,13 @@ export default function Studio({ initialLinks }: StudioProps) {
                     >
                       🍏 Apple 에어팟
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectPreset('치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션', '캐릭터/완구', 'SNS 품절 대란! 말랑쫀득 심쿵 비주얼 치이카와 먼작귀 빅사이즈 인형 쿠션', '18,900원')}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-yellow-50 hover:bg-yellow-100 text-yellow-900 border border-yellow-200 transition-colors font-bold flex items-center gap-1 shadow-xs"
+                    >
+                      🧸 치이카와 인형
+                    </button>
                   </div>
                 </div>
 

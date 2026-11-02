@@ -181,6 +181,18 @@ const AUTO_DISCOVERY_QUEUE = [
     hook: '🍏 [Apple특가] 액티브 노이즈 캔슬링 탑재! Apple 정품 에어팟 카드할인 특가 로켓배송',
     description: '주변 소음을 마법처럼 지워주는 역대급 노이즈 캔슬링! 쿠팡 공식 Apple 브랜드관에서 내일 아침 바로 받으세요.',
   },
+  {
+    slug: '치이카와',
+    name: '치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션',
+    category: '캐릭터/완구',
+    priceHint: '18,900원 (SNS 품절대란 먼작귀 모찌 쿠션 로켓배송)',
+    shortUrl: 'https://link.coupang.com/a/ifZPWVBdHE',
+    queryOrUrl: 'https://link.coupang.com/a/ifZPWVBdHE',
+    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/vendor_inventory/a933/bceb3ea0f058cfeb774e1d51a660a5d21469e7f82e1858a2e1d7494a44a1.jpg',
+    tagline: 'SNS 품절 대란! 말랑쫀득 심쿵 비주얼 치이카와 먼작귀 빅사이즈 인형 쿠션',
+    hook: '🧸 [심쿵주의] SNS 품절 대란! 말랑쫀득 치이카와 빅사이즈 모찌 인형 쿠션 특가',
+    description: '압도적인 귀여움과 폭신폭신한 촉감! 침대 위 힐링템이자 인테리어 포인트로 완벽한 치이카와 정품 쿠션입니다.',
+  },
 ];
 
 // 로컬 파일에서 상품 읽기
