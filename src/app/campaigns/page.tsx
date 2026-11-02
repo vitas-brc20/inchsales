@@ -55,9 +55,9 @@ export default function CampaignsPage() {
     const isLocalhost = typeof window !== 'undefined' && 
       (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-    if (savedPin === '7777' || isLocalhost) {
+    if (savedPin === 'qwer1234!' || isLocalhost) {
       setIsAuthorized(true);
-      fetchKeys(savedPin || '7777');
+      fetchKeys(savedPin || 'qwer1234!');
       fetchCampaigns();
     }
     setCheckingAuth(false);
@@ -65,14 +65,14 @@ export default function CampaignsPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (pinInput.trim() === '7777') {
-      localStorage.setItem('inch_admin_pin', '7777');
+    if (pinInput.trim() === 'qwer1234!') {
+      localStorage.setItem('inch_admin_pin', 'qwer1234!');
       setIsAuthorized(true);
       setAuthError('');
-      fetchKeys('7777');
+      fetchKeys('qwer1234!');
       fetchCampaigns();
     } else {
-      setAuthError('올바른 관리자 PIN 번호를 입력해주세요. (기본: 7777)');
+      setAuthError('올바른 관리자 비밀번호를 입력해주세요.');
     }
   };
 
@@ -116,7 +116,7 @@ export default function CampaignsPage() {
     setSavingKeys(true);
     setSaveMessage('');
 
-    const pin = localStorage.getItem('inch_admin_pin') || '7777';
+    const pin = localStorage.getItem('inch_admin_pin') || 'qwer1234!';
 
     try {
       const res = await fetch('/api/coupang/keys', {
@@ -171,12 +171,12 @@ export default function CampaignsPage() {
 
           <form onSubmit={handleLogin} className="mt-6 space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">관리자 인증 PIN</label>
+              <label className="block text-xs font-semibold text-slate-300 mb-1.5">관리자 인증 비밀번호</label>
               <input
                 type="password"
                 value={pinInput}
                 onChange={(e) => setPinInput(e.target.value)}
-                placeholder="PIN 번호를 입력하세요"
+                placeholder="비밀번호를 입력하세요"
                 autoFocus
                 className="w-full px-4 py-3 bg-slate-950 border border-slate-700 rounded-xl text-center text-lg font-mono tracking-widest text-white outline-none focus:border-blue-500"
               />

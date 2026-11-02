@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCoupangConfig, setCoupangApiKeys } from '@/lib/coupang';
 
-const ADMIN_PIN = process.env.ADMIN_PIN || '7777';
+const ADMIN_PIN = process.env.ADMIN_PIN || 'qwer1234!';
 
 function isAuthorized(request: Request): boolean {
   // Check authorization header, custom header, or url query
