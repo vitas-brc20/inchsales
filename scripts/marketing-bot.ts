@@ -22,6 +22,8 @@ const OUTREACH_FILE = path.join(process.cwd(), 'logs', 'outreach-queue.json');
 export interface VerifiedCreator {
   channelName: string;
   handle: string;
+  youtubeHandle?: string;
+  searchKeyword: string;
   platform: 'youtube' | 'insta' | 'tiktok' | 'all';
   category: '먹방/디저트' | '뷰티/헤어' | '스킨케어/덴탈' | 'IT/테크' | '헬스/식단' | '캐릭터/키덜트' | '크리스마스/홈파티';
   allowedSlugs: string[];
@@ -32,7 +34,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 1. 먹방 / 디저트 분야 (간식, 음료, 디저트만 엄격 매핑)
   {
     channelName: '입짧은햇님',
-    handle: 'haetnim_mukbang',
+    handle: 'short_mouth_sun',
+    youtubeHandle: 'short_mouth_sun',
+    searchKeyword: '입짧은햇님',
     platform: 'all',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
@@ -40,7 +44,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '쯔양',
-    handle: 'tzuyang_official',
+    handle: 'tzuyang6145',
+    youtubeHandle: 'tzuyang6145',
+    searchKeyword: '쯔양',
     platform: 'all',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
@@ -48,7 +54,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '여수언니 정혜영',
-    handle: 'yeosu_unnie',
+    handle: 'yeosuunnie',
+    youtubeHandle: 'yeosuunnie',
+    searchKeyword: '여수언니 정혜영',
     platform: 'all',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie'],
@@ -57,6 +65,8 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '나도Nado',
     handle: 'nado_eat',
+    youtubeHandle: 'nado_eat',
+    searchKeyword: '나도Nado',
     platform: 'all',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라', '펩시제로'],
@@ -65,6 +75,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 디저트여왕 (TikTok)',
     handle: 'tiktok_snack_queen',
+    searchKeyword: '틱톡 디저트 쿠키 먹방',
     platform: 'tiktok',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라'],
@@ -74,7 +85,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 2. 뷰티 / 헤어 / 스킨케어 분야 (헤어, 미백, 톤업, 피지제거만 엄격 매핑)
   {
     channelName: '회사원A',
-    handle: 'office_worker_a',
+    handle: 'calarygirl',
+    youtubeHandle: 'calarygirl',
+    searchKeyword: '회사원A',
     platform: 'all',
     category: '뷰티/헤어',
     allowedSlugs: ['물미역트리트먼트', '물미역헤어에센스', '미역헤어에센스', '물광피부로션', '미백치약', '미백크림', '블랙헤드제거'],
@@ -82,7 +95,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '이사배',
-    handle: 'risabae_art',
+    handle: 'RISABAE',
+    youtubeHandle: 'RISABAE',
+    searchKeyword: '이사배',
     platform: 'all',
     category: '뷰티/헤어',
     allowedSlugs: ['미백크림', '물광피부로션', '블랙헤드제거', '물미역트리트먼트'],
@@ -90,7 +105,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '레오제이',
-    handle: 'leojmakeup',
+    handle: 'LeoJMakeup',
+    youtubeHandle: 'LeoJMakeup',
+    searchKeyword: '레오제이',
     platform: 'all',
     category: '뷰티/헤어',
     allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '미백치약'],
@@ -99,6 +116,8 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '유트루',
     handle: 'yootrue_beauty',
+    youtubeHandle: 'yootrue_beauty',
+    searchKeyword: '유트루',
     platform: 'all',
     category: '뷰티/헤어',
     allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '물미역트리트먼트'],
@@ -107,6 +126,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 뷰티꿀팁 (TikTok)',
     handle: 'tiktok_beauty_room',
+    searchKeyword: '틱톡 올영세일 꿀템 추천',
     platform: 'tiktok',
     category: '뷰티/헤어',
     allowedSlugs: ['물미역트리트먼트', '물광피부로션', '블랙헤드제거', '미백크림'],
@@ -117,6 +137,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '피부임상연구소',
     handle: 'dr_skin_lab',
+    searchKeyword: '피부과 의사 모공 블랙헤드 치아미백',
     platform: 'all',
     category: '스킨케어/덴탈',
     allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
@@ -126,7 +147,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 4. IT / 테크 / 전자기기 분야 (애플 정품, 음향기기만 엄격 매핑)
   {
     channelName: '잇섭 (ITSub)',
-    handle: 'itsub_official',
+    handle: 'itsub',
+    youtubeHandle: 'itsub',
+    searchKeyword: '잇섭',
     platform: 'all',
     category: 'IT/테크',
     allowedSlugs: ['애플아이폰', '아이폰', '애플맥북', '맥북', '애플아이패드', '아이패드', '애플에어팟', '샥즈오픈핏'],
@@ -134,7 +157,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '주연 (ZUYONI)',
-    handle: 'juyeon_tech',
+    handle: 'zuyoni1',
+    youtubeHandle: 'zuyoni1',
+    searchKeyword: '주연 ZUYONI',
     platform: 'all',
     category: 'IT/테크',
     allowedSlugs: ['애플아이폰', '아이폰', '애플아이패드', '아이패드', '애플맥북', '맥북', '애플에어팟'],
@@ -142,7 +167,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '테크몽',
-    handle: 'techmong_it',
+    handle: 'techmong',
+    youtubeHandle: 'techmong',
+    searchKeyword: '테크몽',
     platform: 'all',
     category: 'IT/테크',
     allowedSlugs: ['애플아이패드', '아이패드', '애플맥북', '맥북', '애플아이폰', '아이폰'],
@@ -150,7 +177,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '뻘짓연구소',
-    handle: 'bboljit_lab',
+    handle: 'BullsLab',
+    youtubeHandle: 'BullsLab',
+    searchKeyword: '뻘짓연구소',
     platform: 'all',
     category: 'IT/테크',
     allowedSlugs: ['애플맥북', '맥북', '애플아이폰', '아이폰', '애플에어팟', '샥즈오픈핏'],
@@ -159,6 +188,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 테크트렌드 (TikTok)',
     handle: 'tiktok_it_trend',
+    searchKeyword: '틱톡 아이폰 맥북 꿀팁',
     platform: 'tiktok',
     category: 'IT/테크',
     allowedSlugs: ['애플아이폰', '애플맥북', '애플아이패드', '샥즈오픈핏'],
@@ -168,7 +198,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 5. 헬스 / 식단 분야 (닭가슴살, 제로음료, 운동기기만 엄격 매핑)
   {
     channelName: '핏블리 (FITVELY)',
-    handle: 'fitvely_diet',
+    handle: 'fitvely',
+    youtubeHandle: 'fitvely',
+    searchKeyword: '핏블리',
     platform: 'all',
     category: '헬스/식단',
     allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로', '샥즈오픈핏'],
@@ -176,7 +208,9 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   },
   {
     channelName: '피지컬갤러리 (김계란)',
-    handle: 'physical_gallery',
+    handle: 'physicalgallery',
+    youtubeHandle: 'physicalgallery',
+    searchKeyword: '피지컬갤러리',
     platform: 'all',
     category: '헬스/식단',
     allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
@@ -186,7 +220,8 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 6. 캐릭터 / 키덜트 분야 (먼작귀 치이카와만 엄격 매핑)
   {
     channelName: '치이카와 굿즈룸',
-    handle: 'chii_goods_collector',
+    handle: 'chii_goods',
+    searchKeyword: '치이카와 정품 인형 언박싱',
     platform: 'all',
     category: '캐릭터/키덜트',
     allowedSlugs: ['치이카와'],
@@ -197,6 +232,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '오늘의 감성홈',
     handle: 'home_interior_cafe',
+    searchKeyword: '크리스마스 트리 풀세트 인테리어',
     platform: 'all',
     category: '크리스마스/홈파티',
     allowedSlugs: ['크리스마스트리', '한정판스타벅스'],
@@ -717,7 +753,10 @@ export async function runMarketingCycle() {
       let targetUrl = '';
       let commentText = '';
       if (selectedPlatform === 'youtube') {
-        targetUrl = `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`;
+        const ytHandle = matchedCreator.youtubeHandle || matchedCreator.handle;
+        targetUrl = matchedCreator.youtubeHandle
+          ? `https://www.youtube.com/@${encodeURIComponent(ytHandle)}/videos`
+          : `https://www.youtube.com/results?search_query=${encodeURIComponent(matchedCreator.searchKeyword + ' ' + (creatorOutreachBundle.videoTitle || ''))}`;
         commentText = creatorOutreachBundle.ytComment;
       } else if (selectedPlatform === 'instagram') {
         targetUrl = `https://www.instagram.com/${encodeURIComponent(matchedCreator.handle)}/`;
