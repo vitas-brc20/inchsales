@@ -588,9 +588,9 @@ export default function Studio({ initialLinks }: StudioProps) {
                       const instaLink = getPathUrl(createdInfo.slug, activeHandle, 'insta');
                       const statsLink = `${getBaseOrigin()}?id=${encodeURIComponent(activeHandle)}`;
                       
-                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 70% 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수수료의 70%가 @${activeHandle}님 지갑에 자동으로 누적됩니다! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)`;
+                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 70% 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)`;
 
-                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 70% 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70%가 바로 적립돼요 ✨`;
+                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 70% 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨`;
 
                       const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! 멋진 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
 
