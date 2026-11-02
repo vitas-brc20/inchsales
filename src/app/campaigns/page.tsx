@@ -116,7 +116,7 @@ export default function CampaignsPage() {
 
                   <div className="flex items-center gap-2">
                     <Link
-                      href={camp.localLandingUrl}
+                      href={camp.localLandingUrl || '#'}
                       target="_blank"
                       className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold transition-colors flex items-center gap-1"
                     >
@@ -140,13 +140,13 @@ export default function CampaignsPage() {
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts.threads}
+                        {camp.socialPosts?.threads || ''}
                       </p>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-slate-200/60">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts.threads, `${camp.campaignId}_threads`)}
+                        onClick={() => handleCopy(camp.socialPosts?.threads || '', `${camp.campaignId}_threads`)}
                         className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                       >
                         {copiedKey === `${camp.campaignId}_threads` ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -167,13 +167,13 @@ export default function CampaignsPage() {
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts.twitterX}
+                        {camp.socialPosts?.twitterX || ''}
                       </p>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-slate-200/60">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts.twitterX, `${camp.campaignId}_x`)}
+                        onClick={() => handleCopy(camp.socialPosts?.twitterX || '', `${camp.campaignId}_x`)}
                         className="w-full py-2 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                       >
                         {copiedKey === `${camp.campaignId}_x` ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -191,13 +191,13 @@ export default function CampaignsPage() {
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts.instagramCaption}
+                        {camp.socialPosts?.instagramCaption || ''}
                       </p>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-slate-200/60">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts.instagramCaption, `${camp.campaignId}_insta`)}
+                        onClick={() => handleCopy(camp.socialPosts?.instagramCaption || '', `${camp.campaignId}_insta`)}
                         className="w-full py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
                       >
                         {copiedKey === `${camp.campaignId}_insta` ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -215,13 +215,13 @@ export default function CampaignsPage() {
                         </span>
                       </div>
                       <p className="text-xs text-slate-700 font-sans whitespace-pre-wrap leading-relaxed line-clamp-4">
-                        {camp.socialPosts.kakaoTalkShare}
+                        {camp.socialPosts?.kakaoTalkShare || ''}
                       </p>
                     </div>
 
                     <div className="pt-3 mt-3 border-t border-slate-200/60">
                       <button
-                        onClick={() => handleCopy(camp.socialPosts.kakaoTalkShare, `${camp.campaignId}_kakao`)}
+                        onClick={() => handleCopy(camp.socialPosts?.kakaoTalkShare || '', `${camp.campaignId}_kakao`)}
                         className="w-full py-2 px-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 text-xs font-black transition-colors flex items-center justify-center gap-1.5"
                       >
                         {copiedKey === `${camp.campaignId}_kakao` ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 const CAMPAIGN_DIR = path.join(process.cwd(), 'logs', 'campaigns');
 
 export async function GET() {
@@ -15,10 +17,38 @@ export async function GET() {
       .sort((a, b) => b.localeCompare(a))
       .slice(0, 10);
 
-    const campaigns = files.map((file) => {
-      const content = fs.readFileSync(path.join(CAMPAIGN_DIR, file), 'utf8');
-      return JSON.parse(content);
-    });
+    const campaigns = files
+      .map((file) => {
+        try {
+          const content = fs.readFileSync(path.join(CAMPAIGN_DIR, file), 'utf8');
+          const raw = JSON.parse(content);
+          const campaignId = raw.campaignId || `camp_${file.replace(/[^0-9]/g, '')}`;
+          const targetSlug = raw.targetSlug || raw.slug || 'item';
+          const localLandingUrl = raw.localLandingUrl || raw.directLandingUrl || `/p/${encodeURIComponent(targetSlug)}?ref=local_${campaignId}`;
+          return {
+            campaignId,
+            generatedAt: raw.generatedAt || new Date().toISOString(),
+            targetProduct: raw.targetProduct || '추천 상품',
+            targetSlug,
+            trackingId: raw.trackingId || 'AF5232288',
+            localLandingUrl,
+            directCoupangUrl: raw.directCoupangUrl || '',
+            socialPosts: {
+              threads: raw.socialPosts?.threads || '',
+              twitterX: raw.socialPosts?.twitterX || '',
+              instagramCaption: raw.socialPosts?.instagramCaption || raw.socialPosts?.instagramStoryText || '',
+              kakaoTalkShare: raw.socialPosts?.kakaoTalkShare || '',
+            },
+            systemStats: {
+              totalClicks: raw.systemStats?.totalClicks || 0,
+              totalWithdrawals: raw.systemStats?.totalWithdrawals || 0,
+            },
+          };
+        } catch {
+          return null;
+        }
+      })
+      .filter(Boolean);
 
     return NextResponse.json({ success: true, campaigns });
   } catch (err: unknown) {

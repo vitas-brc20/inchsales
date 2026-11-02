@@ -146,9 +146,9 @@ export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: str
     }
   }
 
-  // 2. 검색어 기반인 경우 쿠팡 공식 검색 게이트웨이로 자동 생성
+  // 2. 검색어 기반인 경우 쿠팡 공식 검색 URL로 연동 (AFFSRCH는 쿠팡 메인으로 리다이렉트되므로 검색 페이지 직접 연동)
   const encodedKeyword = encodeURIComponent(trimmed);
-  return `https://link.coupang.com/re/AFFSRCH?lptag=${trackingId}&subid=${encodeURIComponent(subId)}&keyword=${encodedKeyword}`;
+  return `https://www.coupang.com/np/search?component=&q=${encodedKeyword}&channel=user&lptag=${trackingId}&subid=${encodeURIComponent(subId)}`;
 }
 
 // 동기 호환 래퍼
@@ -189,5 +189,5 @@ export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, s
   }
 
   const encodedKeyword = encodeURIComponent(trimmed);
-  return `https://link.coupang.com/re/AFFSRCH?lptag=${trackingId}&subid=${encodeURIComponent(subId)}&keyword=${encodedKeyword}`;
+  return `https://www.coupang.com/np/search?component=&q=${encodedKeyword}&channel=user&lptag=${trackingId}&subid=${encodeURIComponent(subId)}`;
 }

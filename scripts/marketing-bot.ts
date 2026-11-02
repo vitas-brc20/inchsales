@@ -102,8 +102,12 @@ export async function runMarketingCycle() {
   const directCoupangUrl = target.slug === '제로콜라' 
     ? `https://link.coupang.com/a/ikoqLZW3zg?subid=inch_local_${campaignId}`
     : target.slug === '두쫀쿠'
-    ? `https://link.coupang.com/a/ik36itDSai?subid=inch_local_${campaignId}`
-    : `https://link.coupang.com/re/AFFSRCH?lptag=${TRACKING_ID}&subid=inch_local_${campaignId}&keyword=${encodeURIComponent(target.name)}`;
+    ? `https://link.coupang.com/a/ik4aZWyRZA?subid=inch_local_${campaignId}`
+    : target.slug === '데스크청소기'
+    ? `https://link.coupang.com/re/AFFSDP?lptag=${TRACKING_ID}&subid=inch_local_${campaignId}&pageKey=6904818789&itemId=16618581786`
+    : target.slug === '노트북거치대'
+    ? `https://link.coupang.com/re/AFFSDP?lptag=${TRACKING_ID}&subid=inch_local_${campaignId}&pageKey=7454921932&itemId=19416599182`
+    : `https://www.coupang.com/np/search?q=${encodeURIComponent(target.name)}&lptag=${TRACKING_ID}&subid=inch_local_${campaignId}`;
 
   // 3. 캠페인 포스팅 번들 저장
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
