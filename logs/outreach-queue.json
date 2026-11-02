@@ -1,7 +1,692 @@
 {
-  "generatedAt": "2026-11-02T11:21:16.118Z",
+  "generatedAt": "2026-11-02T14:46:44.954Z",
   "totalTargetCreators": 5,
   "targets": [
+    {
+      "creatorHandle": "techmong",
+      "creatorName": "테크몽 Techmong",
+      "creatorTier": "mega",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "아이폰17 프로 진짜 변색될까?",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=OP6wPuQbTyk",
+      "productDisplayName": "아이폰 17 Pro Max",
+      "targetProductSlug": "애플아이폰",
+      "targetProductName": "Apple 정품 아이폰 17 Pro Max 자급제 (512GB)",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=techmong",
+      "ytComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram",
+      "tiktokComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=tiktok",
+      "instaDm": "안녕하세요 @techmong 크리에이터님! 테크몽 Techmong 채널의 '아이폰17 프로 진짜 변색될까?' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [아이폰 17 Pro Max] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @techmong님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @techmong님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@techmong' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "youtube",
+      "targetUrl": "https://www.youtube.com/watch?v=OP6wPuQbTyk",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "techmong",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": null,
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @techmong 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "fitvely_moon",
+      "creatorName": "핏블리",
+      "creatorTier": "mega",
+      "creatorCategory": "헬스/식단",
+      "videoTitle": "M5 맥북 프로 14인치 전문가 작업 성능 테스트",
+      "productDisplayName": "맥북 프로 14 M5",
+      "targetProductSlug": "애플맥북",
+      "targetProductName": "Apple 정품 맥북 프로 14 M5 (512GB 스페이스 블랙)",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_diet&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_moon&ch=instagram",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_moon&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=fitvely_moon",
+      "ytComment": "오 영상에 나왔던 [맥북 프로 14 M5] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_diet&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [맥북 프로 14 M5] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_moon&ch=instagram",
+      "tiktokComment": "오 영상에 나왔던 [맥북 프로 14 M5] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_moon&ch=tiktok",
+      "instaDm": "안녕하세요 @fitvely_moon 크리에이터님! 핏블리 채널의 'M5 맥북 프로 14인치 전문가 작업 성능 테스트' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [맥북 프로 14 M5] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @fitvely_moon님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @fitvely_moon님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=%40fitvely_moon&ch=instagram\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@fitvely_moon' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/fitvely_moon/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "fitvely_diet",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "BACKGROUND_CHROME",
+        "details": "[백그라운드 반자동 모드] @fitvely_diet (instagram) 백그라운드 탭 열기 & 클립보드 복사 완료"
+      }
+    },
+    {
+      "creatorHandle": "physicalgallery",
+      "creatorName": "피지컬갤러리 (김계란)",
+      "creatorTier": "mega",
+      "creatorCategory": "헬스/식단",
+      "videoTitle": "맛있는 다이어트 식단 통 닭가슴살 추천",
+      "productDisplayName": "굽네 오븐 통 닭가슴살",
+      "targetProductSlug": "굽네닭가슴살",
+      "targetProductName": "굽네 오븐구이 통 닭가슴살 40팩",
+      "ytUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=physicalgallery",
+      "ytComment": "오 영상에 나왔던 [굽네 오븐 통 닭가슴살] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [굽네 오븐 통 닭가슴살] 드디어 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=insta",
+      "tiktokComment": "오 영상에 나온 [굽네 오븐 통 닭가슴살] 찾았어요 ! 🔥\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=tiktok",
+      "instaDm": "안녕하세요 @physicalgallery 크리에이터님! 피지컬갤러리 (김계란) 채널의 '맛있는 다이어트 식단 통 닭가슴살 추천' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [굽네 오븐 통 닭가슴살] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @physicalgallery님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @physicalgallery님 전용 정산 링크:\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=physicalgallery&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@physicalgallery' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/search?q=%ED%94%BC%EC%A7%80%EC%BB%AC%EA%B0%A4%EB%9F%AC%EB%A6%AC%20(%EA%B9%80%EA%B3%84%EB%9E%80)%20%EA%B5%BD%EB%84%A4%20%EC%98%A4%EB%B8%90%20%ED%86%B5%20%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "physicalgallery",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[틱톡 첫 번째 영상 직행 성공] @physicalgallery 실제 영상 직행: https://www.tiktok.com/search?q=%ED%94%BC%EC%A7%80%EC%BB%AC%EA%B0%A4%EB%9F%AC%EB%A6%AC%20(%EA%B9%80%EA%B3%84%EB%9E%80)%20%EA%B5%BD%EB%84%A4%20%EC%98%A4%EB%B8%90%20%ED%86%B5%20%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4"
+      }
+    },
+    {
+      "creatorHandle": "T리뷰",
+      "creatorName": "T리뷰",
+      "creatorTier": "micro",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "OLED 맥북프로, 지금 사지 않아도 되는 이유 3가지! #oled맥북 #oled맥북프로 #맥북프로m5 #맥북추천 #oledmacbook",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=8K1RO6G1Dbs",
+      "productDisplayName": "맥북 프로 14 M5",
+      "targetProductSlug": "애플맥북",
+      "targetProductName": "Apple 정품 맥북 프로 14 M5 (512GB 스페이스 블랙)",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=T%EB%A6%AC%EB%B7%B0",
+      "ytComment": "오 영상에 나왔던 [맥북 프로 14 M5] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [맥북 프로 14 M5] 드디어 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=insta",
+      "tiktokComment": "오 영상에 나온 [맥북 프로 14 M5] 찾았어요 ! 🔥\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=tiktok",
+      "instaDm": "안녕하세요 @T리뷰 크리에이터님! T리뷰 채널의 'OLED 맥북프로, 지금 사지 않아도 되는 이유 3가지! #oled맥북 #oled맥북프로 #맥북프로m5 #맥북추천 #oledmacbook' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [맥북 프로 14 M5] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @T리뷰님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @T리뷰님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=T%EB%A6%AC%EB%B7%B0&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@T리뷰' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "youtube",
+      "targetUrl": "https://www.youtube.com/watch?v=8K1RO6G1Dbs",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "T리뷰",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": null,
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @T리뷰 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "underkg",
+      "creatorName": "언더케이지",
+      "creatorTier": "mega",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "내 가방에 달고 다니는 치이카와 키링",
+      "productDisplayName": "치이카와 정품 인형 & 키링",
+      "targetProductSlug": "치이카와",
+      "targetProductName": "치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션",
+      "ytUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=underkg",
+      "ytComment": "오 영상에 나왔던 [치이카와 정품 인형 & 키링] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [치이카와 정품 인형 & 키링] 드디어 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=insta",
+      "tiktokComment": "오 영상에 나온 [치이카와 정품 인형 & 키링] 찾았어요 ! 🔥\nhttps://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=tiktok",
+      "instaDm": "안녕하세요 @underkg 크리에이터님! 언더케이지 채널의 '내 가방에 달고 다니는 치이카와 키링' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [치이카와 정품 인형 & 키링] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @underkg님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @underkg님 전용 정산 링크:\nhttps://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=underkg&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@underkg' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/underkg/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "Underkg",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[인스타그램 릴스/게시물 직행 성공] @Underkg 첫 번째 영상 직행: no_post"
+      }
+    },
+    {
+      "creatorHandle": "home_interior_cafe",
+      "creatorName": "오늘의 감성홈",
+      "creatorTier": "mega",
+      "creatorCategory": "크리스마스/홈파티",
+      "videoTitle": "연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기",
+      "productDisplayName": "전나무 크리스마스 트리 풀세트",
+      "targetProductSlug": "크리스마스트리",
+      "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
+      "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=home_interior_cafe",
+      "ytComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 드디어 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta",
+      "tiktokComment": "오 영상에 나온 [전나무 크리스마스 트리 풀세트] 찾았어요 ! 🔥\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=tiktok",
+      "instaDm": "안녕하세요 @home_interior_cafe 크리에이터님! 오늘의 감성홈 채널의 '연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @home_interior_cafe님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @home_interior_cafe님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@home_interior_cafe' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/search?q=%EC%98%A4%EB%8A%98%EC%9D%98%20%EA%B0%90%EC%84%B1%ED%99%88%20%EC%A0%84%EB%82%98%EB%AC%B4%20%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%20%ED%8A%B8%EB%A6%AC%20%ED%92%80%EC%84%B8%ED%8A%B8",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "home_interior_cafe",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[틱톡 첫 번째 영상 직행 성공] @home_interior_cafe 실제 영상 직행: https://www.tiktok.com/@lifeitemfactory/video/7577701224946978056"
+      }
+    },
+    {
+      "creatorHandle": "사리오의_사볼텐데",
+      "creatorName": "사볼텐데",
+      "creatorTier": "micro",
+      "creatorCategory": "크리스마스/홈파티",
+      "videoTitle": "한 번에 끝내는 크리스마스트리 쇼핑 I 가성비 트리 추천 I 크리스마스 트리 꾸미기 I 겨울 인테리어 I  산타",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=3F9wIVrxCew",
+      "productDisplayName": "전나무 크리스마스 트리 풀세트",
+      "targetProductSlug": "크리스마스트리",
+      "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
+      "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0",
+      "ytComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 드디어 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=insta",
+      "tiktokComment": "오 영상에 나온 [전나무 크리스마스 트리 풀세트] 찾았어요 ! 🔥\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=tiktok",
+      "instaDm": "안녕하세요 @사리오의_사볼텐데 크리에이터님! 사볼텐데 채널의 '한 번에 끝내는 크리스마스트리 쇼핑 I 가성비 트리 추천 I 크리스마스 트리 꾸미기 I 겨울 인테리어 I  산타' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @사리오의_사볼텐데님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @사리오의_사볼텐데님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=%EC%82%AC%EB%A6%AC%EC%98%A4%EC%9D%98_%EC%82%AC%EB%B3%BC%ED%85%90%EB%8D%B0&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@사리오의_사볼텐데' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "youtube",
+      "targetUrl": "https://www.youtube.com/watch?v=3F9wIVrxCew",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "사리오의_사볼텐데",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": null,
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @사리오의_사볼텐데 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "쇼곰",
+      "creatorName": "쇼곰 SHOW_GOM",
+      "creatorTier": "micro",
+      "creatorCategory": "뷰티/헤어",
+      "videoTitle": "청담동 미용실에서 몰래 쓰는 물미역 루틴 🤫 #헤어케어 #머릿결관리 #홈케어 #물미역머리",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=Vvx8_j5jqWc",
+      "productDisplayName": "모레모 미라클 10 워터 트리트먼트 200ml",
+      "targetProductSlug": "미역헤어에센스",
+      "targetProductName": "모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)",
+      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=%EC%87%BC%EA%B3%B0",
+      "ytComment": "오 영상에 나왔던 [모레모 미라클 10 워터 트리트먼트 200ml] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [모레모 미라클 10 워터 트리트먼트 200ml] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=insta",
+      "tiktokComment": "오 영상에 나온 [모레모 미라클 10 워터 트리트먼트 200ml] 찾음! 🔥\nhttps://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=tiktok",
+      "instaDm": "안녕하세요 @쇼곰 크리에이터님! 쇼곰 SHOW_GOM 채널의 '청담동 미용실에서 몰래 쓰는 물미역 루틴 🤫 #헤어케어 #머릿결관리 #홈케어 #물미역머리' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [모레모 미라클 10 워터 트리트먼트 200ml] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @쇼곰님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @쇼곰님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EC%97%AD%ED%97%A4%EC%96%B4%EC%97%90%EC%84%BC%EC%8A%A4?ref=%EC%87%BC%EA%B3%B0&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@쇼곰' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "youtube",
+      "targetUrl": "https://www.youtube.com/watch?v=Vvx8_j5jqWc",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "쇼곰",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": null,
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @쇼곰 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "yootrue5504",
+      "creatorName": "유트루",
+      "creatorTier": "mega",
+      "creatorCategory": "뷰티/헤어",
+      "videoTitle": "10초 만에 개털 머리 물미역 되는 트리트먼트 추천",
+      "productDisplayName": "10초 물미역 헤어 트리트먼트",
+      "targetProductSlug": "물미역트리트먼트",
+      "targetProductName": "모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)",
+      "ytUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=yootrue5504",
+      "ytComment": "오 영상에 나왔던 [10초 물미역 헤어 트리트먼트] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [10초 물미역 헤어 트리트먼트] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=insta",
+      "tiktokComment": "오 영상에 나온 [10초 물미역 헤어 트리트먼트] 찾음! 🔥\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=tiktok",
+      "instaDm": "안녕하세요 @yootrue5504 크리에이터님! 유트루 채널의 '10초 만에 개털 머리 물미역 되는 트리트먼트 추천' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [10초 물미역 헤어 트리트먼트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @yootrue5504님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @yootrue5504님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue5504&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@yootrue5504' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/yootrue5504/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "yootrue_beauty",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[인스타그램 릴스/게시물 직행 성공] @yootrue_beauty 첫 번째 영상 직행: no_post"
+      }
+    },
+    {
+      "creatorHandle": "simple_desk_setup",
+      "creatorName": "심플 데스크테리어",
+      "creatorTier": "micro",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "아이폰 17 프로 맥스 자급제 언박싱 솔직후기",
+      "productDisplayName": "아이폰 17 Pro Max",
+      "targetProductSlug": "애플아이폰",
+      "targetProductName": "Apple 정품 아이폰 17 Pro Max 자급제 (512GB)",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=simple_desk_setup",
+      "ytComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=insta",
+      "tiktokComment": "오 영상에 나온 [아이폰 17 Pro Max] 찾음! 🔥\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=tiktok",
+      "instaDm": "안녕하세요 @simple_desk_setup 크리에이터님! 심플 데스크테리어 채널의 '아이폰 17 프로 맥스 자급제 언박싱 솔직후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [아이폰 17 Pro Max] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @simple_desk_setup님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @simple_desk_setup님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=simple_desk_setup&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@simple_desk_setup' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/search?q=%EC%8B%AC%ED%94%8C%20%EB%8D%B0%EC%8A%A4%ED%81%AC%ED%85%8C%EB%A6%AC%EC%96%B4%20%EC%95%84%EC%9D%B4%ED%8F%B0%2017%20Pro%20Max",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "simple_desk_setup",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[틱톡 첫 번째 영상 직행 성공] @simple_desk_setup 실제 영상 직행: https://www.tiktok.com/@simplysofia/video/7595367836793490710"
+      }
+    },
+    {
+      "creatorHandle": "leojmakeup",
+      "creatorName": "레오제이",
+      "creatorTier": "mega",
+      "creatorCategory": "뷰티/헤어",
+      "videoTitle": "누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기",
+      "productDisplayName": "오스템 뷰센 28 미백치약",
+      "targetProductSlug": "미백치약",
+      "targetProductName": "오스템파마 뷰센 28 전문 치아미백제 80g",
+      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=leojmakeup",
+      "ytComment": "오 영상에 나왔던 [오스템 뷰센 28 미백치약] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [오스템 뷰센 28 미백치약] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=insta",
+      "tiktokComment": "오 영상에 나온 [오스템 뷰센 28 미백치약] 찾음! 🔥\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=tiktok",
+      "instaDm": "안녕하세요 @leojmakeup 크리에이터님! 레오제이 채널의 '누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [오스템 뷰센 28 미백치약] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @leojmakeup님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @leojmakeup님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=leojmakeup&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@leojmakeup' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/leojmakeup/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "LeoJMakeup",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[인스타그램 릴스/게시물 직행 성공] @LeoJMakeup 첫 번째 영상 직행: https://www.instagram.com/leojmakeup/reel/DfODzSWhV2X/"
+      }
+    },
+    {
+      "creatorHandle": "tteggu_tech",
+      "creatorName": "떼끄 테크룸",
+      "creatorTier": "micro",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰 솔직 후기",
+      "productDisplayName": "Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰",
+      "targetProductSlug": "애플에어팟",
+      "targetProductName": "Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=tteggu_tech",
+      "ytComment": "오 영상에 나왔던 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=insta",
+      "tiktokComment": "오 영상에 나온 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 찾음! 🔥\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=tiktok",
+      "instaDm": "안녕하세요 @tteggu_tech 크리에이터님! 떼끄 테크룸 채널의 'Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰 솔직 후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @tteggu_tech님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @tteggu_tech님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=tteggu_tech&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@tteggu_tech' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/tteggu_tech/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "tteggu_tech",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[인스타그램 릴스/게시물 직행 성공] @tteggu_tech 첫 번째 영상 직행: no_post"
+      }
+    },
+    {
+      "creatorHandle": "cozy_winter_home",
+      "creatorName": "자취방 겨울감성",
+      "creatorTier": "micro",
+      "creatorCategory": "크리스마스/홈파티",
+      "videoTitle": "겨울 홈인테리어 감성 크리스마스 트리",
+      "productDisplayName": "전나무 크리스마스 트리 풀세트",
+      "targetProductSlug": "크리스마스트리",
+      "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
+      "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=cozy_winter_home",
+      "ytComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 최저가 찾았다! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [전나무 크리스마스 트리 풀세트] 드디어 찾았다! ✨\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta",
+      "tiktokComment": "오 영상에 나온 [전나무 크리스마스 트리 풀세트] 찾음! 🔥\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=tiktok",
+      "instaDm": "안녕하세요 @cozy_winter_home 크리에이터님! 자취방 겨울감성 채널의 '겨울 홈인테리어 감성 크리스마스 트리' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @cozy_winter_home님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @cozy_winter_home님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@cozy_winter_home' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/@cozy_winter_home",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "cozy_winter_home",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "BACKGROUND_CHROME",
+        "details": "[백그라운드 반자동 모드] @cozy_winter_home (tiktok) 백그라운드 탭 열기 & 클립보드 복사 완료"
+      }
+    },
+    {
+      "creatorHandle": "mukbang_asmr",
+      "creatorName": "디저트먹방 ASMR",
+      "creatorTier": "micro",
+      "creatorCategory": "먹방/디저트",
+      "videoTitle": "카다이프 피스타치오 두쫀쿠 디저트 먹방",
+      "productDisplayName": "두바이 쫀득 쿠키 (두쫀쿠)",
+      "targetProductSlug": "두쫀쿠",
+      "targetProductName": "두바이 쫀득 쿠키 (두쫀쿠)",
+      "ytUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=mukbang_asmr",
+      "ytComment": "오 영상에 나왔던 [두바이 쫀득 쿠키 (두쫀쿠)] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [두바이 쫀득 쿠키 (두쫀쿠)] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=insta",
+      "tiktokComment": "오 영상에 나온 [두바이 쫀득 쿠키 (두쫀쿠)] 찾음! 🔥\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=tiktok",
+      "instaDm": "안녕하세요 @mukbang_asmr 크리에이터님! 디저트먹방 ASMR 채널의 '카다이프 피스타치오 두쫀쿠 디저트 먹방' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [두바이 쫀득 쿠키 (두쫀쿠)] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @mukbang_asmr님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @mukbang_asmr님 전용 정산 링크:\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_asmr&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@mukbang_asmr' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "instagram",
+      "targetUrl": "https://www.instagram.com/mukbang_asmr/",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "mukbang_asmr",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "BACKGROUND_CHROME",
+        "details": "[백그라운드 반자동 모드] @mukbang_asmr (instagram) 백그라운드 탭 열기 & 클립보드 복사 완료"
+      }
+    },
+    {
+      "creatorHandle": "chaeso_beauty",
+      "creatorName": "올영탐구 채소",
+      "creatorTier": "micro",
+      "creatorCategory": "뷰티/헤어",
+      "videoTitle": "옷에 묻어남 없는 24시간 톤업 미백크림 추천",
+      "productDisplayName": "코스노리 톤업 미백크림",
+      "targetProductSlug": "미백크림",
+      "targetProductName": "코스노리 화이트닝 드레스 톤업크림 50ml 2개",
+      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=chaeso_beauty",
+      "ytComment": "오 영상에 나왔던 [코스노리 톤업 미백크림] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [코스노리 톤업 미백크림] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=insta",
+      "tiktokComment": "오 영상에 나온 [코스노리 톤업 미백크림] 찾음! 🔥\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=tiktok",
+      "instaDm": "안녕하세요 @chaeso_beauty 크리에이터님! 올영탐구 채소 채널의 '옷에 묻어남 없는 24시간 톤업 미백크림 추천' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [코스노리 톤업 미백크림] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @chaeso_beauty님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @chaeso_beauty님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=chaeso_beauty&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@chaeso_beauty' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/@chaeso_beauty",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "chaeso_beauty",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "BACKGROUND_CHROME",
+        "details": "[백그라운드 반자동 모드] @chaeso_beauty (tiktok) 백그라운드 탭 열기 & 클립보드 복사 완료"
+      }
+    },
+    {
+      "creatorHandle": "도던_official",
+      "creatorName": "도던",
+      "creatorTier": "micro",
+      "creatorCategory": "헬스/식단",
+      "videoTitle": "복근 예쁜걸로 유명한 유튜버 까로님이 이 닭가슴살만 먹는 이유 | 굽네 오븐구이 통 닭가슴살",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=DmZ_mJFuNLQ",
+      "productDisplayName": "굽네 오븐 통 닭가슴살",
+      "targetProductSlug": "굽네닭가슴살",
+      "targetProductName": "굽네 오븐구이 통 닭가슴살 40팩",
+      "ytUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=%EB%8F%84%EB%8D%98_official",
+      "ytComment": "오 영상에 나왔던 [굽네 오븐 통 닭가슴살] 최저가 찾았다! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [굽네 오븐 통 닭가슴살] 드디어 찾았다! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=insta",
+      "tiktokComment": "오 영상에 나온 [굽네 오븐 통 닭가슴살] 찾음! 🔥\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=tiktok",
+      "instaDm": "안녕하세요 @도던_official 크리에이터님! 도던 채널의 '복근 예쁜걸로 유명한 유튜버 까로님이 이 닭가슴살만 먹는 이유 | 굽네 오븐구이 통 닭가슴살' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [굽네 오븐 통 닭가슴살] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @도던_official님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @도던_official님 전용 정산 링크:\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%EB%8F%84%EB%8D%98_official&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@도던_official' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "도던_official",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "도던_official",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "도던_official",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @도던_official 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "리뷰맨J",
+      "creatorName": "리뷰맨J",
+      "creatorTier": "micro",
+      "creatorCategory": "IT/테크",
+      "videoTitle": "에어팟5를 한달동안 귀에 껴봤습니다 솔직후기",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=t3d709kjahY",
+      "productDisplayName": "Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰",
+      "targetProductSlug": "애플에어팟",
+      "targetProductName": "Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰",
+      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=%EB%A6%AC%EB%B7%B0%EB%A7%A8J",
+      "ytComment": "오 영상에 나왔던 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 최저가 찾았다! 🛒✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=youtube\n(와우회원 로켓배송 바로가기)",
+      "instaComment": "오 영상에 나왔던 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 드디어 찾았다! 🛒✨ 최저가 좌표 👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=insta",
+      "tiktokComment": "오 영상에 나온 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 찾음! 🛒🔥 최저가 좌표 👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=tiktok",
+      "instaDm": "안녕하세요 @리뷰맨J 크리에이터님! 리뷰맨J 채널의 '에어팟5를 한달동안 귀에 껴봤습니다 솔직후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [Apple 정품 에어팟 액티브 노이즈 캔슬링 블루투스 이어폰] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @리뷰맨J님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @리뷰맨J님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%97%90%EC%96%B4%ED%8C%9F?ref=%EB%A6%AC%EB%B7%B0%EB%A7%A8J&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@리뷰맨J' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "리뷰맨J",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "리뷰맨J",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "리뷰맨J",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @리뷰맨J 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
+    {
+      "creatorHandle": "calarygirl",
+      "creatorName": "회사원A",
+      "creatorTier": "mega",
+      "creatorCategory": "뷰티/헤어",
+      "videoTitle": "광고❌ 내돈내산⭕ 곧 여름인데 파데프리용 톤업 선크림 제대로 보여드릴게 😎",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=CzfIjuoRIQI",
+      "productDisplayName": "코스노리 톤업 미백크림",
+      "targetProductSlug": "미백크림",
+      "targetProductName": "코스노리 화이트닝 드레스 톤업크림 50ml 2개",
+      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=youtube",
+      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=insta",
+      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=tiktok",
+      "statsUrl": "https://inch.sale/?id=calarygirl",
+      "ytComment": "안녕하세요 @calarygirl (회사원A)님! 이번 '광고❌ 내돈내산⭕ 곧 여름인데 파데프리용 톤업 선크림 제대로 보여드릴게 😎' 영상 보신 팬분들이 [코스노리 톤업 미백크림] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
+      "instaComment": "@calarygirl 이번 '광고❌ 내돈내산⭕ 곧 여름인데 파데프리용 톤업 선크림 제대로 보여드릴게 😎' 영상 속 [코스노리 톤업 미백크림] 어디서 사는지 물어보는 분들 많길래 @calarygirl님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
+      "tiktokComment": "@calarygirl 틱톡 '광고❌ 내돈내산⭕ 곧 여름인데 파데프리용 톤업 선크림 제대로 보여드릴게 😎' 영상 보고 [코스노리 톤업 미백크림] 어디서 사는지 물어보는 분들 많길래 @calarygirl님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
+      "instaDm": "안녕하세요 @calarygirl 크리에이터님! 회사원A 채널의 '광고❌ 내돈내산⭕ 곧 여름인데 파데프리용 톤업 선크림 제대로 보여드릴게 😎' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [코스노리 톤업 미백크림] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @calarygirl님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @calarygirl님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=calarygirl&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@calarygirl' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "calarygirl",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": {
+          "platform": "instagram",
+          "targetHandle": "calarygirl",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "calarygirl",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @calarygirl 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      }
+    },
     {
       "creatorHandle": "judamapperie8216",
       "creatorName": "juda mapperie",
@@ -94,696 +779,43 @@
         "method": "BACKGROUND_CHROME",
         "details": "[백그라운드 반자동 모드] @show_gom_hair (youtube) 백그라운드 탭 열기 & 클립보드 복사 완료"
       }
-    },
-    {
-      "creatorHandle": "미소학개론",
-      "creatorName": "유경쌤의 미소학개론",
-      "creatorTier": "micro",
-      "creatorCategory": "스킨케어/덴탈",
-      "videoTitle": "누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기",
-      "productDisplayName": "오스템 뷰센 28 미백치약",
-      "targetProductSlug": "미백치약",
-      "targetProductName": "오스템파마 뷰센 28 전문 치아미백제 80g",
-      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0",
-      "ytComment": "안녕하세요 @미소학개론 (유경쌤의 미소학개론)님! 방금 영상 구독 누르고 너무 유익하게 잘 챙겨보고 있습니다 😊\n이번 '누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기' 영상 보구 [오스템 뷰센 28 미백치약] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@미소학개론 님 이번 '누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기' 영상 속 [오스템 뷰센 28 미백치약] 어디서 사는지 물어보는 댓글 많길래 @미소학개론님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@미소학개론 틱톡 '누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기' 영상 보고 [오스템 뷰센 28 미백치약] 어디서 사는지 궁금해하길래 @미소학개론님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @미소학개론 크리에이터님! 유경쌤의 미소학개론 채널의 '누런 이 치과 미백 효과 뷰센 28 미백치약 솔직후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [오스템 뷰센 28 미백치약] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @미소학개론님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @미소학개론님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=%EB%AF%B8%EC%86%8C%ED%95%99%EA%B0%9C%EB%A1%A0&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@미소학개론' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "미소학개론",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "미소학개론",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "미소학개론",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "BACKGROUND_CHROME",
-        "details": "[백그라운드 반자동 모드] @미소학개론 (youtube) 백그라운드 탭 열기 & 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "ZOEYASMR",
-      "creatorName": "ZOEY ASMR 조이",
-      "creatorTier": "micro",
-      "creatorCategory": "먹방/디저트",
-      "videoTitle": "ASMR MUKBANG | DUBAI CHEWY COOKIE 두바이쫀득쿠키 먹방 EATING SOUNDS | ZOEY ASMR 조이",
-      "targetVideoUrl": "https://www.youtube.com/watch?v=xxnvv-TTqlY",
-      "productDisplayName": "두바이 쫀득 쿠키 (두쫀쿠)",
-      "targetProductSlug": "두쫀쿠",
-      "targetProductName": "두바이 쫀득 쿠키 (두쫀쿠)",
-      "ytUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=ZOEYASMR",
-      "ytComment": "안녕하세요 @ZOEY ASMR 조이님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 'ASMR MUKBANG | DUBAI CHEWY COOKIE 두바이쫀득쿠키 먹방 EATING SOUNDS | ZOEY ASMR 조이' 영상 보구 [두바이 쫀득 쿠키 (두쫀쿠)] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@ZOEYASMR 님 이번 'ASMR MUKBANG | DUBAI CHEWY COOKIE 두바이쫀득쿠키 먹방 EATING SOUNDS | ZOEY ASMR 조이' 영상 속 [두바이 쫀득 쿠키 (두쫀쿠)] 어디서 사는지 물어보는 댓글 많길래 @ZOEYASMR님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@ZOEYASMR 틱톡 'ASMR MUKBANG | DUBAI CHEWY COOKIE 두바이쫀득쿠키 먹방 EATING SOUNDS | ZOEY ASMR 조이' 영상 보고 [두바이 쫀득 쿠키 (두쫀쿠)] 어디서 사는지 궁금해하길래 @ZOEYASMR님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @ZOEYASMR 크리에이터님! ZOEY ASMR 조이 채널의 'ASMR MUKBANG | DUBAI CHEWY COOKIE 두바이쫀득쿠키 먹방 EATING SOUNDS | ZOEY ASMR 조이' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [두바이 쫀득 쿠키 (두쫀쿠)] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @ZOEYASMR님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @ZOEYASMR님 전용 정산 링크:\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=ZOEYASMR&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@ZOEYASMR' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "ZOEYASMR",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "ZOEYASMR",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "ZOEYASMR",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_FULL_AUTO",
-        "details": "[100% 완전 자동 전송 완료] @ZOEYASMR 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
-      }
-    },
-    {
-      "creatorHandle": "Twentyninebilly",
-      "creatorName": "빌리초이 Shining Choi",
-      "creatorTier": "micro",
-      "creatorCategory": "먹방/디저트",
-      "videoTitle": "ASMR Coca Cola Zero sugar drinking sounds@shorts 코카콜라 제로 슈거 음료수 먹방 #fyp #fypシ #satisfying #오이도#rain",
-      "targetVideoUrl": "https://www.youtube.com/watch?v=zgX7uni7_08",
-      "productDisplayName": "코카콜라 제로",
-      "targetProductSlug": "제로콜라",
-      "targetProductName": "코카콜라 제로 355ml 24캔",
-      "ytUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=Twentyninebilly",
-      "ytComment": "안녕하세요 @빌리초이 Shining Choi님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 'ASMR Coca Cola Zero sugar drinking sounds@shorts 코카콜라 제로 슈거 음료수 먹방 #fyp #fypシ #satisfying #오이도#rain' 영상 보구 [코카콜라 제로] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@Twentyninebilly 님 이번 'ASMR Coca Cola Zero sugar drinking sounds@shorts 코카콜라 제로 슈거 음료수 먹방 #fyp #fypシ #satisfying #오이도#rain' 영상 속 [코카콜라 제로] 어디서 사는지 물어보는 댓글 많길래 @Twentyninebilly님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@Twentyninebilly 틱톡 'ASMR Coca Cola Zero sugar drinking sounds@shorts 코카콜라 제로 슈거 음료수 먹방 #fyp #fypシ #satisfying #오이도#rain' 영상 보고 [코카콜라 제로] 어디서 사는지 궁금해하길래 @Twentyninebilly님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @Twentyninebilly 크리에이터님! 빌리초이 Shining Choi 채널의 'ASMR Coca Cola Zero sugar drinking sounds@shorts 코카콜라 제로 슈거 음료수 먹방 #fyp #fypシ #satisfying #오이도#rain' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [코카콜라 제로] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @Twentyninebilly님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @Twentyninebilly님 전용 정산 링크:\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=Twentyninebilly&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@Twentyninebilly' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "Twentyninebilly",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "Twentyninebilly",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "Twentyninebilly",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_FULL_AUTO",
-        "details": "[100% 완전 자동 전송 완료] @Twentyninebilly 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
-      }
-    },
-    {
-      "creatorHandle": "dental_homecare",
-      "creatorName": "덴탈 홈케어 일상",
-      "creatorTier": "micro",
-      "creatorCategory": "스킨케어/덴탈",
-      "videoTitle": "치과의사가 추천하는 올리브영 미백템",
-      "targetVideoUrl": "https://www.youtube.com/watch?v=kXliAL1ECVk",
-      "productDisplayName": "오스템 뷰센 28 미백치약",
-      "targetProductSlug": "미백치약",
-      "targetProductName": "오스템파마 뷰센 28 전문 치아미백제 80g",
-      "ytUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=dental_homecare",
-      "ytComment": "안녕하세요 @덴탈 홈케어 일상님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '치과의사가 추천하는 올리브영 미백템' 영상 보구 [오스템 뷰센 28 미백치약] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@dental_homecare 님 이번 '치과의사가 추천하는 올리브영 미백템' 영상 속 [오스템 뷰센 28 미백치약] 어디서 사는지 물어보는 댓글 많길래 @dental_homecare님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@dental_homecare 틱톡 '치과의사가 추천하는 올리브영 미백템' 영상 보고 [오스템 뷰센 28 미백치약] 어디서 사는지 궁금해하길래 @dental_homecare님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @dental_homecare 크리에이터님! 덴탈 홈케어 일상 채널의 '치과의사가 추천하는 올리브영 미백템' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [오스템 뷰센 28 미백치약] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @dental_homecare님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @dental_homecare님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%EC%B9%98%EC%95%BD?ref=dental_homecare&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@dental_homecare' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "dental_homecare",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "dental_homecare",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "dental_homecare",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_FULL_AUTO",
-        "details": "[100% 완전 자동 전송 완료] @dental_homecare 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
-      }
-    },
-    {
-      "creatorHandle": "simple_desk_setup",
-      "creatorName": "심플 데스크테리어",
-      "creatorTier": "micro",
-      "creatorCategory": "IT/테크",
-      "videoTitle": "샥즈 오픈핏2플러스 살까말까. 3분정리.",
-      "targetVideoUrl": "https://www.youtube.com/watch?v=7IDHfrrMQ2Q",
-      "productDisplayName": "샥즈 오픈핏 무선 이어폰",
-      "targetProductSlug": "샥즈오픈핏",
-      "targetProductName": "샥즈 오픈핏 2+ T921 오픈형 무선 블루투스 이어폰",
-      "ytUrl": "https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=simple_desk_setup",
-      "ytComment": "안녕하세요 @심플 데스크테리어님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '샥즈 오픈핏2플러스 살까말까. 3분정리.' 영상 보구 [샥즈 오픈핏 무선 이어폰] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@simple_desk_setup 님 이번 '샥즈 오픈핏2플러스 살까말까. 3분정리.' 영상 속 [샥즈 오픈핏 무선 이어폰] 어디서 사는지 물어보는 댓글 많길래 @simple_desk_setup님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@simple_desk_setup 틱톡 '샥즈 오픈핏2플러스 살까말까. 3분정리.' 영상 보고 [샥즈 오픈핏 무선 이어폰] 어디서 사는지 궁금해하길래 @simple_desk_setup님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @simple_desk_setup 크리에이터님! 심플 데스크테리어 채널의 '샥즈 오픈핏2플러스 살까말까. 3분정리.' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [샥즈 오픈핏 무선 이어폰] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @simple_desk_setup님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @simple_desk_setup님 전용 정산 링크:\nhttps://inch.sale/p/%EC%83%A5%EC%A6%88%EC%98%A4%ED%94%88%ED%95%8F?ref=simple_desk_setup&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@simple_desk_setup' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "simple_desk_setup",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "simple_desk_setup",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "simple_desk_setup",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "BACKGROUND_CHROME",
-        "details": "[백그라운드 무간섭 모드] 작업 화면 유지한 채 @simple_desk_setup (youtube) 백그라운드 탭 열기 & 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "chii_collector",
-      "creatorName": "먼작귀 덕후룸",
-      "creatorTier": "micro",
-      "creatorCategory": "캐릭터/키덜트",
-      "videoTitle": "귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱",
-      "productDisplayName": "치이카와 정품 인형 & 키링",
-      "targetProductSlug": "치이카와",
-      "targetProductName": "치이카와 하치와레 우사기 모찌 빅사이즈 봉제인형 쿠션",
-      "ytUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=chii_collector",
-      "ytComment": "안녕하세요 @먼작귀 덕후룸님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱' 영상 보구 [치이카와 정품 인형 & 키링] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@chii_collector 님 이번 '귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱' 영상 속 [치이카와 정품 인형 & 키링] 어디서 사는지 물어보는 댓글 많길래 @chii_collector님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@chii_collector 틱톡 '귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱' 영상 보고 [치이카와 정품 인형 & 키링] 어디서 사는지 궁금해하길래 @chii_collector님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @chii_collector 크리에이터님! 먼작귀 덕후룸 채널의 '귀여움 폭발 먼작귀 치이카와 정품 굿즈 언박싱' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [치이카와 정품 인형 & 키링] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @chii_collector님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @chii_collector님 전용 정산 링크:\nhttps://inch.sale/p/%EC%B9%98%EC%9D%B4%EC%B9%B4%EC%99%80?ref=chii_collector&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@chii_collector' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "chii_collector",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "chii_collector",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "chii_collector",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "BACKGROUND_CHROME",
-        "details": "[백그라운드 무간섭 모드] 작업 화면 유지한 채 @chii_collector (youtube) 백그라운드 탭 열기 & 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "cozy_winter_home",
-      "creatorName": "자취방 겨울감성",
-      "creatorTier": "micro",
-      "creatorCategory": "크리스마스/홈파티",
-      "videoTitle": "연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기",
-      "productDisplayName": "전나무 크리스마스 트리 풀세트",
-      "targetProductSlug": "크리스마스트리",
-      "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
-      "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=cozy_winter_home",
-      "ytComment": "안녕하세요 @자취방 겨울감성님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기' 영상 보구 [전나무 크리스마스 트리 풀세트] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-      "instaComment": "@cozy_winter_home 님 이번 '연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기' 영상 속 [전나무 크리스마스 트리 풀세트] 어디서 사는지 물어보는 댓글 많길래 @cozy_winter_home님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@cozy_winter_home 틱톡 '연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기' 영상 보고 [전나무 크리스마스 트리 풀세트] 어디서 사는지 궁금해하길래 @cozy_winter_home님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-      "instaDm": "안녕하세요 @cozy_winter_home 크리에이터님! 자취방 겨울감성 채널의 '연말 분위기 물씬 크리스마스 트리 풀세트 꾸미기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @cozy_winter_home님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @cozy_winter_home님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=cozy_winter_home&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@cozy_winter_home' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "cozy_winter_home",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "cozy_winter_home",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "cozy_winter_home",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "BACKGROUND_CHROME",
-        "details": "[백그라운드 무간섭 모드] 작업 화면 유지한 채 @cozy_winter_home (youtube) 백그라운드 탭 열기 & 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "home_interior_cafe",
-      "creatorName": "오늘의 감성홈",
-      "creatorTier": "mega",
-      "creatorCategory": "크리스마스/홈파티",
-      "videoTitle": "겨울 홈인테리어 감성 크리스마스 트리",
-      "productDisplayName": "전나무 크리스마스 트리 풀세트",
-      "targetProductSlug": "크리스마스트리",
-      "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
-      "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=home_interior_cafe",
-      "ytComment": "안녕하세요 @home_interior_cafe (오늘의 감성홈)님! 이번 '겨울 홈인테리어 감성 크리스마스 트리' 영상 보신 팬분들이 [전나무 크리스마스 트리 풀세트] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@home_interior_cafe 이번 '겨울 홈인테리어 감성 크리스마스 트리' 영상 속 [전나무 크리스마스 트리 풀세트] 어디서 사는지 물어보는 분들 많길래 @home_interior_cafe님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@home_interior_cafe 틱톡 '겨울 홈인테리어 감성 크리스마스 트리' 영상 보고 [전나무 크리스마스 트리 풀세트] 어디서 사는지 물어보는 분들 많길래 @home_interior_cafe님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @home_interior_cafe 크리에이터님! 오늘의 감성홈 채널의 '겨울 홈인테리어 감성 크리스마스 트리' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @home_interior_cafe님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @home_interior_cafe님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=home_interior_cafe&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@home_interior_cafe' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "home_interior_cafe",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "home_interior_cafe",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "home_interior_cafe",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_CHROME",
-        "details": "Google Chrome에서 @home_interior_cafe (youtube) 페이지 열기 및 댓글 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "yootrue_beauty",
-      "creatorName": "유트루",
-      "creatorCategory": "뷰티/헤어",
-      "videoTitle": "올영세일 손상모 구원템 물미역 트리트먼트",
-      "productDisplayName": "10초 물미역 헤어 트리트먼트",
-      "targetProductSlug": "물미역트리트먼트",
-      "targetProductName": "모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)",
-      "ytUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=yootrue_beauty",
-      "ytComment": "안녕하세요 @yootrue_beauty (유트루)님! 이번 '올영세일 손상모 구원템 물미역 트리트먼트' 영상 보신 팬분들이 [10초 물미역 헤어 트리트먼트] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@yootrue_beauty 이번 '올영세일 손상모 구원템 물미역 트리트먼트' 영상 속 [10초 물미역 헤어 트리트먼트] 어디서 사는지 물어보는 분들 많길래 @yootrue_beauty님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@yootrue_beauty 틱톡 '올영세일 손상모 구원템 물미역 트리트먼트' 영상 보고 [10초 물미역 헤어 트리트먼트] 어디서 사는지 물어보는 분들 많길래 @yootrue_beauty님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @yootrue_beauty 크리에이터님! 유트루 채널의 '올영세일 손상모 구원템 물미역 트리트먼트' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [10초 물미역 헤어 트리트먼트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @yootrue_beauty님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @yootrue_beauty님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=yootrue_beauty&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@yootrue_beauty' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "yootrue_beauty",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "yootrue_beauty",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "yootrue_beauty",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_CHROME",
-        "details": "Google Chrome에서 @yootrue_beauty (youtube) 페이지 열기 및 댓글 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "fitvely_diet",
-      "creatorName": "핏블리 (FITVELY)",
-      "creatorCategory": "헬스/식단",
-      "videoTitle": "탄산 종결 펩시 제로 라임 대량 구매 후기",
-      "productDisplayName": "펩시 제로 라임",
-      "targetProductSlug": "펩시제로",
-      "targetProductName": "펩시 제로슈거 라임향 250ml 30캔",
-      "ytUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=fitvely_diet",
-      "ytComment": "안녕하세요 @fitvely_diet (핏블리 (FITVELY))님! 이번 '탄산 종결 펩시 제로 라임 대량 구매 후기' 영상 보신 팬분들이 [펩시 제로 라임] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@fitvely_diet 이번 '탄산 종결 펩시 제로 라임 대량 구매 후기' 영상 속 [펩시 제로 라임] 어디서 사는지 물어보는 분들 많길래 @fitvely_diet님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@fitvely_diet 틱톡 '탄산 종결 펩시 제로 라임 대량 구매 후기' 영상 보고 [펩시 제로 라임] 어디서 사는지 물어보는 분들 많길래 @fitvely_diet님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @fitvely_diet 크리에이터님! 핏블리 (FITVELY) 채널의 '탄산 종결 펩시 제로 라임 대량 구매 후기' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [펩시 제로 라임] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @fitvely_diet님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @fitvely_diet님 전용 정산 링크:\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=fitvely_diet&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@fitvely_diet' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "fitvely_diet",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "fitvely_diet",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "fitvely_diet",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_CHROME",
-        "details": "Google Chrome에서 @fitvely_diet (youtube) 페이지 열기 및 댓글 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "bboljit_lab",
-      "creatorName": "뻘짓연구소",
-      "creatorCategory": "IT/테크",
-      "videoTitle": "M5 맥북 프로 14인치 전문가 작업 성능 테스트",
-      "productDisplayName": "맥북 프로 14 M5",
-      "targetProductSlug": "애플맥북",
-      "targetProductName": "Apple 정품 맥북 프로 14 M5 (512GB 스페이스 블랙)",
-      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=bboljit_lab",
-      "ytComment": "안녕하세요 @bboljit_lab (뻘짓연구소)님! 이번 'M5 맥북 프로 14인치 전문가 작업 성능 테스트' 영상 보신 팬분들이 [맥북 프로 14 M5] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@bboljit_lab 이번 'M5 맥북 프로 14인치 전문가 작업 성능 테스트' 영상 속 [맥북 프로 14 M5] 어디서 사는지 물어보는 분들 많길래 @bboljit_lab님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@bboljit_lab 틱톡 'M5 맥북 프로 14인치 전문가 작업 성능 테스트' 영상 보고 [맥북 프로 14 M5] 어디서 사는지 물어보는 분들 많길래 @bboljit_lab님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @bboljit_lab 크리에이터님! 뻘짓연구소 채널의 'M5 맥북 프로 14인치 전문가 작업 성능 테스트' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [맥북 프로 14 M5] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @bboljit_lab님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @bboljit_lab님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EB%A7%A5%EB%B6%81?ref=bboljit_lab&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@bboljit_lab' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "bboljit_lab",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "bboljit_lab",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "bboljit_lab",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_CHROME",
-        "details": "Google Chrome에서 @bboljit_lab (youtube) 페이지 열기 및 댓글 클립보드 복사 완료"
-      }
-    },
-    {
-      "creatorHandle": "risabae_art",
-      "creatorName": "이사배",
-      "creatorCategory": "뷰티/헤어",
-      "videoTitle": "승무원 원조 물광 스프레이 세럼 스킨케어 루틴",
-      "productDisplayName": "달바 프리미엄 물광세럼",
-      "targetProductSlug": "물광피부로션",
-      "targetProductName": "달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml",
-      "ytUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=insta",
-      "tiktokUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=tiktok",
-      "statsUrl": "https://inch.sale/?id=risabae_art",
-      "ytComment": "안녕하세요 @risabae_art (이사배)님! 이번 '승무원 원조 물광 스프레이 세럼 스킨케어 루틴' 영상 보신 팬분들이 [달바 프리미엄 물광세럼] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@risabae_art 이번 '승무원 원조 물광 스프레이 세럼 스킨케어 루틴' 영상 속 [달바 프리미엄 물광세럼] 어디서 사는지 물어보는 분들 많길래 @risabae_art님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨",
-      "tiktokComment": "@risabae_art 틱톡 '승무원 원조 물광 스프레이 세럼 스킨케어 루틴' 영상 보고 [달바 프리미엄 물광세럼] 어디서 사는지 물어보는 분들 많길래 @risabae_art님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @risabae_art 크리에이터님! 이사배 채널의 '승무원 원조 물광 스프레이 세럼 스킨케어 루틴' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [달바 프리미엄 물광세럼] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @risabae_art님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @risabae_art님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=risabae_art&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@risabae_art' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "risabae_art",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": {
-          "platform": "instagram",
-          "targetHandle": "risabae_art",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "risabae_art",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      }
-    },
-    {
-      "creatorHandle": "leojmakeup",
-      "creatorName": "레오제이",
-      "creatorCategory": "뷰티/헤어",
-      "targetProductSlug": "물광피부로션",
-      "targetProductName": "달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml",
-      "ytUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=leojmakeup&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=leojmakeup&ch=insta",
-      "statsUrl": "https://inch.sale/?id=leojmakeup",
-      "ytComment": "안녕하세요 @leojmakeup (레오제이)님! 영상 보신 팬분들이 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 구매처를 정말 많이 물어보셔서, 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=leojmakeup&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@leojmakeup 영상 속 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 어디서 사는지 물어보는 분들 많길래 @leojmakeup님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=leojmakeup&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @leojmakeup 크리에이터님! 레오제이 채널의 알찬 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n콘텐츠에 소개해주신 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @leojmakeup님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @leojmakeup님 전용 정산 링크:\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=leojmakeup&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@leojmakeup' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
-    },
-    {
-      "creatorHandle": "haetnim_mukbang",
-      "creatorName": "입짧은햇님",
-      "creatorCategory": "먹방/디저트",
-      "targetProductSlug": "제로콜라",
-      "targetProductName": "코카콜라 제로 355ml 24캔",
-      "ytUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=haetnim_mukbang&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=haetnim_mukbang&ch=insta",
-      "statsUrl": "https://inch.sale/?id=haetnim_mukbang",
-      "ytComment": "안녕하세요 @haetnim_mukbang (입짧은햇님)님! 영상 보신 팬분들이 [코카콜라 제로 355ml 24캔] 구매처를 정말 많이 물어보셔서, 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=haetnim_mukbang&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@haetnim_mukbang 영상 속 [코카콜라 제로 355ml 24캔] 어디서 사는지 물어보는 분들 많길래 @haetnim_mukbang님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=haetnim_mukbang&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @haetnim_mukbang 크리에이터님! 입짧은햇님 채널의 알찬 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n콘텐츠에 소개해주신 [코카콜라 제로 355ml 24캔] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @haetnim_mukbang님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @haetnim_mukbang님 전용 정산 링크:\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=haetnim_mukbang&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@haetnim_mukbang' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
-    },
-    {
-      "creatorHandle": "nado_eat",
-      "creatorName": "나도Nado",
-      "creatorCategory": "먹방/디저트",
-      "targetProductSlug": "두쫀쿠",
-      "targetProductName": "두바이 쫀득 쿠키 (두쫀쿠)",
-      "ytUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=nado_eat&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=nado_eat&ch=insta",
-      "statsUrl": "https://inch.sale/?id=nado_eat",
-      "ytComment": "안녕하세요 @nado_eat (나도Nado)님! 영상 보신 팬분들이 [두바이 쫀득 쿠키 (두쫀쿠)] 구매처를 정말 많이 물어보셔서, 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=nado_eat&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@nado_eat 영상 속 [두바이 쫀득 쿠키 (두쫀쿠)] 어디서 사는지 물어보는 분들 많길래 @nado_eat님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=nado_eat&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @nado_eat 크리에이터님! 나도Nado 채널의 알찬 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n콘텐츠에 소개해주신 [두바이 쫀득 쿠키 (두쫀쿠)] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @nado_eat님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @nado_eat님 전용 정산 링크:\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=nado_eat&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@nado_eat' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
-    },
-    {
-      "creatorHandle": "mukbang_daily",
-      "category": "먹방/디저트",
-      "productName": "두바이 쫀득 쿠키 (두쫀쿠)",
-      "slug": "두쫀쿠",
-      "hashtags": [
-        "#두바이초콜릿",
-        "#두바이쿠키",
-        "#두쫀쿠",
-        "#디저트먹방",
-        "#간식추천"
-      ],
-      "ytUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_daily&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_daily&ch=insta",
-      "statsUrl": "https://inch.sale/?id=mukbang_daily",
-      "ytComment": "안녕하세요 @mukbang_daily님! 영상 보신 분들이 [두바이 쫀득 쿠키 (두쫀쿠)] 구매처를 많이 물어보셔서, @mukbang_daily님 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_daily&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@mukbang_daily 릴스 보고 [두바이 쫀득 쿠키 (두쫀쿠)] 어디서 사는지 물어보는 분들 많길래 @mukbang_daily님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_daily&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @mukbang_daily 크리에이터님! 매번 센스 넘치는 콘텐츠 즐겁게 보고 있습니다 ✨\n\n이번 콘텐츠에 소개해주신 [두바이 쫀득 쿠키 (두쫀쿠)] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @mukbang_daily님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @mukbang_daily님 전용 70% 정산 링크:\nhttps://inch.sale/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=mukbang_daily&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@mukbang_daily' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
-    },
-    {
-      "creatorHandle": "beauty_unnie",
-      "category": "뷰티/헤어",
-      "productName": "모레모 10초 물미역 헤어 트리트먼트",
-      "slug": "물미역트리트먼트",
-      "hashtags": [
-        "#물미역트리트먼트",
-        "#헤어에센스",
-        "#머릿결관리",
-        "#손상모복구",
-        "#올영세일"
-      ],
-      "ytUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=beauty_unnie&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=beauty_unnie&ch=insta",
-      "statsUrl": "https://inch.sale/?id=beauty_unnie",
-      "ytComment": "안녕하세요 @beauty_unnie님! 영상 보신 분들이 [모레모 10초 물미역 헤어 트리트먼트] 구매처를 많이 물어보셔서, @beauty_unnie님 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=beauty_unnie&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@beauty_unnie 릴스 보고 [모레모 10초 물미역 헤어 트리트먼트] 어디서 사는지 물어보는 분들 많길래 @beauty_unnie님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=beauty_unnie&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @beauty_unnie 크리에이터님! 매번 센스 넘치는 콘텐츠 즐겁게 보고 있습니다 ✨\n\n이번 콘텐츠에 소개해주신 [모레모 10초 물미역 헤어 트리트먼트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @beauty_unnie님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @beauty_unnie님 전용 70% 정산 링크:\nhttps://inch.sale/p/%EB%AC%BC%EB%AF%B8%EC%97%AD%ED%8A%B8%EB%A6%AC%ED%8A%B8%EB%A8%BC%ED%8A%B8?ref=beauty_unnie&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@beauty_unnie' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
-    },
-    {
-      "creatorHandle": "it_tech_bro",
-      "category": "IT/테크",
-      "productName": "Apple 정품 아이폰 17 Pro Max",
-      "slug": "애플아이폰",
-      "hashtags": [
-        "#아이폰17",
-        "#아이폰17프로",
-        "#아이폰자급제",
-        "#애플언박싱",
-        "#앱등이"
-      ],
-      "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=it_tech_bro&ch=youtube",
-      "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=it_tech_bro&ch=insta",
-      "statsUrl": "https://inch.sale/?id=it_tech_bro",
-      "ytComment": "안녕하세요 @it_tech_bro님! 영상 보신 분들이 [Apple 정품 아이폰 17 Pro Max] 구매처를 많이 물어보셔서, @it_tech_bro님 채널 전용으로 70% 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=it_tech_bro&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)",
-      "instaComment": "@it_tech_bro 릴스 보고 [Apple 정품 아이폰 17 Pro Max] 어디서 사는지 물어보는 분들 많길래 @it_tech_bro님 전용 70% 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=it_tech_bro&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨",
-      "instaDm": "안녕하세요 @it_tech_bro 크리에이터님! 매번 센스 넘치는 콘텐츠 즐겁게 보고 있습니다 ✨\n\n이번 콘텐츠에 소개해주신 [Apple 정품 아이폰 17 Pro Max] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @it_tech_bro님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @it_tech_bro님 전용 70% 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=it_tech_bro&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. https://inch.sale 에서 '@it_tech_bro' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊"
     }
   ],
   "latestAutoMatch": {
-    "creatorHandle": "judamapperie8216",
-    "creatorName": "juda mapperie",
-    "creatorTier": "micro",
-    "creatorCategory": "크리스마스/홈파티",
-    "videoTitle": "크리스마스 벽트리 데코 TIP!",
-    "targetVideoUrl": "https://www.youtube.com/watch?v=ao6tx8S-sn0",
-    "productDisplayName": "전나무 크리스마스 트리 풀세트",
-    "targetProductSlug": "크리스마스트리",
-    "targetProductName": "프리미엄 리얼 전나무 크리스마스 트리 풀세트 (홀리데이 에디션)",
-    "ytUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=youtube",
-    "instaUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=insta",
-    "tiktokUrl": "https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=tiktok",
-    "statsUrl": "https://inch.sale/?id=judamapperie8216",
-    "ytComment": "안녕하세요 @judamapperie8216 (juda mapperie)님! 방금 영상 구독 누르고 너무 유익하게 잘 챙겨보고 있습니다 😊\n이번 '크리스마스 벽트리 데코 TIP!' 영상 보구 [전나무 크리스마스 트리 풀세트] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=youtube\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)",
-    "instaComment": "@judamapperie8216 님 이번 '크리스마스 벽트리 데코 TIP!' 영상 속 [전나무 크리스마스 트리 풀세트] 어디서 사는지 물어보는 댓글 많길래 @judamapperie8216님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=insta 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨",
-    "tiktokComment": "@judamapperie8216 틱톡 '크리스마스 벽트리 데코 TIP!' 영상 보고 [전나무 크리스마스 트리 풀세트] 어디서 사는지 궁금해하길래 @judamapperie8216님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 https://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=tiktok 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!",
-    "instaDm": "안녕하세요 @judamapperie8216 크리에이터님! juda mapperie 채널의 '크리스마스 벽트리 데코 TIP!' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [전나무 크리스마스 트리 풀세트] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @judamapperie8216님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @judamapperie8216님 전용 정산 링크:\nhttps://inch.sale/p/%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4%ED%8A%B8%EB%A6%AC?ref=judamapperie8216&ch=insta\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@judamapperie8216' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+    "creatorHandle": "techmong",
+    "creatorName": "테크몽 Techmong",
+    "creatorTier": "mega",
+    "creatorCategory": "IT/테크",
+    "videoTitle": "아이폰17 프로 진짜 변색될까?",
+    "targetVideoUrl": "https://www.youtube.com/watch?v=OP6wPuQbTyk",
+    "productDisplayName": "아이폰 17 Pro Max",
+    "targetProductSlug": "애플아이폰",
+    "targetProductName": "Apple 정품 아이폰 17 Pro Max 자급제 (512GB)",
+    "ytUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=youtube",
+    "instaUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram",
+    "tiktokUrl": "https://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=tiktok",
+    "statsUrl": "https://inch.sale/?id=techmong",
+    "ytComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=youtube",
+    "instaComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram",
+    "tiktokComment": "오 영상에 나왔던 [아이폰 17 Pro Max] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=tiktok",
+    "instaDm": "안녕하세요 @techmong 크리에이터님! 테크몽 Techmong 채널의 '아이폰17 프로 진짜 변색될까?' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [아이폰 17 Pro Max] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @techmong님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @techmong님 전용 정산 링크:\nhttps://inch.sale/p/%EC%95%A0%ED%94%8C%EC%95%84%EC%9D%B4%ED%8F%B0?ref=%40techmong&ch=instagram\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. https://inch.sale 에서 '@techmong' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊",
+    "selectedPlatform": "youtube",
+    "targetUrl": "https://www.youtube.com/watch?v=OP6wPuQbTyk",
     "apiPublishStatus": {
       "youtube": {
         "platform": "youtube",
-        "targetHandle": "judamapperie8216",
+        "targetHandle": "techmong",
         "success": true,
         "status": "TOKEN_REQUIRED",
         "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
       },
-      "instagram": {
-        "platform": "instagram",
-        "targetHandle": "judamapperie8216",
-        "success": true,
-        "status": "TOKEN_REQUIRED",
-        "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-      },
-      "tiktok": {
-        "platform": "tiktok",
-        "targetHandle": "judamapperie8216",
-        "success": true,
-        "status": "TOKEN_REQUIRED",
-        "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-      }
+      "instagram": null,
+      "tiktok": null
     },
     "browserTaskResult": {
       "success": true,
       "method": "APPLESCRIPT_FULL_AUTO",
-      "details": "[100% 완전 자동 전송 완료] @judamapperie8216 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
+      "details": "[100% 완전 자동 전송 완료] @techmong 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!"
     }
   }
 }

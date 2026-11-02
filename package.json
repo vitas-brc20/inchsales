@@ -6,7 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "bot:scheduler": "npx tsx scripts/marketing-bot.ts --scheduler",
+    "bot:youtube": "npx tsx scripts/marketing-bot.ts --platform youtube",
+    "bot:tiktok": "npx tsx scripts/marketing-bot.ts --platform tiktok",
+    "bot:insta": "npx tsx scripts/marketing-bot.ts --platform instagram"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",

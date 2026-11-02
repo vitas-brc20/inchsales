@@ -28,6 +28,8 @@ export interface VerifiedCreator {
   channelName: string;
   handle: string;
   youtubeHandle?: string;
+  instagramHandle?: string;
+  tiktokHandle?: string;
   tier?: 'mega' | 'micro';
   searchKeyword: string;
   platform: 'youtube' | 'insta' | 'tiktok' | 'all';
@@ -43,6 +45,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '입짧은햇님',
     handle: 'short_mouth_sun',
     youtubeHandle: 'short_mouth_sun',
+    instagramHandle: 'cnstka99',
     tier: 'mega',
     searchKeyword: '입짧은햇님',
     platform: 'all',
@@ -54,6 +57,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '쯔양',
     handle: 'tzuyang6145',
     youtubeHandle: 'tzuyang6145',
+    instagramHandle: 'tzuyang70',
     tier: 'mega',
     searchKeyword: '쯔양',
     platform: 'all',
@@ -65,6 +69,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '여수언니 정혜영',
     handle: 'yeosuunnie',
     youtubeHandle: 'yeosuunnie',
+    instagramHandle: 'yeosuunnie',
     tier: 'mega',
     searchKeyword: '여수언니 정혜영',
     platform: 'all',
@@ -76,6 +81,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '나도Nado',
     handle: 'nado_eat',
     youtubeHandle: 'nado_eat',
+    instagramHandle: 'nado_eat',
     tier: 'mega',
     searchKeyword: '나도Nado',
     platform: 'all',
@@ -84,20 +90,10 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     relevanceKeywords: ['디저트', '쿠키', '먹방', '초콜릿'],
   },
   {
-    channelName: '틱톡 디저트여왕 (TikTok)',
-    handle: 'tiktok_snack_queen',
-    tier: 'mega',
-    searchKeyword: '틱톡 디저트 쿠키 먹방',
-    platform: 'tiktok',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라'],
-    relevanceKeywords: ['틱톡간식', '두바이쿠키', '디저트먹방'],
-  },
-  // [Micro 소형 크리에이터 - 높은 댓글 고정 및 수용율]
-  {
     channelName: '조이 ASMR',
     handle: 'zoey_asmr',
     youtubeHandle: 'zoey_asmr',
+    instagramHandle: 'zoey_asmr',
     tier: 'micro',
     searchKeyword: '조이 ASMR 두바이 쿠키 디저트',
     platform: 'all',
@@ -106,33 +102,10 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     relevanceKeywords: ['asmr', '디저트', '쿠키', '먹방', '초콜릿'],
   },
   {
-    channelName: '디저트먹방 ASMR',
-    handle: 'mukbang_asmr',
-    youtubeHandle: 'mukbang_asmr',
-    tier: 'micro',
-    searchKeyword: '디저트먹방 ASMR 두바이쿠키',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠'],
-    relevanceKeywords: ['두바이쿠키', '디저트먹방', 'asmr'],
-  },
-  {
-    channelName: '빵지순례 브이로그',
-    handle: 'bakery_vlog_kr',
-    tier: 'micro',
-    searchKeyword: '디저트 빵지순례 브이로그 두바이쿠키',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라'],
-    relevanceKeywords: ['빵지순례', '디저트', '쿠키', '브이로그'],
-  },
-
-  // 2. 뷰티 / 헤어 / 스킨케어 분야 (헤어, 미백, 톤업, 피지제거만 엄격 매핑)
-  // [Mega 크리에이터]
-  {
     channelName: '회사원A',
     handle: 'calarygirl',
     youtubeHandle: 'calarygirl',
+    instagramHandle: 'calarygirl_a',
     tier: 'mega',
     searchKeyword: '회사원A',
     platform: 'all',
@@ -144,6 +117,8 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '이사배',
     handle: 'RISABAE',
     youtubeHandle: 'RISABAE',
+    instagramHandle: 'risabae_art',
+    tiktokHandle: 'risabae_art',
     tier: 'mega',
     searchKeyword: '이사배',
     platform: 'all',
@@ -155,6 +130,8 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '레오제이',
     handle: 'LeoJMakeup',
     youtubeHandle: 'LeoJMakeup',
+    instagramHandle: 'leojmakeup',
+    tiktokHandle: 'leojmakeup',
     tier: 'mega',
     searchKeyword: '레오제이',
     platform: 'all',
@@ -166,12 +143,61 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '유트루',
     handle: 'yootrue_beauty',
     youtubeHandle: 'yootrue_beauty',
+    instagramHandle: 'yootrue5502',
     tier: 'mega',
     searchKeyword: '유트루',
     platform: 'all',
     category: '뷰티/헤어',
-    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '물미역트리트먼트'],
-    relevanceKeywords: ['기초케어', '물광', '진정세럼', '보습'],
+    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '물미역트리트먼트', '미역헤어에센스'],
+    relevanceKeywords: ['기초케어', '물광', '진정세럼', '보습', '트리트먼트'],
+  },
+  {
+    channelName: 'simplysofia',
+    handle: 'simplysofia',
+    tiktokHandle: 'simplysofia',
+    instagramHandle: 'simplysofia',
+    tier: 'mega',
+    searchKeyword: 'simplysofia',
+    platform: 'all',
+    category: 'IT/테크',
+    allowedSlugs: ['애플에어팟', '애플아이폰', '로지텍키보드', '스탠드조명'],
+    relevanceKeywords: ['아이폰', '데스크셋업', '핑크', '애플', '테크'],
+  },
+  {
+    channelName: '핏블리',
+    handle: 'fitvely_diet',
+    youtubeHandle: 'fitvely_diet',
+    instagramHandle: 'fitvely_moon',
+    tier: 'mega',
+    searchKeyword: '핏블리 FITVELY',
+    platform: 'all',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로', '샥즈오픈핏'],
+    relevanceKeywords: ['다이어트', '닭가슴살', '식단', '프로틴', '단백질'],
+  },
+  {
+    channelName: '피지컬갤러리',
+    handle: 'physicalgallery',
+    youtubeHandle: 'physicalgallery',
+    instagramHandle: 'physical_gallery_egg',
+    tier: 'mega',
+    searchKeyword: '피지컬갤러리',
+    platform: 'all',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['운동이어폰', '단백질식단', '헬스', '닭가슴살'],
+  },
+  {
+    channelName: '언더케이지',
+    handle: 'Underkg',
+    youtubeHandle: 'Underkg',
+    instagramHandle: 'underkg',
+    tier: 'mega',
+    searchKeyword: 'UNDERkg',
+    platform: 'all',
+    category: 'IT/테크',
+    allowedSlugs: ['샥즈오픈핏', '애플에어팟', '애플아이폰', '노트북거치대'],
+    relevanceKeywords: ['이어폰', '오픈핏', '블루투스', '전자기기', '테크'],
   },
   {
     channelName: '틱톡 뷰티꿀팁 (TikTok)',
@@ -430,12 +456,34 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
 
 // 크리에이터-상품 매칭 엄격 안전 검증기
 // (소형 크리에이터 micro를 65% 확률로 우선 선택하여 고정댓글 수용 및 반응율 극대화)
-export function matchCreatorSafely(targetSlug: string, targetCategory: string): VerifiedCreator | null {
+export function matchCreatorSafely(
+  targetSlug: string,
+  targetCategory: string,
+  requestedPlatform?: 'youtube' | 'tiktok' | 'instagram'
+): VerifiedCreator | null {
   const eligible = VERIFIED_CREATORS.filter((creator) => {
-    return creator.allowedSlugs.includes(targetSlug);
+    const slugMatch = creator.allowedSlugs.includes(targetSlug);
+    if (!slugMatch) return false;
+    if (requestedPlatform === 'instagram') {
+      return Boolean(creator.instagramHandle);
+    }
+    if (requestedPlatform === 'tiktok') {
+      return creator.platform === 'tiktok' || Boolean(creator.tiktokHandle) || Boolean(creator.searchKeyword);
+    }
+    if (requestedPlatform === 'youtube') {
+      return creator.platform === 'all' || creator.platform === 'youtube';
+    }
+    return true;
   });
 
-  if (eligible.length === 0) return null;
+  if (eligible.length === 0) {
+    const fallback = VERIFIED_CREATORS.filter((creator) => {
+      if (requestedPlatform === 'instagram') return Boolean(creator.instagramHandle);
+      return creator.allowedSlugs.includes(targetSlug);
+    });
+    if (fallback.length === 0) return null;
+    return fallback[Math.floor(Math.random() * fallback.length)];
+  }
 
   const microEligible = eligible.filter((c) => c.tier === 'micro');
   const megaEligible = eligible.filter((c) => c.tier !== 'micro');
@@ -527,9 +575,19 @@ export function generateCreatorCommentBundle(
   specificVideoUrl?: string
 ) {
   const baseDomain = BASE_URL;
-  const ytUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=youtube`;
-  const instaUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=insta`;
-  const tiktokUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(creator.handle)}&ch=tiktok`;
+  // 핸들에 반드시 @가 포함되도록 풀네임 포맷팅
+  const fullHandle = (handle?: string) => {
+    const h = (handle || creator.handle || '').trim();
+    return h.startsWith('@') ? h : `@${h}`;
+  };
+
+  const ytRef = fullHandle(creator.youtubeHandle || creator.handle);
+  const igRef = fullHandle(creator.instagramHandle || creator.handle);
+  const ttRef = fullHandle(creator.tiktokHandle || creator.handle);
+
+  const ytUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(ytRef)}&ch=youtube`;
+  const instaUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(igRef)}&ch=instagram`;
+  const tiktokUrl = `${baseDomain}/p/${encodeURIComponent(targetProduct.slug)}?ref=${encodeURIComponent(ttRef)}&ch=tiktok`;
   const statsUrl = `${baseDomain}/?id=${encodeURIComponent(creator.handle)}`;
 
   // 상품의 자연스러운 간결명 및 영상 제목 컨텍스트 추출
@@ -543,21 +601,14 @@ export function generateCreatorCommentBundle(
 
   const isMicro = creator.tier === 'micro';
 
-  // 유튜브 댓글 제안문 (영상 제목 직접 인용 & 70% 수치 제외 & 소형/대형 맞춤 톤앤매너)
-  // [중요] 유튜브에서 파란색 클릭 가능 하이퍼링크로 자동 변환되도록 단독 라인으로 깔끔하게 배치
-  const ytComment = isMicro
-    ? `안녕하세요 @${creator.handle} (${creator.channelName})님! 방금 영상 구독 누르고 너무 유익하게 잘 챙겨보고 있습니다 😊\n이번 '${videoTitle}' 영상 보구 [${productDisplayName}] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n\n${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)`
-    : `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n\n${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+  // 자연스러운 시청자 정보공유 댓글 (친절한 존댓말 톤 & 유튜브 100% 파란색 하이퍼링크 자동 변환)
+  const ytComment = `오 영상에 나왔던 [${productDisplayName}] 최저가 찾았어요 ! ✨\n${ytUrl}`;
 
-  // 인스타그램 릴스/피드 댓글 제안문 (영상 제목 직접 인용)
-  const instaComment = isMicro
-    ? `@${creator.handle} 님 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 댓글 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨`
-    : `@${creator.handle} 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
+  // 인스타그램 릴스/피드 댓글 (친절한 존댓말 톤)
+  const instaComment = `오 영상에 나왔던 [${productDisplayName}] 최저가 찾았어요 ! ✨\n${instaUrl}`;
 
-  // 틱톡 숏폼 댓글 제안문 (영상 제목 직접 인용)
-  const tiktokComment = isMicro
-    ? `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 궁금해하길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!`
-    : `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+  // 틱톡 숏폼 댓글 (친절한 존댓말 톤)
+  const tiktokComment = `오 영상에 나왔던 [${productDisplayName}] 최저가 찾았어요 ! ✨\n${tiktokUrl}`;
 
   // 인스타그램 DM 협업 제안 전문 (영상 제목 직접 인용)
   const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 '${videoTitle}' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${productDisplayName}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
@@ -584,31 +635,51 @@ export function generateCreatorCommentBundle(
 }
 
 /**
- * YouTube 검색 결과에서 가장 최신의 실제 첫 번째 영상(/watch?v=...)과 실제 채널명/핸들을 자동 추출합니다.
- * (단순 검색 결과 페이지 대신 100% 실제 영상 시청 페이지 직행 및 영상 제목/실제 크리에이터 핸들 정밀 인용 보장)
+ * 쇼츠(Shorts) 영상 여부를 확인합니다.
+ * (유튜브 정책상 쇼츠 영상은 댓글 하이퍼링크가 강제 비활성화(일반 텍스트)되므로,
+ * 하이퍼링크가 파란색 링크로 100% 작동하는 일반 롱폼 정규 영상만 선별하기 위함)
+ */
+async function isYouTubeShort(id: string): Promise<boolean> {
+  try {
+    const { stdout } = await execAsync(`curl -s -I --max-time 4 "https://www.youtube.com/shorts/${id}" | head -n 1`);
+    // Shorts는 200 OK를 반환하고, 일반 롱폼 영상은 303 Redirect를 반환함
+    return stdout.includes('200');
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * YouTube 검색 결과에서 가장 최신의 실제 첫 번째 롱폼 영상(/watch?v=...)을 추출합니다.
+ * (쇼츠는 댓글 링크 클릭이 유튜브에 의해 차단되므로, 링크가 100% 클릭 가능한 일반 가로 롱폼 영상만 엄격 선별)
  */
 export async function resolveFirstYouTubeVideo(
   query: string
 ): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string; channelName?: string; channelHandle?: string } | null> {
   try {
-    // 1차: 일반 롱폼 동영상 우선 탐색 (sp=EgIQAQ%253D%253D : 댓글 하이퍼링크 100% 클릭 가능)
-    const urlLong = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}&sp=EgIQAQ%253D%253D`;
-    const cmdLong = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${urlLong}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
-    let { stdout } = await execAsync(cmdLong);
-    let match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    // 1차: 일반 롱폼 동영상 후보군 추출
+    const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+    const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o '"videoId":"[a-zA-Z0-9_-]\\{11\\}"' | head -n 10`;
+    const { stdout } = await execAsync(cmd);
+    const videoMatches = Array.from(stdout.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)).map((m) => m[1]);
+    const uniqueIds = Array.from(new Set(videoMatches));
 
-    // 2차: 롱폼이 없을 경우 전체(숏폼 포함)에서 첫 영상 폴백 탐색
-    if (!match || !match[1]) {
-      const urlAny = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-      const cmdAny = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${urlAny}" | grep -o "/watch?v=[a-zA-Z0-9_-]\\{11\\}" | head -n 1`;
-      const resAny = await execAsync(cmdAny);
-      stdout = resAny.stdout;
-      match = stdout.trim().match(/\/watch\?v=([a-zA-Z0-9_-]{11})/);
+    // 쇼츠가 아닌 정규 롱폼 비디오만 필터링 (댓글 하이퍼링크 100% 활성화 보장)
+    let chosenId = '';
+    for (const id of uniqueIds) {
+      const shortCheck = await isYouTubeShort(id);
+      if (!shortCheck) {
+        chosenId = id;
+        break;
+      }
     }
 
-    if (!match || !match[1]) return null;
+    if (!chosenId && uniqueIds.length > 0) {
+      chosenId = uniqueIds[0];
+    }
+    if (!chosenId) return null;
 
-    const videoId = match[1];
+    const videoId = chosenId;
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
 
     // 실제 첫 영상 제목 및 채널 정보 파싱 시도
@@ -951,9 +1022,39 @@ async function autoDiscoverAndAddProducts(timestamp: string): Promise<any | null
   return newlyAdded;
 }
 
-export async function runMarketingCycle() {
+export type PlatformType = 'youtube' | 'tiktok' | 'instagram';
+const CYCLE_STATE_FILE = path.join(process.cwd(), 'logs', 'cycle-state.json');
+
+export function getNextPlatform(forced?: PlatformType): PlatformType {
+  if (forced) return forced;
+  try {
+    if (fs.existsSync(CYCLE_STATE_FILE)) {
+      const data = JSON.parse(fs.readFileSync(CYCLE_STATE_FILE, 'utf8'));
+      if (data.lastPlatform === 'youtube') return 'tiktok';
+      if (data.lastPlatform === 'tiktok') return 'instagram';
+      if (data.lastPlatform === 'instagram') return 'youtube';
+    }
+  } catch {}
+  return 'youtube';
+}
+
+export function saveLastPlatform(platform: PlatformType) {
+  try {
+    const dir = path.dirname(CYCLE_STATE_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(CYCLE_STATE_FILE, JSON.stringify({
+      lastPlatform: platform,
+      updatedAt: new Date().toISOString(),
+    }, null, 2), 'utf8');
+  } catch {}
+}
+
+export async function runMarketingCycle(forcedPlatform?: PlatformType) {
+  const selectedPlatform = getNextPlatform(forcedPlatform);
+  saveLastPlatform(selectedPlatform);
+
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] 🚀 inchsales 30분 정기 마케팅 & 상품 등록 사이클 실행`);
+  console.log(`[${timestamp}] 🚀 inchsales [${selectedPlatform.toUpperCase()}] 사이클 실행 (10분 교차 로테이션)`);
 
   if (!fs.existsSync(CAMPAIGN_DIR)) {
     fs.mkdirSync(CAMPAIGN_DIR, { recursive: true });
@@ -1000,16 +1101,18 @@ export async function runMarketingCycle() {
   // 4. 캠페인 포스팅 번들 저장 (다채널 6대 홍보 채널 자동 생성)
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
 
-  // 4-1. 유명 크리에이터 맞춤 댓글 홍보 매칭 (카테고리/제목 어울림 엄격 검증)
-  const matchedCreator = matchCreatorSafely(target.slug, target.category);
+  // 4-1. 선택된 플랫폼에 최적화된 유명 크리에이터 맞춤 댓글 홍보 매칭
+  const matchedCreator = matchCreatorSafely(target.slug, target.category, selectedPlatform);
   let creatorOutreachBundle: any = null;
   let apiPublishStatus: any = null;
   let browserTaskResult: any = null;
 
   if (matchedCreator) {
-    // 유튜브 플랫폼일 경우 단순 검색창(search_query)이 아닌, '실제 첫 번째 영상(/watch?v=...)'을 실시간 파싱하여 직행 타깃팅!
     let resolvedVideo: Awaited<ReturnType<typeof resolveFirstYouTubeVideo>> = null;
-    if (matchedCreator.platform === 'all' || matchedCreator.platform === 'youtube') {
+    let targetUrl = '';
+    let commentText = '';
+
+    if (selectedPlatform === 'youtube') {
       const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
       const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;
       resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
@@ -1020,7 +1123,6 @@ export async function runMarketingCycle() {
         resolvedVideo = await resolveFirstYouTubeVideo(matchedCreator.searchKeyword);
       }
       if (resolvedVideo) {
-        // [핵심] 영상 시청 페이지에서 파싱된 실제 크리에이터 핸들과 채널명으로 즉시 갱신!
         if (resolvedVideo.channelHandle) {
           matchedCreator.handle = resolvedVideo.channelHandle;
           matchedCreator.youtubeHandle = resolvedVideo.channelHandle;
@@ -1030,20 +1132,49 @@ export async function runMarketingCycle() {
         }
         console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] 채널: @${matchedCreator.handle} (${matchedCreator.channelName}) / 영상: "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
       }
+
+      creatorOutreachBundle = generateCreatorCommentBundle(
+        matchedCreator,
+        target,
+        resolvedVideo?.videoTitle,
+        resolvedVideo?.videoUrl
+      );
+
+      targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
+        ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
+        : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
+      commentText = creatorOutreachBundle.ytComment;
+    } else if (selectedPlatform === 'instagram') {
+      const igHandle = matchedCreator.instagramHandle || matchedCreator.handle;
+      creatorOutreachBundle = generateCreatorCommentBundle(
+        { ...matchedCreator, handle: igHandle },
+        target
+      );
+      targetUrl = `https://www.instagram.com/${encodeURIComponent(igHandle)}/`;
+      commentText = creatorOutreachBundle.instaComment;
+      console.log(`[${timestamp}] 📸 [인스타그램 타깃 매칭 성공] 계정: @${igHandle} (${matchedCreator.channelName}) -> ${targetUrl}`);
+    } else {
+      // tiktok (404 원천 차단: 검증된 핸들 또는 실제 검색어 직행)
+      const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
+      if (matchedCreator.tiktokHandle) {
+        targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle)}`;
+      } else {
+        const query = `${matchedCreator.channelName} ${shortProductName}`.trim();
+        targetUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+      }
+      creatorOutreachBundle = generateCreatorCommentBundle(
+        matchedCreator,
+        target
+      );
+      commentText = creatorOutreachBundle.tiktokComment;
+      console.log(`[${timestamp}] 🎵 [틱톡 타깃 매칭 성공] ${matchedCreator.channelName} -> ${targetUrl}`);
     }
 
-    creatorOutreachBundle = generateCreatorCommentBundle(
-      matchedCreator,
-      target,
-      resolvedVideo?.videoTitle,
-      resolvedVideo?.videoUrl
-    );
-
-    // 4-2. 공식 API (YouTube Data API v3 / Meta Graph / TikTok) 백그라운드 직접 전송 시도 (옵션 B)
+    // 4-2. 공식 API 백그라운드 직접 전송 시도
     try {
-      const ytResult = await publishYouTubeComment(matchedCreator.handle, creatorOutreachBundle.ytComment);
-      const igResult = await publishInstagramComment(matchedCreator.handle, creatorOutreachBundle.instaComment);
-      const ttResult = await publishTikTokComment(matchedCreator.handle, creatorOutreachBundle.tiktokComment);
+      const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(matchedCreator.handle, creatorOutreachBundle.ytComment) : null;
+      const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(matchedCreator.handle, creatorOutreachBundle.instaComment) : null;
+      const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(matchedCreator.handle, creatorOutreachBundle.tiktokComment) : null;
 
       apiPublishStatus = {
         youtube: ytResult,
@@ -1054,28 +1185,8 @@ export async function runMarketingCycle() {
       console.warn('API direct publish check error:', e);
     }
     
-    // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화 (브라우저 새 탭 열기 & 클립보드 자동 복사 & 알림 배너)
+    // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화
     try {
-      const selectedPlatform = matchedCreator.platform === 'tiktok'
-        ? 'tiktok'
-        : (matchedCreator.platform === 'insta' ? 'instagram' : 'youtube');
-
-      let targetUrl = '';
-      let commentText = '';
-      if (selectedPlatform === 'youtube') {
-        // [중요] 단순 검색 결과 페이지(results?search_query)가 아닌, 실제 첫 번째 영상(/watch?v=...) 페이지로 100% 직행!
-        targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
-          ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
-          : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
-        commentText = creatorOutreachBundle.ytComment;
-      } else if (selectedPlatform === 'instagram') {
-        targetUrl = `https://www.instagram.com/${encodeURIComponent(matchedCreator.handle)}/`;
-        commentText = creatorOutreachBundle.instaComment;
-      } else {
-        targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.handle)}`;
-        commentText = creatorOutreachBundle.tiktokComment;
-      }
-
       browserTaskResult = await dispatchBrowserOutreach({
         platform: selectedPlatform,
         creatorHandle: matchedCreator.handle,
@@ -1097,14 +1208,17 @@ export async function runMarketingCycle() {
       currentOutreach.generatedAt = timestamp;
       currentOutreach.latestAutoMatch = {
         ...creatorOutreachBundle,
+        selectedPlatform,
+        targetUrl,
         apiPublishStatus,
         browserTaskResult,
       };
       if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
-      // 중복 방지 후 선두에 추가
       currentOutreach.targets = [
         {
           ...creatorOutreachBundle,
+          selectedPlatform,
+          targetUrl,
           apiPublishStatus,
           browserTaskResult,
         },
@@ -1120,6 +1234,7 @@ export async function runMarketingCycle() {
   const campaignData = {
     campaignId,
     generatedAt: timestamp,
+    selectedPlatform,
     targetProduct: target.name,
     targetSlug: target.slug,
     trackingId: TRACKING_ID,
@@ -1132,11 +1247,13 @@ export async function runMarketingCycle() {
           name: creatorOutreachBundle.creatorName,
           handle: creatorOutreachBundle.creatorHandle,
           category: creatorOutreachBundle.creatorCategory,
+          platform: selectedPlatform,
         }
       : null,
     targetedCreatorOutreach: creatorOutreachBundle
       ? {
           ...creatorOutreachBundle,
+          selectedPlatform,
           apiPublishStatus,
         }
       : null,
@@ -1170,17 +1287,21 @@ export async function runMarketingCycle() {
 
   // 5. 마케팅 활동 로그 기록
   const creatorLog = creatorOutreachBundle
-    ? ` | 🎯크리에이터 댓글홍보: @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${creatorOutreachBundle.creatorCategory})`
+    ? ` | 🎯크리에이터 댓글홍보: @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${selectedPlatform})`
     : '';
-  const logMessage = `[${timestamp}] [정기 사이클] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl}${creatorLog} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
+  const logMessage = `[${timestamp}] [정기 사이클 · ${selectedPlatform.toUpperCase()}] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl}${creatorLog} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
   fs.appendFileSync(LOG_FILE, logMessage, 'utf8');
 
   console.log(`[${timestamp}] ✅ 마케팅 캠페인 번들 생성 완료: ${target.name} (${landingUrl})`);
   if (creatorOutreachBundle) {
-    console.log(`[${timestamp}] 🎯 [크리에이터 맞춤 댓글 홍보 매칭] @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
-    console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment.slice(0, 80)}..."`);
-    console.log(`[${timestamp}] 💬 [인스타 댓글] "${creatorOutreachBundle.instaComment}"`);
-    console.log(`[${timestamp}] 💬 [틱톡 댓글] "${creatorOutreachBundle.tiktokComment}"`);
+    console.log(`[${timestamp}] 🎯 [${selectedPlatform.toUpperCase()} 크리에이터 매칭] @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
+    if (selectedPlatform === 'youtube') {
+      console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment}"`);
+    } else if (selectedPlatform === 'instagram') {
+      console.log(`[${timestamp}] 💬 [인스타 댓글] "${creatorOutreachBundle.instaComment}"`);
+    } else {
+      console.log(`[${timestamp}] 💬 [틱톡 댓글] "${creatorOutreachBundle.tiktokComment}"`);
+    }
     if (browserTaskResult) {
       console.log(`[${timestamp}] 🖥️ [로컬 Chrome 브라우저 자동화] ${browserTaskResult.details}`);
     }
@@ -1188,4 +1309,39 @@ export async function runMarketingCycle() {
   return campaignData;
 }
 
-runMarketingCycle().catch(console.error);
+/**
+ * 10분 단위 교차 스케줄러 (유튜브 30분, 틱톡 30분, 인스타 30분)
+ * - 00분, 30분: 유튜브
+ * - 10분, 40분: 틱톡
+ * - 20분, 50분: 인스타그램
+ */
+export async function start10MinScheduler() {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ⏰ 10분 간격 교차 스케줄러 시작! (유튜브 30분, 틱톡 30분, 인스타 30분)`);
+
+  // 즉시 현재 사이클 1회 실행
+  await runMarketingCycle();
+
+  // 10분(600,000ms)마다 다음 플랫폼으로 교차 실행
+  const INTERVAL_MS = 10 * 60 * 1000;
+  setInterval(async () => {
+    try {
+      await runMarketingCycle();
+    } catch (e) {
+      console.error('Scheduled cycle error:', e);
+    }
+  }, INTERVAL_MS);
+}
+
+// CLI 실행 처리
+const cliArgs = process.argv.slice(2);
+const platformFlag = cliArgs.find((a, i) => a === '--platform' && cliArgs[i + 1])
+  ? (cliArgs[cliArgs.indexOf('--platform') + 1] as PlatformType)
+  : undefined;
+const isSchedulerMode = cliArgs.includes('--scheduler') || cliArgs.includes('-s') || cliArgs.includes('--daemon');
+
+if (isSchedulerMode) {
+  start10MinScheduler().catch(console.error);
+} else {
+  runMarketingCycle(platformFlag).catch(console.error);
+}

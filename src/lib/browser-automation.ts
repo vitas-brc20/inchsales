@@ -1,7 +1,7 @@
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { isCDPAvailable, postYouTubeCommentViaCDP } from './cdp-automation';
-import { postYouTubeCommentViaAppleScript } from './applescript-poster';
+import { postYouTubeCommentViaAppleScript, postInstagramViaAppleScript, postTikTokViaAppleScript } from './applescript-poster';
 
 const execAsync = promisify(exec);
 
@@ -46,7 +46,7 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     await copyToMacClipboard(task.commentText);
 
     // 2-1. [AppleScript 100% 무인 자동화 시도]
-    // 사용자가 'Apple Events의 자바스크립트 허용'을 켰으므로, 백그라운드에서 직접 작성 & 제출!
+    // 1) 유튜브: 첫 영상 직접 작성 & 제출
     if (task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
       const asRes = await postYouTubeCommentViaAppleScript(task.targetUrl, task.commentText);
       if (asRes.success) {
@@ -64,6 +64,44 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
         };
       } else {
         console.warn('AppleScript auto-submit notice:', asRes.message);
+      }
+    }
+
+    // 2) 인스타그램: 프로필 목록 대신 첫 번째 실제 릴스/게시물로 즉시 직행 및 댓글창 포커스
+    if (task.platform === 'instagram') {
+      const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText);
+      if (igRes.success) {
+        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
+        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
+        const notifScript = `
+          display notification "첫 릴스/게시물 직행 완료! (Cmd+V 로 등록)" with title "📸 [인스타 직행] @${cleanHandle}" subtitle "${cleanProduct}"
+        `;
+        await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
+
+        return {
+          success: true,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[인스타그램 릴스/게시물 직행 성공] @${task.creatorHandle} 첫 번째 영상 직행: ${igRes.postUrl || task.targetUrl}`,
+        };
+      }
+    }
+
+    // 3) 틱톡: 404 방지 및 첫 번째 실제 영상으로 즉시 직행
+    if (task.platform === 'tiktok') {
+      const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText);
+      if (ttRes.success) {
+        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
+        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
+        const notifScript = `
+          display notification "첫 숏폼 영상 직행 완료! (Cmd+V 로 등록)" with title "🎵 [틱톡 영상 직행] @${cleanHandle}" subtitle "${cleanProduct}"
+        `;
+        await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
+
+        return {
+          success: true,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[틱톡 첫 번째 영상 직행 성공] @${task.creatorHandle} 실제 영상 직행: ${ttRes.videoUrl || task.targetUrl}`,
+        };
       }
     }
 
