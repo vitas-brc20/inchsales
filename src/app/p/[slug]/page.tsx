@@ -3,6 +3,8 @@ import { getLinkBySlug } from '@/lib/storage';
 import ProductCardView from '@/components/ProductCardView';
 import type { Metadata } from 'next';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata(
   props: {
     params: Promise<{ slug: string }>;

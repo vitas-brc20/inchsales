@@ -40,6 +40,16 @@ const INITIAL_PRODUCTS: Record<string, ProductItem> = {
     totalClicks: 231,
     createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
   },
+  '두쫀쿠': {
+    slug: '두쫀쿠',
+    name: '두바이 쫀득 쿠키 (두쫀쿠)',
+    category: '간식/디저트',
+    tagline: '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기',
+    queryOrUrl: '두바이 쫀득 쿠키',
+    priceHint: '16,900원',
+    totalClicks: 231,
+    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
+  },
   'desk-cleaner': {
     slug: 'desk-cleaner',
     name: '충전식 미니 데스크 무선 청소기',
@@ -50,8 +60,28 @@ const INITIAL_PRODUCTS: Record<string, ProductItem> = {
     totalClicks: 142,
     createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
   },
+  '데스크청소기': {
+    slug: '데스크청소기',
+    name: '충전식 미니 데스크 무선 청소기',
+    category: '리빙/자취',
+    tagline: '릴스에서 문의 폭주했던 책상 위 지우개똥/먼지 청소기',
+    queryOrUrl: '미니 데스크 청소기',
+    priceHint: '12,500원',
+    totalClicks: 142,
+    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+  },
   'laptop-stand': {
     slug: 'laptop-stand',
+    name: '원목 접이식 각도조절 노트북 거치대',
+    category: '데스크테리어',
+    tagline: '목디스크 탈출! 감성 데스크테리어 필수 아이템',
+    queryOrUrl: '접이식 노트북 거치대',
+    priceHint: '24,900원',
+    totalClicks: 88,
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+  },
+  '노트북거치대': {
+    slug: '노트북거치대',
     name: '원목 접이식 각도조절 노트북 거치대',
     category: '데스크테리어',
     tagline: '목디스크 탈출! 감성 데스크테리어 필수 아이템',
@@ -501,8 +531,16 @@ export function getAllLinks(): ProductLink[] {
 }
 
 export function getLinkBySlug(slug: string, refCreator?: string): ProductLink | null {
-  const product = getProductBySlugOrQuery(slug);
-  if (!product) return null;
+  let product = getProductBySlugOrQuery(slug);
+  if (!product) {
+    // 요청된 상품명이 카탈로그에 없는 경우, 실시간 온디맨드로 바로 생성
+    product = upsertProduct({
+      name: slug,
+      category: '트렌드/핫템',
+      tagline: `${slug} - 쿠팡 최저가 로켓배송 실시간 재고 확인`,
+      queryOrUrl: slug,
+    });
+  }
 
   const creatorId = refCreator || 'official';
   const statKey = `${creatorId}:${product.slug}`;
