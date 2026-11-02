@@ -660,22 +660,39 @@ export default function Studio({ initialLinks }: StudioProps) {
                           <div className="space-y-2">
                             {/* YouTube Comment */}
                             <div className="bg-white p-3 rounded-xl border border-red-100 shadow-2xs space-y-1.5">
-                              <div className="flex items-center justify-between">
+                              <div className="flex items-center justify-between gap-1 flex-wrap">
                                 <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
                                   <span>🎬</span> 유튜브 댓글 제안문 (고정댓글/답글용)
                                 </span>
-                                <button
-                                  type="button"
-                                  onClick={() => copyToClipboard(ytComment, 'outreach_yt')}
-                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                                    copiedType === 'outreach_yt'
-                                      ? 'bg-red-600 text-white'
-                                      : 'bg-red-50 hover:bg-red-100 text-red-700'
-                                  }`}
-                                >
-                                  {copiedType === 'outreach_yt' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                                  <span>{copiedType === 'outreach_yt' ? '복사됨!' : '댓글 카피 복사'}</span>
-                                </button>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => copyToClipboard(ytComment, 'outreach_yt')}
+                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                      copiedType === 'outreach_yt'
+                                        ? 'bg-red-600 text-white'
+                                        : 'bg-red-50 hover:bg-red-100 text-red-700'
+                                    }`}
+                                  >
+                                    {copiedType === 'outreach_yt' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                    <span>{copiedType === 'outreach_yt' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      copyToClipboard(ytComment, 'outreach_yt');
+                                      const ytTargetUrl = targetVideoTitle.trim()
+                                        ? `https://www.youtube.com/results?search_query=${encodeURIComponent(activeHandle + ' ' + targetVideoTitle)}`
+                                        : `https://www.youtube.com/@${encodeURIComponent(activeHandle)}/videos`;
+                                      window.open(ytTargetUrl, '_blank');
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all flex items-center gap-1 shrink-0"
+                                    title="댓글을 자동 복사하고 유튜브 새 창을 바로 엽니다"
+                                  >
+                                    <span>🚀 유튜브 바로 열기</span>
+                                    <ExternalLink className="w-2.5 h-2.5" />
+                                  </button>
+                                </div>
                               </div>
                               <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
                                 {ytComment}
@@ -684,22 +701,36 @@ export default function Studio({ initialLinks }: StudioProps) {
 
                             {/* Instagram Comment */}
                             <div className="bg-white p-3 rounded-xl border border-pink-100 shadow-2xs space-y-1.5">
-                              <div className="flex items-center justify-between">
+                              <div className="flex items-center justify-between gap-1 flex-wrap">
                                 <span className="text-xs font-bold text-slate-800 flex items-center gap-1">
                                   <span>📸</span> 인스타그램 릴스/피드 댓글 제안문
                                 </span>
-                                <button
-                                  type="button"
-                                  onClick={() => copyToClipboard(instaComment, 'outreach_insta')}
-                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                                    copiedType === 'outreach_insta'
-                                      ? 'bg-pink-600 text-white'
-                                      : 'bg-pink-50 hover:bg-pink-100 text-pink-700'
-                                  }`}
-                                >
-                                  {copiedType === 'outreach_insta' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                                  <span>{copiedType === 'outreach_insta' ? '복사됨!' : '댓글 카피 복사'}</span>
-                                </button>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => copyToClipboard(instaComment, 'outreach_insta')}
+                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                      copiedType === 'outreach_insta'
+                                        ? 'bg-pink-600 text-white'
+                                        : 'bg-pink-50 hover:bg-pink-100 text-pink-700'
+                                    }`}
+                                  >
+                                    {copiedType === 'outreach_insta' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                    <span>{copiedType === 'outreach_insta' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      copyToClipboard(instaComment, 'outreach_insta');
+                                      window.open(`https://www.instagram.com/${encodeURIComponent(activeHandle)}/`, '_blank');
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-95 transition-all flex items-center gap-1 shrink-0"
+                                    title="댓글을 자동 복사하고 인스타그램 새 창을 바로 엽니다"
+                                  >
+                                    <span>🚀 인스타 바로 열기</span>
+                                    <ExternalLink className="w-2.5 h-2.5" />
+                                  </button>
+                                </div>
                               </div>
                               <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
                                 {instaComment}
@@ -708,22 +739,36 @@ export default function Studio({ initialLinks }: StudioProps) {
 
                             {/* TikTok Comment */}
                             <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                              <div className="flex items-center justify-between">
+                              <div className="flex items-center justify-between gap-1 flex-wrap">
                                 <span className="text-xs font-bold text-slate-900 flex items-center gap-1">
                                   <span>🎵</span> 틱톡(TikTok) 영상 댓글 제안문
                                 </span>
-                                <button
-                                  type="button"
-                                  onClick={() => copyToClipboard(tiktokComment, 'outreach_tiktok')}
-                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
-                                    copiedType === 'outreach_tiktok'
-                                      ? 'bg-slate-900 text-white'
-                                      : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
-                                  }`}
-                                >
-                                  {copiedType === 'outreach_tiktok' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                                  <span>{copiedType === 'outreach_tiktok' ? '복사됨!' : '댓글 카피 복사'}</span>
-                                </button>
+                                <div className="flex items-center gap-1.5">
+                                  <button
+                                    type="button"
+                                    onClick={() => copyToClipboard(tiktokComment, 'outreach_tiktok')}
+                                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                      copiedType === 'outreach_tiktok'
+                                        ? 'bg-slate-900 text-white'
+                                        : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                                    }`}
+                                  >
+                                    {copiedType === 'outreach_tiktok' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                    <span>{copiedType === 'outreach_tiktok' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      copyToClipboard(tiktokComment, 'outreach_tiktok');
+                                      window.open(`https://www.tiktok.com/@${encodeURIComponent(activeHandle)}`, '_blank');
+                                    }}
+                                    className="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-slate-800 text-white hover:bg-black transition-all flex items-center gap-1 shrink-0"
+                                    title="댓글을 자동 복사하고 틱톡 새 창을 바로 엽니다"
+                                  >
+                                    <span>🚀 틱톡 바로 열기</span>
+                                    <ExternalLink className="w-2.5 h-2.5" />
+                                  </button>
+                                </div>
                               </div>
                               <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
                                 {tiktokComment}

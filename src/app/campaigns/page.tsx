@@ -426,18 +426,32 @@ export default function CampaignsPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                       {/* YouTube Comment */}
                       <div className="bg-white p-2.5 rounded-lg border border-red-100 flex flex-col justify-between gap-1.5">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
                           <span className="text-[11px] font-bold text-red-900 flex items-center gap-1">
-                            <span>🎬</span> 유튜브 댓글 (고정/답글용)
+                            <span>🎬</span> 유튜브 댓글
                           </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`)}
-                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-50 hover:bg-red-100 text-red-700 transition-colors flex items-center gap-1"
-                          >
-                            {copiedKey === `yt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
-                            <span>{copiedKey === `yt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`)}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-red-50 hover:bg-red-100 text-red-700 transition-colors flex items-center gap-1"
+                            >
+                              {copiedKey === `yt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                              <span>{copiedKey === `yt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`);
+                                window.open(`https://www.youtube.com/@${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}/videos`, '_blank');
+                              }}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-0.5"
+                              title="댓글 복사 + 유튜브 새 탭 열기"
+                            >
+                              <span>🚀 열기</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </button>
+                          </div>
                         </div>
                         <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
                           {camp.targetedCreatorOutreach.ytComment}
@@ -446,18 +460,32 @@ export default function CampaignsPage() {
 
                       {/* Instagram Comment */}
                       <div className="bg-white p-2.5 rounded-lg border border-pink-100 flex flex-col justify-between gap-1.5">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
                           <span className="text-[11px] font-bold text-pink-900 flex items-center gap-1">
                             <span>📸</span> 인스타그램 릴스 댓글
                           </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.instaComment || '', `insta_out_${camp.campaignId}`)}
-                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-pink-50 hover:bg-pink-100 text-pink-700 transition-colors flex items-center gap-1"
-                          >
-                            {copiedKey === `insta_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
-                            <span>{copiedKey === `insta_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(camp.targetedCreatorOutreach?.instaComment || '', `insta_out_${camp.campaignId}`)}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-pink-50 hover:bg-pink-100 text-pink-700 transition-colors flex items-center gap-1"
+                            >
+                              {copiedKey === `insta_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                              <span>{copiedKey === `insta_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleCopy(camp.targetedCreatorOutreach?.instaComment || '', `insta_out_${camp.campaignId}`);
+                                window.open(`https://www.instagram.com/${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}/`, '_blank');
+                              }}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 transition-opacity flex items-center gap-0.5"
+                              title="댓글 복사 + 인스타그램 새 탭 열기"
+                            >
+                              <span>🚀 열기</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </button>
+                          </div>
                         </div>
                         <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
                           {camp.targetedCreatorOutreach.instaComment}
@@ -466,18 +494,32 @@ export default function CampaignsPage() {
 
                       {/* TikTok Comment */}
                       <div className="bg-white p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between gap-1.5">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
                           <span className="text-[11px] font-bold text-slate-900 flex items-center gap-1">
                             <span>🎵</span> 틱톡(TikTok) 영상 댓글
                           </span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.tiktokComment || '', `tt_out_${camp.campaignId}`)}
-                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors flex items-center gap-1"
-                          >
-                            {copiedKey === `tt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
-                            <span>{copiedKey === `tt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={() => handleCopy(camp.targetedCreatorOutreach?.tiktokComment || '', `tt_out_${camp.campaignId}`)}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors flex items-center gap-1"
+                            >
+                              {copiedKey === `tt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                              <span>{copiedKey === `tt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                handleCopy(camp.targetedCreatorOutreach?.tiktokComment || '', `tt_out_${camp.campaignId}`);
+                                window.open(`https://www.tiktok.com/@${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}`, '_blank');
+                              }}
+                              className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-white hover:bg-black transition-colors flex items-center gap-0.5"
+                              title="댓글 복사 + 틱톡 새 탭 열기"
+                            >
+                              <span>🚀 열기</span>
+                              <ExternalLink className="w-2.5 h-2.5" />
+                            </button>
+                          </div>
                         </div>
                         <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
                           {camp.targetedCreatorOutreach.tiktokComment || `@${camp.targetedCreatorOutreach.creatorHandle} 틱톡 영상 보고 구매처 문의 많길래 전용 정산 링크 준비했어요!`}
