@@ -120,7 +120,7 @@ export default function CampaignsPage() {
                       target="_blank"
                       className="px-3 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold transition-colors flex items-center gap-1"
                     >
-                      <span>로컬 랜딩페이지 열기</span>
+                      <span>공식 랜딩페이지 열기</span>
                       <ExternalLink className="w-3 h-3" />
                     </Link>
                   </div>

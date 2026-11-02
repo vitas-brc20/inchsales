@@ -24,20 +24,25 @@ export async function GET() {
           const raw = JSON.parse(content);
           const campaignId = raw.campaignId || `camp_${file.replace(/[^0-9]/g, '')}`;
           const targetSlug = raw.targetSlug || raw.slug || 'item';
-          const localLandingUrl = raw.localLandingUrl || raw.directLandingUrl || `/p/${encodeURIComponent(targetSlug)}?ref=local_${campaignId}`;
+          const landingUrl = (raw.landingUrl || raw.localLandingUrl || raw.directLandingUrl || `https://inchsales.vercel.app/p/${encodeURIComponent(targetSlug)}?ref=pub_${campaignId}`)
+            .replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+
+          const replaceLocalhost = (str: string) => (str || '').replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+
           return {
             campaignId,
             generatedAt: raw.generatedAt || new Date().toISOString(),
             targetProduct: raw.targetProduct || '추천 상품',
             targetSlug,
             trackingId: raw.trackingId || 'AF5232288',
-            localLandingUrl,
+            landingUrl,
+            localLandingUrl: landingUrl,
             directCoupangUrl: raw.directCoupangUrl || '',
             socialPosts: {
-              threads: raw.socialPosts?.threads || '',
-              twitterX: raw.socialPosts?.twitterX || '',
-              instagramCaption: raw.socialPosts?.instagramCaption || raw.socialPosts?.instagramStoryText || '',
-              kakaoTalkShare: raw.socialPosts?.kakaoTalkShare || '',
+              threads: replaceLocalhost(raw.socialPosts?.threads),
+              twitterX: replaceLocalhost(raw.socialPosts?.twitterX),
+              instagramCaption: replaceLocalhost(raw.socialPosts?.instagramCaption || raw.socialPosts?.instagramStoryText),
+              kakaoTalkShare: replaceLocalhost(raw.socialPosts?.kakaoTalkShare),
             },
             systemStats: {
               totalClicks: raw.systemStats?.totalClicks || 0,

@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js';
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://srimeahesuhiakdlxhwr.supabase.co';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaW1lYWhlc3VoaWFrZGx4aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1Mzc1MzksImV4cCI6MjEwOTExMzUzOX0.1RBDeIhNyJlpyYTSoJZv0CH0a3NZOK2ifwnX5y3M6b0';
 const TRACKING_ID = process.env.COUPANG_TRACKING_ID || 'AF5232288';
-const LOCAL_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:3456';
+const BASE_URL = process.env.APP_BASE_URL || 'https://inchsales.vercel.app';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const LOG_FILE = path.join(process.cwd(), 'logs', 'marketing-activity.log');
@@ -19,7 +19,7 @@ const VIRAL_TARGET_POOL = [
     category: '식음료/음료',
     priceHint: '19,900원 (캔당 820원)',
     shortUrl: 'https://link.coupang.com/a/ikoqLZW3zg',
-    hook: '🔥 [로컬 핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다',
+    hook: '🔥 [핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다',
     description: '다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.',
   },
   {
@@ -35,7 +35,7 @@ const VIRAL_TARGET_POOL = [
 
 export async function runMarketingCycle() {
   const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] 🚀 [로컬 전용] inchsales 30분 정기 마케팅 사이클 실행`);
+  console.log(`[${timestamp}] 🚀 inchsales 30분 정기 마케팅 사이클 실행`);
 
   if (!fs.existsSync(CAMPAIGN_DIR)) {
     fs.mkdirSync(CAMPAIGN_DIR, { recursive: true });
@@ -60,8 +60,8 @@ export async function runMarketingCycle() {
   const target = VIRAL_TARGET_POOL[randomIndex];
 
   const campaignId = `camp_${Date.now().toString(36)}`;
-  const localUrl = `${LOCAL_BASE_URL}/p/${encodeURIComponent(target.slug)}?ref=local_${campaignId}`;
-  const directCoupangUrl = `${target.shortUrl}?subid=inch_local_${campaignId}`;
+  const landingUrl = `${BASE_URL}/p/${encodeURIComponent(target.slug)}?ref=pub_${campaignId}`;
+  const directCoupangUrl = `${target.shortUrl}?subid=inch_pub_${campaignId}`;
 
   // 3. 캠페인 포스팅 번들 저장
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
@@ -71,13 +71,14 @@ export async function runMarketingCycle() {
     targetProduct: target.name,
     targetSlug: target.slug,
     trackingId: TRACKING_ID,
-    localLandingUrl: localUrl,
+    landingUrl,
+    localLandingUrl: landingUrl,
     directCoupangUrl,
     socialPosts: {
-      threads: `${target.description}\n\n👇 최저가 좌표 & 실시간 재고 확인:\n${localUrl}\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)`,
-      twitterX: `${target.hook}\n\n👇 최저가 확인:\n${localUrl}\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)`,
-      instagramCaption: `[영상 속 핫딜 좌표] ${target.name}\n\n프로필 링크 또는 스토리 스티커를 확인해주세요!\n👉 ${localUrl}\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.`,
-      kakaoTalkShare: `[핫딜 알림] ${target.name} 최저가 떴습니다! 확인해보세요 👉 ${localUrl}`,
+      threads: `${target.description}\n\n👇 최저가 좌표 & 실시간 재고 확인:\n${landingUrl}\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)`,
+      twitterX: `${target.hook}\n\n👇 최저가 확인:\n${landingUrl}\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)`,
+      instagramCaption: `[영상 속 핫딜 좌표] ${target.name}\n\n프로필 링크 또는 스토리 스티커를 확인해주세요!\n👉 ${landingUrl}\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.`,
+      kakaoTalkShare: `[핫딜 알림] ${target.name} 최저가 떴습니다! 확인해보세요 👉 ${landingUrl}`,
     },
     systemStats: {
       totalClicks,
@@ -88,10 +89,10 @@ export async function runMarketingCycle() {
   fs.writeFileSync(campaignFile, JSON.stringify(campaignData, null, 2), 'utf8');
 
   // 4. 마케팅 활동 로그 기록
-  const logMessage = `[${timestamp}] [로컬 사이클] 타깃: ${target.name} | 로컬URL: ${localUrl} | 누적클릭: ${totalClicks}회 | 출금: ${totalWithdrawals}건\n`;
+  const logMessage = `[${timestamp}] [정기 사이클] 타깃: ${target.name} | 랜딩URL: ${landingUrl} | 누적클릭: ${totalClicks}회 | 출금: ${totalWithdrawals}건\n`;
   fs.appendFileSync(LOG_FILE, logMessage, 'utf8');
 
-  console.log(`[${timestamp}] ✅ 로컬 마케팅 캠페인 번들 생성 완료: ${target.name} (${localUrl})`);
+  console.log(`[${timestamp}] ✅ 마케팅 캠페인 번들 생성 완료: ${target.name} (${landingUrl})`);
   return campaignData;
 }
 

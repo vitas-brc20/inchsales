@@ -7,10 +7,14 @@
   "socialPosts": {
     "threads": "아직도 두바이 쿠키 못 드셔보신 분? 카다이프 피스타치오 가득 들어간 화제의 그 두쫀쿠 쿠팡에 소량 재입고됐어요!\n\n👇 품절 전 로켓배송 좌표:\nhttps://inchsales.vercel.app/p/두쫀쿠?ref=viral_threads\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
     "twitterX": "🍪 틱톡 150만뷰 두바이 초콜릿 쫀득 쿠키 품절 풀렸습니다!\n\n👇 최저가 확인:\nhttps://inchsales.vercel.app/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=x_viral\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
-    "instagramStoryText": "🔥 영상 속 그 템 최저가 좌표\nhttps://inchsales.vercel.app/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=insta_story"
+    "instagramCaption": "🔥 영상 속 그 템 최저가 좌표\nhttps://inchsales.vercel.app/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=insta_story",
+    "kakaoTalkShare": "[핫딜] 두바이 쫀득 쿠키 소량 입고! http://localhost:3456/p/%EB%91%90%EC%AB%80%EC%BF%A0"
   },
   "systemStats": {
     "totalClicks": 5,
     "totalWithdrawals": 0
-  }
+  },
+  "campaignId": "camp_legacy_1",
+  "localLandingUrl": "http://localhost:3456/p/%EB%91%90%EC%AB%80%EC%BF%A0?ref=local_legacy_1",
+  "directCoupangUrl": "https://link.coupang.com/a/ik4aZWyRZA"
 }
