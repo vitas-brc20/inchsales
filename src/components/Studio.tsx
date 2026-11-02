@@ -155,24 +155,28 @@ export default function Studio({ initialLinks }: StudioProps) {
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
           동일한 핫딜 상품, <br className="hidden sm:inline" />
           <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            인플루언서마다 고유 링크(?id=uuid)
+            인플루언서마다 고유 링크
           </span>
           로 정산
         </h1>
         <p className="mt-5 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto font-normal leading-relaxed">
-          상품 하나를 등록하면 수백 명의 크리에이터가 각자의 추천인 ID가 담긴 고유 URL을 발급받아 홍보합니다. <br className="hidden sm:inline" />
-          누가 추천했는지 쿠팡 subId로 100% 추적되어 수수료의 70%가 자동 정산됩니다.
+          상품 하나를 등록하면 수백 명의 크리에이터가 각자의 고유 링크를 발급받아 홍보합니다. <br className="hidden sm:inline" />
+          누가 추천했는지 100% 자동 추적되어 파트너스 수익의 70%가 바로 정산됩니다.
         </p>
 
         {/* Feature Pills */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-xs font-semibold text-slate-700">
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 font-mono text-[11px]">
-            <Link2 className="w-3.5 h-3.5 text-blue-600" />
-            <span>?q=두쫀쿠&id=uuid</span>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700">
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 text-slate-700">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>원클릭 맞춤 링크 생성</span>
           </div>
-          <div className="px-3 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 font-mono text-[11px]">
-            <Link2 className="w-3.5 h-3.5 text-indigo-600" />
-            <span>/p/ddu-zon-cookie?ref=uuid</span>
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 text-slate-700">
+            <Share2 className="w-3.5 h-3.5 text-indigo-600" />
+            <span>인스타 · 틱톡 · 유튜브 채널별 자동 추적</span>
+          </div>
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center gap-1.5 text-slate-700">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>수익금 매주 자동 정산</span>
           </div>
         </div>
       </section>
@@ -244,10 +248,10 @@ export default function Studio({ initialLinks }: StudioProps) {
                     <div className="flex items-center justify-between mb-1.5">
                       <label className="text-xs font-extrabold text-blue-900 flex items-center gap-1.5">
                         <Users className="w-3.5 h-3.5 text-blue-600" />
-                        <span>추천인 / 인플루언서 고유 식별자 (id / ref)</span>
+                        <span>추천인 / 인플루언서 닉네임 (ID)</span>
                         <span className="text-rose-500">*</span>
                       </label>
-                      <span className="text-[10px] text-blue-600 font-semibold">URL에 담기는 값</span>
+                      <span className="text-[10px] text-blue-600 font-semibold">내 링크 식별값</span>
                     </div>
                     <div className="relative">
                       <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-semibold">@</span>
@@ -256,7 +260,7 @@ export default function Studio({ initialLinks }: StudioProps) {
                         required
                         value={creatorId}
                         onChange={(e) => setCreatorId(e.target.value)}
-                        placeholder="예: jisu_log 또는 uuid_123"
+                        placeholder="예: jisu_log 또는 creator_1"
                         className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-blue-200 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 outline-none text-sm transition-all bg-white font-mono"
                       />
                     </div>
@@ -399,9 +403,9 @@ export default function Studio({ initialLinks }: StudioProps) {
                         <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
                           <span className="flex items-center gap-1 text-slate-700">
                             <span className="w-2 h-2 rounded-full bg-blue-500" />
-                            포맷 1. 쿼리 파라미터 URL (요청하신 형태)
+                            포맷 1. 상품명 맞춤 링크 (공구/추천용)
                           </span>
-                          <span className="text-[10px] text-blue-600 font-mono">?q=...&id=...</span>
+                          <span className="text-[10px] text-blue-600 font-medium">검색 랜딩</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <input
@@ -421,14 +425,14 @@ export default function Studio({ initialLinks }: StudioProps) {
                         </div>
                       </div>
 
-                      {/* Format 2: Path Format (/p/slug?ref=uuid) */}
+                      {/* Format 2: Path Format */}
                       <div className="bg-white p-2.5 rounded-xl border border-emerald-200 flex flex-col gap-1.5">
                         <div className="flex items-center justify-between text-[11px] font-bold text-slate-500">
                           <span className="flex items-center gap-1 text-slate-700">
                             <span className="w-2 h-2 rounded-full bg-indigo-500" />
-                            포맷 2. 슬러그 단축 URL
+                            포맷 2. 간결한 단축 링크 (인스타 프로필용)
                           </span>
-                          <span className="text-[10px] text-indigo-600 font-mono">/p/slug?ref=...</span>
+                          <span className="text-[10px] text-indigo-600 font-medium">단축 URL</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <input
