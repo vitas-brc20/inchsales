@@ -9,6 +9,17 @@ export const metadata: Metadata = {
   verification: {
     google: 'LBW5pnmqvikg5Xl2m0_EVeYRqSm735Bfh_VFml3dvYM',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     title: 'inchsales - 크리에이터를 위한 1초 쇼핑 링크 & 정산 네트워크',
     description: '인스타 릴스, 틱톡 영상 속 그 아이템! 링크 하나로 팔로워에게 공유하고 쿠팡 파트너스 수수료를 매주 정산받으세요.',

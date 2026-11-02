@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 140" width="100%" height="100%">
+  <defs>
+    <linearGradient id="logoBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+    <linearGradient id="logoQuoteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60a5fa" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+  </defs>
+  <!-- Icon Squircle -->
+  <rect x="10" y="15" width="110" height="110" rx="28" fill="url(#logoBgGrad)" stroke="rgba(255,255,255,0.15)" stroke-width="2" />
+  <text x="54" y="90" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="62" font-weight="900" fill="#FFFFFF">1</text>
+  <text x="82" y="74" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="52" font-weight="900" fill="url(#logoQuoteGrad)">"</text>
+  
+  <!-- Text inchsales -->
+  <text x="145" y="85" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="60" font-weight="900" letter-spacing="-1.5">
+    <tspan fill="#0f172a">inch</tspan><tspan fill="#2563eb">sales</tspan>
+  </text>
+  <text x="148" y="115" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="16" font-weight="600" fill="#64748b" letter-spacing="0.5">
+    크리에이터를 위한 1초 쇼핑 링크 &amp; 실시간 정산
+  </text>
+</svg>
