@@ -18,11 +18,13 @@ const OUTREACH_FILE = path.join(process.cwd(), 'logs', 'outreach-queue.json');
 
 // ============================================================================
 // 유명 크리에이터 검증 풀 및 카테고리 엄격 매핑 정의 (불일치 제품 댓글 원천 차단)
+// 대형 크리에이터(Mega: 인지도) + 소형 크리에이터(Micro: 5천~5만, 압도적 댓글 반응율) 듀얼 타겟팅
 // ============================================================================
 export interface VerifiedCreator {
   channelName: string;
   handle: string;
   youtubeHandle?: string;
+  tier?: 'mega' | 'micro';
   searchKeyword: string;
   platform: 'youtube' | 'insta' | 'tiktok' | 'all';
   category: '먹방/디저트' | '뷰티/헤어' | '스킨케어/덴탈' | 'IT/테크' | '헬스/식단' | '캐릭터/키덜트' | '크리스마스/홈파티';
@@ -32,10 +34,12 @@ export interface VerifiedCreator {
 
 export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 1. 먹방 / 디저트 분야 (간식, 음료, 디저트만 엄격 매핑)
+  // [Mega 크리에이터]
   {
     channelName: '입짧은햇님',
     handle: 'short_mouth_sun',
     youtubeHandle: 'short_mouth_sun',
+    tier: 'mega',
     searchKeyword: '입짧은햇님',
     platform: 'all',
     category: '먹방/디저트',
@@ -46,6 +50,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '쯔양',
     handle: 'tzuyang6145',
     youtubeHandle: 'tzuyang6145',
+    tier: 'mega',
     searchKeyword: '쯔양',
     platform: 'all',
     category: '먹방/디저트',
@@ -56,6 +61,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '여수언니 정혜영',
     handle: 'yeosuunnie',
     youtubeHandle: 'yeosuunnie',
+    tier: 'mega',
     searchKeyword: '여수언니 정혜영',
     platform: 'all',
     category: '먹방/디저트',
@@ -66,6 +72,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '나도Nado',
     handle: 'nado_eat',
     youtubeHandle: 'nado_eat',
+    tier: 'mega',
     searchKeyword: '나도Nado',
     platform: 'all',
     category: '먹방/디저트',
@@ -75,18 +82,54 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 디저트여왕 (TikTok)',
     handle: 'tiktok_snack_queen',
+    tier: 'mega',
     searchKeyword: '틱톡 디저트 쿠키 먹방',
     platform: 'tiktok',
     category: '먹방/디저트',
     allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라'],
     relevanceKeywords: ['틱톡간식', '두바이쿠키', '디저트먹방'],
   },
+  // [Micro 소형 크리에이터 - 높은 댓글 고정 및 수용율]
+  {
+    channelName: '조이 ASMR',
+    handle: 'zoey_asmr',
+    youtubeHandle: 'zoey_asmr',
+    tier: 'micro',
+    searchKeyword: '조이 ASMR 두바이 쿠키 디저트',
+    platform: 'all',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['asmr', '디저트', '쿠키', '먹방', '초콜릿'],
+  },
+  {
+    channelName: '디저트먹방 ASMR',
+    handle: 'mukbang_asmr',
+    youtubeHandle: 'mukbang_asmr',
+    tier: 'micro',
+    searchKeyword: '디저트먹방 ASMR 두바이쿠키',
+    platform: 'all',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠'],
+    relevanceKeywords: ['두바이쿠키', '디저트먹방', 'asmr'],
+  },
+  {
+    channelName: '빵지순례 브이로그',
+    handle: 'bakery_vlog_kr',
+    tier: 'micro',
+    searchKeyword: '디저트 빵지순례 브이로그 두바이쿠키',
+    platform: 'all',
+    category: '먹방/디저트',
+    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라'],
+    relevanceKeywords: ['빵지순례', '디저트', '쿠키', '브이로그'],
+  },
 
   // 2. 뷰티 / 헤어 / 스킨케어 분야 (헤어, 미백, 톤업, 피지제거만 엄격 매핑)
+  // [Mega 크리에이터]
   {
     channelName: '회사원A',
     handle: 'calarygirl',
     youtubeHandle: 'calarygirl',
+    tier: 'mega',
     searchKeyword: '회사원A',
     platform: 'all',
     category: '뷰티/헤어',
@@ -97,6 +140,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '이사배',
     handle: 'RISABAE',
     youtubeHandle: 'RISABAE',
+    tier: 'mega',
     searchKeyword: '이사배',
     platform: 'all',
     category: '뷰티/헤어',
@@ -107,6 +151,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '레오제이',
     handle: 'LeoJMakeup',
     youtubeHandle: 'LeoJMakeup',
+    tier: 'mega',
     searchKeyword: '레오제이',
     platform: 'all',
     category: '뷰티/헤어',
@@ -117,6 +162,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '유트루',
     handle: 'yootrue_beauty',
     youtubeHandle: 'yootrue_beauty',
+    tier: 'mega',
     searchKeyword: '유트루',
     platform: 'all',
     category: '뷰티/헤어',
@@ -126,29 +172,74 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 뷰티꿀팁 (TikTok)',
     handle: 'tiktok_beauty_room',
+    tier: 'mega',
     searchKeyword: '틱톡 올영세일 꿀템 추천',
     platform: 'tiktok',
     category: '뷰티/헤어',
     allowedSlugs: ['물미역트리트먼트', '물광피부로션', '블랙헤드제거', '미백크림'],
     relevanceKeywords: ['올영세일', '물광피부', '블랙헤드제거'],
   },
+  // [Micro 소형 크리에이터]
+  {
+    channelName: '쇼곰 (SHOW_GOM)',
+    handle: 'show_gom_hair',
+    tier: 'micro',
+    searchKeyword: '쇼곰 손상모 물미역 트리트먼트 헤어케어',
+    platform: 'all',
+    category: '뷰티/헤어',
+    allowedSlugs: ['물미역트리트먼트', '물미역헤어에센스', '미역헤어에센스'],
+    relevanceKeywords: ['손상모', '물미역트리트먼트', '헤어케어', '올영세일'],
+  },
+  {
+    channelName: '뷰티 사르나이',
+    handle: 'sarna2_beauty',
+    tier: 'micro',
+    searchKeyword: '사르나이 물미역 트리트먼트 물광 스킨케어',
+    platform: 'all',
+    category: '뷰티/헤어',
+    allowedSlugs: ['물미역트리트먼트', '물광피부로션', '미백크림'],
+    relevanceKeywords: ['트리트먼트', '물광피부', '스킨케어', '올영추천'],
+  },
+  {
+    channelName: '올영탐구 채소',
+    handle: 'chaeso_beauty',
+    tier: 'micro',
+    searchKeyword: '올영세일 피지 블랙헤드 코팩 톤업크림',
+    platform: 'all',
+    category: '뷰티/헤어',
+    allowedSlugs: ['블랙헤드제거', '미백크림', '물광피부로션'],
+    relevanceKeywords: ['블랙헤드', '코팩', '톤업크림', '올영세일'],
+  },
 
   // 3. 덴탈 / 모공 전문 분야
   {
     channelName: '피부임상연구소',
     handle: 'dr_skin_lab',
+    tier: 'mega',
     searchKeyword: '피부과 의사 모공 블랙헤드 치아미백',
     platform: 'all',
     category: '스킨케어/덴탈',
     allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
     relevanceKeywords: ['피부과', '치아미백', '블랙헤드', '모공청소'],
   },
+  {
+    channelName: '덴탈 홈케어 일상',
+    handle: 'dental_homecare',
+    tier: 'micro',
+    searchKeyword: '치과위생사 치아미백 뷰센28 솔직후기',
+    platform: 'all',
+    category: '스킨케어/덴탈',
+    allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
+    relevanceKeywords: ['치아미백', '미백치약', '뷰센', '구강관리'],
+  },
 
   // 4. IT / 테크 / 전자기기 분야 (애플 정품, 음향기기만 엄격 매핑)
+  // [Mega 크리에이터]
   {
     channelName: '잇섭 (ITSub)',
     handle: 'itsub',
     youtubeHandle: 'itsub',
+    tier: 'mega',
     searchKeyword: '잇섭',
     platform: 'all',
     category: 'IT/테크',
@@ -159,6 +250,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '주연 (ZUYONI)',
     handle: 'zuyoni1',
     youtubeHandle: 'zuyoni1',
+    tier: 'mega',
     searchKeyword: '주연 ZUYONI',
     platform: 'all',
     category: 'IT/테크',
@@ -169,6 +261,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '테크몽',
     handle: 'techmong',
     youtubeHandle: 'techmong',
+    tier: 'mega',
     searchKeyword: '테크몽',
     platform: 'all',
     category: 'IT/테크',
@@ -179,6 +272,7 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '뻘짓연구소',
     handle: 'BullsLab',
     youtubeHandle: 'BullsLab',
+    tier: 'mega',
     searchKeyword: '뻘짓연구소',
     platform: 'all',
     category: 'IT/테크',
@@ -188,18 +282,52 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
   {
     channelName: '틱톡 테크트렌드 (TikTok)',
     handle: 'tiktok_it_trend',
+    tier: 'mega',
     searchKeyword: '틱톡 아이폰 맥북 꿀팁',
     platform: 'tiktok',
     category: 'IT/테크',
     allowedSlugs: ['애플아이폰', '애플맥북', '애플아이패드', '샥즈오픈핏'],
     relevanceKeywords: ['아이폰꿀팁', '맥북세팅', '에어팟'],
   },
+  // [Micro 소형 테크 크리에이터]
+  {
+    channelName: '심플 데스크테리어',
+    handle: 'simple_desk_setup',
+    tier: 'micro',
+    searchKeyword: '심플 Simple 맥북 데스크테리어 셋업',
+    platform: 'all',
+    category: 'IT/테크',
+    allowedSlugs: ['애플맥북', '애플아이패드', '애플아이폰', '샥즈오픈핏'],
+    relevanceKeywords: ['데스크셋업', '맥북', '아이패드', '테크'],
+  },
+  {
+    channelName: '떼끄 테크룸',
+    handle: 'tteggu_tech',
+    tier: 'micro',
+    searchKeyword: '떼끄 아이폰 맥북 가성비 악세서리',
+    platform: 'all',
+    category: 'IT/테크',
+    allowedSlugs: ['애플아이폰', '애플맥북', '애플아이패드', '애플에어팟'],
+    relevanceKeywords: ['아이폰', '맥북', '애플', '아이패드'],
+  },
+  {
+    channelName: '러너스 하이',
+    handle: 'runner_gear_lab',
+    tier: 'micro',
+    searchKeyword: '러닝 오픈형 이어폰 샥즈 오픈핏 솔직후기',
+    platform: 'all',
+    category: 'IT/테크',
+    allowedSlugs: ['샥즈오픈핏'],
+    relevanceKeywords: ['샥즈', '오픈핏', '러닝이어폰', '운동'],
+  },
 
   // 5. 헬스 / 식단 분야 (닭가슴살, 제로음료, 운동기기만 엄격 매핑)
+  // [Mega 크리에이터]
   {
     channelName: '핏블리 (FITVELY)',
     handle: 'fitvely',
     youtubeHandle: 'fitvely',
+    tier: 'mega',
     searchKeyword: '핏블리',
     platform: 'all',
     category: '헬스/식단',
@@ -210,43 +338,108 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     channelName: '피지컬갤러리 (김계란)',
     handle: 'physicalgallery',
     youtubeHandle: 'physicalgallery',
+    tier: 'mega',
     searchKeyword: '피지컬갤러리',
     platform: 'all',
     category: '헬스/식단',
     allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
     relevanceKeywords: ['운동이어폰', '단백질식단', '헬스', '닭가슴살'],
   },
+  // [Micro 소형 헬스/식단 크리에이터]
+  {
+    channelName: '직장인 다이어트 브이로그',
+    handle: 'diet_vlog',
+    youtubeHandle: 'diet_vlog',
+    tier: 'micro',
+    searchKeyword: '직장인 다이어트 식단 브이로그 닭가슴살 제로콜라',
+    platform: 'all',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['식단일기', '닭가슴살', '다이어트', '제로콜라'],
+  },
+  {
+    channelName: '웨이트 덕코치',
+    handle: 'duck_coach_fit',
+    tier: 'micro',
+    searchKeyword: '웨이트연구소 덕코치 닭가슴살 추천',
+    platform: 'all',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라'],
+    relevanceKeywords: ['닭가슴살', '단백질', '식단', '헬스이어폰'],
+  },
+  {
+    channelName: '살빼라 장혁',
+    handle: 'diet_janghyuk',
+    tier: 'micro',
+    searchKeyword: '살빼라장혁 닭가슴살 식단 다이어트',
+    platform: 'all',
+    category: '헬스/식단',
+    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로'],
+    relevanceKeywords: ['다이어트식단', '닭가슴살', '제로콜라'],
+  },
 
   // 6. 캐릭터 / 키덜트 분야 (먼작귀 치이카와만 엄격 매핑)
   {
     channelName: '치이카와 굿즈룸',
     handle: 'chii_goods',
+    tier: 'mega',
     searchKeyword: '치이카와 정품 인형 언박싱',
     platform: 'all',
     category: '캐릭터/키덜트',
     allowedSlugs: ['치이카와'],
     relevanceKeywords: ['치이카와', '먼작귀', '인형', '키링', '소품샵'],
   },
+  {
+    channelName: '먼작귀 덕후룸',
+    handle: 'chii_collector',
+    tier: 'micro',
+    searchKeyword: '치이카와 신상 인형 키링 언박싱 먼작귀',
+    platform: 'all',
+    category: '캐릭터/키덜트',
+    allowedSlugs: ['치이카와'],
+    relevanceKeywords: ['치이카와', '먼작귀', '인형', '소품샵'],
+  },
 
   // 7. 크리스마스 / 홈파티 / 시즌선물 분야
   {
     channelName: '오늘의 감성홈',
     handle: 'home_interior_cafe',
+    tier: 'mega',
     searchKeyword: '크리스마스 트리 풀세트 인테리어',
     platform: 'all',
     category: '크리스마스/홈파티',
     allowedSlugs: ['크리스마스트리', '한정판스타벅스'],
     relevanceKeywords: ['크리스마스', '오르골', '홈파티', '연말선물', '트리', '스타벅스'],
   },
+  {
+    channelName: '자취방 겨울감성',
+    handle: 'cozy_winter_home',
+    tier: 'micro',
+    searchKeyword: '자취방 크리스마스 트리 꾸미기 홈파티',
+    platform: 'all',
+    category: '크리스마스/홈파티',
+    allowedSlugs: ['크리스마스트리'],
+    relevanceKeywords: ['크리스마스', '트리', '홈카페', '인테리어'],
+  },
 ];
 
 // 크리에이터-상품 매칭 엄격 안전 검증기
+// (소형 크리에이터 micro를 65% 확률로 우선 선택하여 고정댓글 수용 및 반응율 극대화)
 export function matchCreatorSafely(targetSlug: string, targetCategory: string): VerifiedCreator | null {
   const eligible = VERIFIED_CREATORS.filter((creator) => {
     return creator.allowedSlugs.includes(targetSlug);
   });
 
   if (eligible.length === 0) return null;
+
+  const microEligible = eligible.filter((c) => c.tier === 'micro');
+  const megaEligible = eligible.filter((c) => c.tier !== 'micro');
+
+  // 소형 크리에이터가 존재할 경우 65% 확률로 소형 우선 배정
+  if (microEligible.length > 0 && (megaEligible.length === 0 || Math.random() < 0.65)) {
+    return microEligible[Math.floor(Math.random() * microEligible.length)];
+  }
+
   return eligible[Math.floor(Math.random() * eligible.length)];
 }
 
@@ -338,14 +531,22 @@ export function generateCreatorCommentBundle(creator: VerifiedCreator, targetPro
   const productDisplayName = context.shortName;
   const videoTitle = specificVideoTitle || context.sampleVideoTitles[Math.floor(Math.random() * context.sampleVideoTitles.length)];
 
-  // 유튜브 댓글 제안문 (영상 제목 직접 인용 & 70% 수치 제외)
-  const ytComment = `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
+  const isMicro = creator.tier === 'micro';
+
+  // 유튜브 댓글 제안문 (영상 제목 직접 인용 & 70% 수치 제외 & 소형/대형 맞춤 톤앤매너)
+  const ytComment = isMicro
+    ? `안녕하세요 @${creator.channelName}님! 평소 영상 너무 유익하게 잘 챙겨보고 있는 구독자입니다 😊 이번 '${videoTitle}' 영상 보구 [${productDisplayName}] 구매처 궁금해하는 분들이 많길래, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다!\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크 걸어두시면 시청자분들도 편하게 찾고 판매 수익 편하게 정산받으세요 ! (복잡한 가입 절차 없이 100원부터 바로 정산돼요, 항상 응원합니다 화이팅!)`
+    : `안녕하세요 @${creator.handle} (${creator.channelName})님! 이번 '${videoTitle}' 영상 보신 팬분들이 [${productDisplayName}] 구매처를 정말 많이 물어보셔서, 채널 전용 수익 정산 링크를 미리 준비해 두었습니다 😊\n👉 ${ytUrl}\n\n영상 고정댓글이나 더보기란에 이 링크만 복사해 두시면 시청자분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
 
   // 인스타그램 릴스/피드 댓글 제안문 (영상 제목 직접 인용)
-  const instaComment = `@${creator.handle} 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
+  const instaComment = isMicro
+    ? `@${creator.handle} 님 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 댓글 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 바로 사고 판매 수익 편하게 정산받으세요 ! ✨`
+    : `@${creator.handle} 이번 '${videoTitle}' 영상 속 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎁👉 ${instaUrl} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
 
   // 틱톡 숏폼 댓글 제안문 (영상 제목 직접 인용)
-  const tiktokComment = `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+  const tiktokComment = isMicro
+    ? `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 궁금해하길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨ 응원합니다!`
+    : `@${creator.handle} 틱톡 '${videoTitle}' 영상 보고 [${productDisplayName}] 어디서 사는지 물어보는 분들 많길래 @${creator.handle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokUrl} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
 
   // 인스타그램 DM 협업 제안 전문 (영상 제목 직접 인용)
   const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 '${videoTitle}' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${productDisplayName}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
@@ -353,6 +554,7 @@ export function generateCreatorCommentBundle(creator: VerifiedCreator, targetPro
   return {
     creatorHandle: creator.handle,
     creatorName: creator.channelName,
+    creatorTier: creator.tier || 'mega',
     creatorCategory: creator.category,
     videoTitle,
     productDisplayName,

@@ -34,7 +34,7 @@ export default function Studio({ initialLinks }: StudioProps) {
   // Form State
   const [productName, setProductName] = useState('코카콜라 제로 355ml 24캔');
   const [category, setCategory] = useState('식음료/음료');
-  const [creatorId, setCreatorId] = useState('my_uuid_100');
+  const [creatorId, setCreatorId] = useState('');
   const [selectedChannel, setSelectedChannel] = useState<string>('insta');
   const [tagline, setTagline] = useState('칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장');
   const [priceHint, setPriceHint] = useState('19,900원');
@@ -49,7 +49,7 @@ export default function Studio({ initialLinks }: StudioProps) {
     channel?: string;
   } | null>({
     slug: '제로콜라',
-    creatorId: 'my_uuid_100',
+    creatorId: 'creator_7721',
     productName: '코카콜라 제로',
     channel: 'insta',
   });
