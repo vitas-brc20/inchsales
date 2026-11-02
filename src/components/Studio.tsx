@@ -129,7 +129,7 @@ export default function Studio({ initialLinks }: StudioProps) {
     if (typeof window !== 'undefined') {
       return window.location.origin;
     }
-    return 'https://inchsales.vercel.app';
+    return 'https://inch.sale';
   };
 
   // 포맷 1: ?q=두쫀쿠&id=uuid&ch=insta (사용자 요청 포맷)

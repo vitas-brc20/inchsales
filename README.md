@@ -9,8 +9,8 @@
 ## ✨ 핵심 기능
 
 1. **인플루언서별 고유 추천 URL 발급**:
-   - 쿼리형: `https://inchsales.vercel.app?q=두쫀쿠&id=jisu_vlog`
-   - 슬러그형: `https://inchsales.vercel.app/p/ddu-zon-cookie?ref=jisu_vlog`
+   - 쿼리형: `https://inch.sale?q=두쫀쿠&id=jisu_vlog`
+   - 슬러그형: `https://inch.sale/p/ddu-zon-cookie?ref=jisu_vlog`
    - 동일한 상품이어도 추천인 ID에 따라 완전히 독립적으로 트래킹 및 정산.
 
 2. **쿠팡 파트너스 공식 리디렉션 게이트웨이 연동**:

@@ -24,12 +24,15 @@ export async function GET() {
           const raw = JSON.parse(content);
           const campaignId = raw.campaignId || `camp_${file.replace(/[^0-9]/g, '')}`;
           const targetSlug = raw.targetSlug || raw.slug || 'item';
-          const landingUrl = (raw.landingUrl || raw.localLandingUrl || raw.directLandingUrl || `https://inchsales.vercel.app/p/${encodeURIComponent(targetSlug)}?ref=pub_${campaignId}`)
-            .replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+          const landingUrl = (raw.landingUrl || raw.localLandingUrl || raw.directLandingUrl || `https://inch.sale/p/${encodeURIComponent(targetSlug)}?ref=pub_${campaignId}`)
+            .replace(/https:\/\/inchsales\.vercel\.app/g, 'https://inch.sale')
+            .replace(/http:\/\/localhost:\d+/g, 'https://inch.sale');
 
           const sanitizeUrls = (val: any): any => {
             if (typeof val === 'string') {
-              return val.replace(/http:\/\/localhost:\d+/g, 'https://inchsales.vercel.app');
+              return val
+                .replace(/https:\/\/inchsales\.vercel\.app/g, 'https://inch.sale')
+                .replace(/http:\/\/localhost:\d+/g, 'https://inch.sale');
             }
             if (val && typeof val === 'object') {
               const res: Record<string, any> = {};

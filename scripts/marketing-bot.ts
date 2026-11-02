@@ -11,7 +11,7 @@ const execAsync = promisify(exec);
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://srimeahesuhiakdlxhwr.supabase.co';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyaW1lYWhlc3VoaWFrZGx4aHdyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM1Mzc1MzksImV4cCI6MjEwOTExMzUzOX0.1RBDeIhNyJlpyYTSoJZv0CH0a3NZOK2ifwnX5y3M6b0';
 const TRACKING_ID = process.env.COUPANG_TRACKING_ID || 'AF5232288';
-const BASE_URL = process.env.APP_BASE_URL || 'https://inchsales.vercel.app';
+const BASE_URL = process.env.APP_BASE_URL || 'https://inch.sale';
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 const DATA_DIR = path.join(process.cwd(), 'data');
@@ -1008,7 +1008,7 @@ export async function runMarketingCycle() {
 
   if (matchedCreator) {
     // 유튜브 플랫폼일 경우 단순 검색창(search_query)이 아닌, '실제 첫 번째 영상(/watch?v=...)'을 실시간 파싱하여 직행 타깃팅!
-    let resolvedVideo: { videoUrl: string; videoTitle?: string; videoId?: string } | null = null;
+    let resolvedVideo: Awaited<ReturnType<typeof resolveFirstYouTubeVideo>> = null;
     if (matchedCreator.platform === 'all' || matchedCreator.platform === 'youtube') {
       const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
       const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;

@@ -48,7 +48,7 @@ export default function DashboardView({ link }: DashboardViewProps) {
     if (typeof window !== 'undefined') {
       return `${window.location.origin}/p/${link.slug}?ref=${link.creatorId}`;
     }
-    return `https://inchsales.vercel.app/p/${link.slug}?ref=${link.creatorId}`;
+    return `https://inch.sale/p/${link.slug}?ref=${link.creatorId}`;
   };
 
   const handleCopy = () => {
@@ -60,7 +60,7 @@ export default function DashboardView({ link }: DashboardViewProps) {
   const getChannelUrl = (channelId: string) => {
     const base = typeof window !== 'undefined'
       ? `${window.location.origin}/p/${encodeURIComponent(link.slug)}?ref=${encodeURIComponent(link.creatorId)}`
-      : `https://inchsales.vercel.app/p/${encodeURIComponent(link.slug)}?ref=${encodeURIComponent(link.creatorId)}`;
+      : `https://inch.sale/p/${encodeURIComponent(link.slug)}?ref=${encodeURIComponent(link.creatorId)}`;
     return channelId && channelId !== 'general' ? `${base}&ch=${channelId}` : base;
   };
 

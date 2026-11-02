@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
               // 구매/링크 관련 키워드 감지
               if (/링크|정보|좌표|얼마|가격|구매|사고싶|쿠키|아이폰|맥북|치약|물미역|트리트먼트|두쫀쿠/.test(commentText)) {
                 console.log(`[Instagram Auto-DM 트리거] "${commentText}" 키워드 감지 -> DM 발송 시도`);
-                await sendInstagramDM(commenterId, `안녕하세요! 요청하신 상품의 쿠팡 로켓배송 최저가 구매 좌표입니다 👇\nhttps://inchsales.vercel.app/?ch=insta_dm\n\n품절 전에 확인해보세요!`);
+                await sendInstagramDM(commenterId, `안녕하세요! 요청하신 상품의 쿠팡 로켓배송 최저가 구매 좌표입니다 👇\nhttps://inch.sale/?ch=insta_dm\n\n품절 전에 확인해보세요!`);
               }
             }
           }
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
             if (senderId && messageText) {
               console.log(`[Instagram DM 수신] 보낸이: ${senderId} | 내용: "${messageText}"`);
-              await sendInstagramDM(senderId, `안녕하세요! inchsales 실시간 최저가 링크 안내입니다.\n원하시는 상품을 확인해보세요 👇\nhttps://inchsales.vercel.app/?ch=insta_dm`);
+              await sendInstagramDM(senderId, `안녕하세요! inchsales 실시간 최저가 링크 안내입니다.\n원하시는 상품을 확인해보세요 👇\nhttps://inch.sale/?ch=insta_dm`);
             }
           }
         }

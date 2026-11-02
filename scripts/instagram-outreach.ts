@@ -69,7 +69,7 @@ function parseArgs() {
 
 function generateProposals(creatorHandle: string, productName: string, slug: string) {
   const cleanHandle = creatorHandle.replace(/^@+/, '');
-  const baseDomain = 'https://inchsales.vercel.app';
+  const baseDomain = 'https://inch.sale';
   const ytUrl = `${baseDomain}/p/${encodeURIComponent(slug)}?ref=${encodeURIComponent(cleanHandle)}&ch=youtube`;
   const instaUrl = `${baseDomain}/p/${encodeURIComponent(slug)}?ref=${encodeURIComponent(cleanHandle)}&ch=insta`;
   const tiktokUrl = `${baseDomain}/p/${encodeURIComponent(slug)}?ref=${encodeURIComponent(cleanHandle)}&ch=tiktok`;
