@@ -1,6 +1,7 @@
 import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { isCDPAvailable, postYouTubeCommentViaCDP } from './cdp-automation';
+import { postYouTubeCommentViaAppleScript } from './applescript-poster';
 
 const execAsync = promisify(exec);
 
@@ -29,12 +30,13 @@ function copyToMacClipboard(text: string): Promise<void> {
 
 /**
  * 사용자가 이미 로그인해 둔 로컬 Chrome 브라우저를 백그라운드로 안전하게 연동합니다.
- * - [우선순위 1] Chrome 원격 디버깅 포트(9222)가 켜져 있으면, 화면 간섭 0%로 실제 댓글 작성 및 [댓글] 등록 버튼까지 100% 무인 자동 완료
- * - [우선순위 2] 미연결 시 백그라운드 탭 열기 & 클립보드 복사(반자동) 안전 폴백
+ * - [우선순위 1] AppleScript 자바스크립트 실행을 통해 화면 간섭 0%로 실제 댓글 작성 및 [댓글] 등록 버튼까지 100% 무인 자동 완료!
+ * - [우선순위 2] Chrome 원격 디버깅 포트(9222)가 켜져 있으면 CDP 무인 전송
+ * - [우선순위 3] 미연결 시 백그라운드 탭 열기 & 클립보드 복사(반자동) 안전 폴백
  */
 export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promise<{
   success: boolean;
-  method: 'CDP_FULL_AUTO' | 'BACKGROUND_CHROME' | 'SILENT_QUEUE' | 'FALLBACK_OPEN';
+  method: 'APPLESCRIPT_FULL_AUTO' | 'CDP_FULL_AUTO' | 'BACKGROUND_CHROME' | 'SILENT_QUEUE' | 'FALLBACK_OPEN';
   details: string;
 }> {
   try {
@@ -43,7 +45,29 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     // 1. 맥OS 클립보드에 댓글 텍스트 100% 안전 복사 (spawn pbcopy)
     await copyToMacClipboard(task.commentText);
 
-    // 2. [CDP 완전 자동화 시도] 포트 9222 활성화 상태인지 실시간 점검
+    // 2-1. [AppleScript 100% 무인 자동화 시도]
+    // 사용자가 'Apple Events의 자바스크립트 허용'을 켰으므로, 백그라운드에서 직접 작성 & 제출!
+    if (task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
+      const asRes = await postYouTubeCommentViaAppleScript(task.targetUrl, task.commentText);
+      if (asRes.success) {
+        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
+        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
+        const notifScript = `
+          display notification "첫 영상에 댓글 자동 등록 완료!" with title "✅ [100% 무인 전송] @${cleanHandle}" subtitle "${cleanProduct}"
+        `;
+        await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
+
+        return {
+          success: true,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[100% 완전 자동 전송 완료] @${task.creatorHandle} 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!`,
+        };
+      } else {
+        console.warn('AppleScript auto-submit notice:', asRes.message);
+      }
+    }
+
+    // 2-2. [CDP 완전 자동화 시도] 포트 9222 활성화 상태일 경우
     const cdpReady = await isCDPAvailable();
     if (cdpReady && task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
       const cdpRes = await postYouTubeCommentViaCDP(task.targetUrl, task.commentText);
@@ -89,7 +113,7 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     return {
       success: true,
       method: 'BACKGROUND_CHROME',
-      details: `[백그라운드 반자동 모드] @${task.creatorHandle} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료 (CDP 미연결 상태)`,
+      details: `[백그라운드 반자동 모드] @${task.creatorHandle} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료`,
     };
   } catch (err: any) {
     try {
