@@ -586,13 +586,16 @@ export default function Studio({ initialLinks }: StudioProps) {
                       const activeHandle = (targetHandle.trim() || createdInfo.creatorId).replace(/^@+/, '');
                       const ytLink = getPathUrl(createdInfo.slug, activeHandle, 'youtube');
                       const instaLink = getPathUrl(createdInfo.slug, activeHandle, 'insta');
+                      const tiktokLink = getPathUrl(createdInfo.slug, activeHandle, 'tiktok');
                       const statsLink = `${getBaseOrigin()}?id=${encodeURIComponent(activeHandle)}`;
                       
-                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 70% 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수수료 70% 편하게 정산받으세요 ! (쿠팡 파트너스 별도 가입 불필요, 100원부터 즉시 출금 가능)`;
+                      const ytComment = `안녕하세요 @${activeHandle}님! 영상에 나온 [${createdInfo.productName}] 구매처 물어보시는 팬분들이 많아서, @${activeHandle}님 채널 전용 수익 정산 링크를 미리 만들어두었습니다 😊\n👉 ${ytLink}\n\n영상 고정댓글이나 더보기란에 이 링크만 복붙해 두시면, 팬분들이 구매할 때마다 판매 수익 편하게 정산받으세요 ! (쿠팡 파트너스 번거로운 가입 불필요, 100원부터 즉시 출금 가능)`;
 
-                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 70% 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 수수료 70% 편하게 정산받으세요 ! ✨`;
+                      const instaComment = `@${activeHandle} 릴스 보고 [${createdInfo.productName}] 문의하시는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 생성해뒀어요! 🎁👉 ${instaLink} 프로필 링크나 스토리에 걸어두시면 팬분들도 편하게 사고 판매 수익 편하게 정산받으세요 ! ✨`;
 
-                      const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! 멋진 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 70% 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 판매 수수료의 70% 크리에이터 지급 (업계 최고 수준)\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+                      const tiktokComment = `@${activeHandle} 틱톡 보고 [${createdInfo.productName}] 어디서 사는지 물어보는 분들 많길래 @${activeHandle}님 전용 정산 링크 미리 만들어뒀어요! 🎵👉 ${tiktokLink} 프로필 바이오나 댓글에 달아두시고 판매 수익 편하게 정산받으세요 ! ✨`;
+
+                      const instaDm = `안녕하세요 @${activeHandle} 크리에이터님! 멋진 콘텐츠 항상 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${createdInfo.productName}] 상품에 대해 팬분들의 구매 문의가 많을 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익을 가져가실 수 있도록 @${activeHandle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${activeHandle}님 전용 정산 링크:\n${instaLink}\n\n💡 주요 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 끝)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${getBaseOrigin()} 에서 '@${activeHandle}' 입력 시 누적 클릭 및 수익 실시간 조회 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 큰 도움이 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
 
                       return (
                         <div className="mt-4 p-4 rounded-xl bg-gradient-to-br from-indigo-50/90 via-purple-50/70 to-pink-50/90 border-2 border-indigo-200/90 shadow-sm space-y-3">
@@ -605,7 +608,7 @@ export default function Studio({ initialLinks }: StudioProps) {
                             </span>
                           </div>
                           <p className="text-[11px] text-indigo-900/80 leading-relaxed">
-                            유튜브나 인스타를 보다가 마음에 드는 크리에이터 계정 아이디를 입력하세요. <strong>가입을 기다리지 않고 해당 계정 전용 정산 링크를 즉시 발급</strong>하여 바로 복사 가능한 협업 제안문을 만듭니다.
+                            유튜브, 인스타, 틱톡을 보다가 마음에 드는 크리에이터 계정 아이디를 입력하세요. <strong>가입을 기다리지 않고 해당 계정 전용 정산 링크를 즉시 발급</strong>하여 바로 복사 가능한 협업 제안문을 만듭니다.
                           </p>
 
                           <div className="flex items-center gap-2 bg-white p-2 rounded-xl border border-indigo-200">
@@ -674,6 +677,30 @@ export default function Studio({ initialLinks }: StudioProps) {
                               </div>
                               <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
                                 {instaComment}
+                              </pre>
+                            </div>
+
+                            {/* TikTok Comment */}
+                            <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-900 flex items-center gap-1">
+                                  <span>🎵</span> 틱톡(TikTok) 영상 댓글 제안문
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => copyToClipboard(tiktokComment, 'outreach_tiktok')}
+                                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all flex items-center gap-1 ${
+                                    copiedType === 'outreach_tiktok'
+                                      ? 'bg-slate-900 text-white'
+                                      : 'bg-slate-100 hover:bg-slate-200 text-slate-800'
+                                  }`}
+                                >
+                                  {copiedType === 'outreach_tiktok' ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                  <span>{copiedType === 'outreach_tiktok' ? '복사됨!' : '댓글 카피 복사'}</span>
+                                </button>
+                              </div>
+                              <pre className="text-[10.5px] text-slate-600 bg-slate-50 p-2 rounded-lg font-sans whitespace-pre-wrap leading-relaxed select-all">
+                                {tiktokComment}
                               </pre>
                             </div>
 

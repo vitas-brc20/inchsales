@@ -28,10 +28,17 @@ interface CampaignItem {
     creatorCategory: string;
     ytUrl: string;
     instaUrl: string;
+    tiktokUrl?: string;
     statsUrl: string;
     ytComment: string;
     instaComment: string;
+    tiktokComment?: string;
     instaDm: string;
+    apiPublishStatus?: {
+      youtube?: { status: string; success: boolean };
+      instagram?: { status: string; success: boolean };
+      tiktok?: { status: string; success: boolean };
+    };
   } | null;
   socialPosts: {
     naverBlog?: { title: string; content: string } | string;
@@ -413,10 +420,10 @@ export default function CampaignsPage() {
                           {camp.targetedCreatorOutreach.creatorCategory} 카테고리 엄격 매칭
                         </span>
                       </span>
-                      <span className="text-[10px] font-mono text-purple-600 font-bold">선발급 70% ref 자동 연동</span>
+                      <span className="text-[10px] font-mono text-purple-600 font-bold">선발급 ref 자동 연동</span>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-xs">
                       {/* YouTube Comment */}
                       <div className="bg-white p-2.5 rounded-lg border border-red-100 flex flex-col justify-between gap-1.5">
                         <div className="flex items-center justify-between">
@@ -441,7 +448,7 @@ export default function CampaignsPage() {
                       <div className="bg-white p-2.5 rounded-lg border border-pink-100 flex flex-col justify-between gap-1.5">
                         <div className="flex items-center justify-between">
                           <span className="text-[11px] font-bold text-pink-900 flex items-center gap-1">
-                            <span>📸</span> 인스타그램 릴스/피드 댓글
+                            <span>📸</span> 인스타그램 릴스 댓글
                           </span>
                           <button
                             type="button"
@@ -454,6 +461,26 @@ export default function CampaignsPage() {
                         </div>
                         <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
                           {camp.targetedCreatorOutreach.instaComment}
+                        </p>
+                      </div>
+
+                      {/* TikTok Comment */}
+                      <div className="bg-white p-2.5 rounded-lg border border-slate-200 flex flex-col justify-between gap-1.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[11px] font-bold text-slate-900 flex items-center gap-1">
+                            <span>🎵</span> 틱톡(TikTok) 영상 댓글
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(camp.targetedCreatorOutreach?.tiktokComment || '', `tt_out_${camp.campaignId}`)}
+                            className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors flex items-center gap-1"
+                          >
+                            {copiedKey === `tt_out_${camp.campaignId}` ? <Check className="w-2.5 h-2.5" /> : <Copy className="w-2.5 h-2.5" />}
+                            <span>{copiedKey === `tt_out_${camp.campaignId}` ? '복사됨' : '복사'}</span>
+                          </button>
+                        </div>
+                        <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
+                          {camp.targetedCreatorOutreach.tiktokComment || `@${camp.targetedCreatorOutreach.creatorHandle} 틱톡 영상 보고 구매처 문의 많길래 전용 정산 링크 준비했어요!`}
                         </p>
                       </div>
                     </div>
