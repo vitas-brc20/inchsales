@@ -8,6 +8,7 @@ interface PhoneMockupProps {
   productName: string;
   category: string;
   creatorId: string;
+  channel?: string;
   tagline: string;
   priceHint: string;
   slug: string;
@@ -17,6 +18,7 @@ export default function PhoneMockup({
   productName,
   category,
   creatorId,
+  channel,
   tagline,
   priceHint,
   slug,
@@ -26,6 +28,7 @@ export default function PhoneMockup({
   const displayCreator = creatorId ? `@${creatorId}` : '@tiktok_sweet';
   const displayTagline = tagline || '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기';
   const displayPrice = priceHint || '16,900원';
+  const channelBadge = channel === 'insta' ? '📸 인스타' : channel === 'tiktok' ? '🎵 틱톡' : channel === 'youtube' ? '🎬 유튜브' : channel === 'threads' ? '🧵 스레드' : channel === 'blog' ? '📝 블로그' : '';
 
   return (
     <div className="w-full max-w-[340px] mx-auto">
@@ -54,11 +57,16 @@ export default function PhoneMockup({
           <div className="p-4 flex-1 flex flex-col gap-3">
             
             {/* Creator Badge */}
-            <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-white shadow-xs border border-slate-100 w-fit">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-white shadow-xs border border-slate-100 w-fit">
               <div className="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center text-white text-[9px] font-bold">
                 {displayCreator.substring(1, 2).toUpperCase()}
               </div>
               <span className="font-semibold text-slate-700 text-[11px]">{displayCreator}</span>
+              {channelBadge && (
+                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100">
+                  {channelBadge}
+                </span>
+              )}
               <span className="text-slate-300 text-[9px]">•</span>
               <span className="text-blue-600 font-medium text-[10px]">추천템</span>
             </div>

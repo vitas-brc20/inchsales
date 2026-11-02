@@ -12,6 +12,7 @@ interface DashboardViewProps {
 
 export default function DashboardView({ link }: DashboardViewProps) {
   const [copied, setCopied] = useState(false);
+  const [copiedChannel, setCopiedChannel] = useState<string | null>(null);
   const [withdrawModalOpen, setWithdrawModalOpen] = useState(false);
   const [tossIdOrAccount, setTossIdOrAccount] = useState('');
   const [withdrawnSuccess, setWithdrawnSuccess] = useState(false);
@@ -54,6 +55,19 @@ export default function DashboardView({ link }: DashboardViewProps) {
     navigator.clipboard.writeText(getFullUrl());
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const getChannelUrl = (channelId: string) => {
+    const base = typeof window !== 'undefined'
+      ? `${window.location.origin}/p/${encodeURIComponent(link.slug)}?ref=${encodeURIComponent(link.creatorId)}`
+      : `https://inchsales.vercel.app/p/${encodeURIComponent(link.slug)}?ref=${encodeURIComponent(link.creatorId)}`;
+    return channelId && channelId !== 'general' ? `${base}&ch=${channelId}` : base;
+  };
+
+  const handleCopyChannel = (channelId: string) => {
+    navigator.clipboard.writeText(getChannelUrl(channelId));
+    setCopiedChannel(channelId);
+    setTimeout(() => setCopiedChannel(null), 2000);
   };
 
   const handleWithdrawSubmit = async (e: React.FormEvent) => {
@@ -232,6 +246,84 @@ export default function DashboardView({ link }: DashboardViewProps) {
             </div>
           </div>
 
+        </div>
+
+        {/* Channel Performance Breakdown Card */}
+        <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 border-b border-slate-100 gap-2">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" />
+                <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                  채널별 유입 &amp; 정산 성과 분리 분석
+                </h2>
+              </div>
+              <p className="text-xs text-slate-500 mt-0.5">
+                인스타그램, 틱톡, 유튜브 등 공유 채널별 클릭수와 예상 정산금을 실시간으로 분리 추적합니다.
+              </p>
+            </div>
+            <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold w-fit">
+              실시간 파라미터 연동
+            </span>
+          </div>
+
+          <div className="mt-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              { id: 'insta', name: '인스타그램', desc: '릴스 / 스토리 / 프로필', icon: '📸', color: 'from-pink-500 to-rose-500' },
+              { id: 'tiktok', name: '틱톡', desc: '숏폼 영상 / 바이오 링크', icon: '🎵', color: 'from-slate-900 to-zinc-700' },
+              { id: 'youtube', name: '유튜브', desc: '쇼츠 고정댓글 / 영상 본문', icon: '🎬', color: 'from-red-600 to-rose-600' },
+              { id: 'threads', name: '스레드 / X', desc: '실시간 피드 포스팅', icon: '🧵', color: 'from-indigo-600 to-blue-700' },
+              { id: 'blog', name: '블로그 / 카페', desc: '리뷰 글 / 오픈채팅', icon: '📝', color: 'from-emerald-600 to-teal-700' },
+              { id: 'general', name: '공통 / 직접 유입', desc: '통합 기본 파라미터', icon: '🌐', color: 'from-blue-600 to-cyan-600' },
+            ].map((ch) => {
+              const chStat = link.channelStats?.[ch.id] || { clicks: 0, estimatedEarnings: 0 };
+              const chShare = Math.round(chStat.estimatedEarnings * 0.7);
+              const isCopied = copiedChannel === ch.id;
+
+              return (
+                <div key={ch.id} className="p-4 rounded-2xl bg-slate-50/80 border border-slate-200/80 flex flex-col justify-between gap-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{ch.icon}</span>
+                      <div>
+                        <span className="text-xs font-extrabold text-slate-900 block leading-tight">{ch.name}</span>
+                        <span className="text-[10px] text-slate-400 font-mono">{ch.desc}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200/60 flex items-end justify-between">
+                    <div>
+                      <span className="text-xs text-slate-400 block font-medium">유입 클릭</span>
+                      <span className="text-lg font-black text-slate-900">
+                        {chStat.clicks.toLocaleString()}
+                        <span className="text-xs font-normal text-slate-500 ml-0.5">회</span>
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-slate-400 block font-medium">예상 정산 (70%)</span>
+                      <span className="text-sm font-black text-emerald-600">
+                        {chShare.toLocaleString()}원
+                      </span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleCopyChannel(ch.id)}
+                    className={`w-full py-1.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+                      isCopied
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs'
+                    }`}
+                  >
+                    {isCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{isCopied ? '전용 링크 복사됨!' : `${ch.name} 전용 링크 복사`}</span>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         {/* Withdrawal History Card */}

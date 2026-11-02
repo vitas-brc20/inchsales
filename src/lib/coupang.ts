@@ -100,11 +100,14 @@ export async function requestCoupangDeepLinkApi(targetUrl: string, subId: string
  * - API Key가 있으면: 쿠팡 Open API를 호출해 link.coupang.com/a/XXXXX 단축 링크를 0.1초 만에 발급
  * - API Key가 없으면: 공식 게이트웨이 link.coupang.com/re/AFF... 주소를 즉시 자동 조합
  */
-export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: string, slug: string): Promise<string> {
+export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: string, slug: string, channel?: string): Promise<string> {
   const trackingId = getCoupangTrackingId();
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const subId = `inch_${safeCreator}_${safeSlug}`;
+  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  const safeChannel = (channel || '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 8);
+  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  const subId = safeChannel && safeChannel !== 'general'
+    ? `inch_${safeCreator}_${safeChannel}_${safeSlug}`
+    : `inch_${safeCreator}_${safeSlug}`;
 
   const trimmed = queryOrUrl.trim();
 
@@ -152,11 +155,14 @@ export async function generateAutoCoupangLink(queryOrUrl: string, creatorId: str
 }
 
 // 동기 호환 래퍼
-export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, slug: string): string {
+export function buildCoupangLinkWithRef(queryOrUrl: string, creatorId: string, slug: string, channel?: string): string {
   const trackingId = getCoupangTrackingId();
-  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 16);
-  const subId = `inch_${safeCreator}_${safeSlug}`;
+  const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  const safeChannel = (channel || '').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 8);
+  const safeSlug = (slug || 'item').replace(/[^a-zA-Z0-9_-]/g, '').substring(0, 14);
+  const subId = safeChannel && safeChannel !== 'general'
+    ? `inch_${safeCreator}_${safeChannel}_${safeSlug}`
+    : `inch_${safeCreator}_${safeSlug}`;
 
   const trimmed = queryOrUrl.trim();
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {

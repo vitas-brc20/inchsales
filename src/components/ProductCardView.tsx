@@ -18,8 +18,9 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
     setClicked(true);
 
     try {
-      // 추천인(creatorId) 정보를 함께 넘겨 실시간 실적 집계
-      fetch(`/api/links/${encodeURIComponent(link.slug)}/click?creator=${encodeURIComponent(link.creatorId)}`, {
+      // 추천인(creatorId) 및 채널(channel) 정보를 함께 넘겨 실시간 실적 집계
+      const channelParam = link.channel ? `&channel=${encodeURIComponent(link.channel)}` : '';
+      fetch(`/api/links/${encodeURIComponent(link.slug)}/click?creator=${encodeURIComponent(link.creatorId)}${channelParam}`, {
         method: 'POST',
       });
     } catch {
@@ -72,9 +73,21 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
                 {link.creatorId.substring(0, 1).toUpperCase()}
               </div>
               <div>
-                <span className="text-xs font-extrabold text-slate-900 block leading-tight">
-                  @{link.creatorId}
-                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-extrabold text-slate-900 leading-tight">
+                    @{link.creatorId}
+                  </span>
+                  {link.channel && link.channel !== 'general' && (
+                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-0.5">
+                      {link.channel === 'insta' && '📸 인스타'}
+                      {link.channel === 'tiktok' && '🎵 틱톡'}
+                      {link.channel === 'youtube' && '🎬 유튜브'}
+                      {link.channel === 'threads' && '🧵 스레드'}
+                      {link.channel === 'blog' && '📝 블로그'}
+                      {link.channel === 'kakao' && '💬 카톡'}
+                    </span>
+                  )}
+                </div>
                 <span className="text-[10px] text-slate-400">영상 추천 큐레이터</span>
               </div>
             </div>

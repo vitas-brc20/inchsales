@@ -1,3 +1,11 @@
+export type ChannelType = 'insta' | 'tiktok' | 'youtube' | 'threads' | 'blog' | 'kakao' | 'general';
+
+export interface ChannelStat {
+  clicks: number;
+  estimatedEarnings: number;
+  lastClickAt: string;
+}
+
 export interface ProductItem {
   slug: string;
   name: string;
@@ -18,6 +26,7 @@ export interface CreatorStat {
   clicks: number;
   estimatedEarnings: number;
   lastClickAt: string;
+  channelStats?: Record<string, ChannelStat>;
 }
 
 export interface WithdrawalRequest {
@@ -37,6 +46,7 @@ export interface ProductLink {
   productName: string;
   category: string;
   creatorId: string;
+  channel?: ChannelType | string;
   tagline: string;
   originalQueryOrUrl: string;
   coupangUrl: string;
@@ -46,6 +56,7 @@ export interface ProductLink {
   priceHint?: string;
   imageUrl?: string;
   iframeUrl?: string;
+  channelStats?: Record<string, ChannelStat>;
   createdAt: string;
 }
 
@@ -53,6 +64,7 @@ export interface CreateLinkPayload {
   productName: string;
   category?: string;
   creatorId: string;
+  channel?: ChannelType | string;
   tagline?: string;
   queryOrUrl?: string;
   priceHint?: string;

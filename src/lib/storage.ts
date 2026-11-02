@@ -293,9 +293,22 @@ export function upsertProduct(payload: {
   return newProduct;
 }
 
+export function normalizeChannel(raw?: string): string {
+  if (!raw) return 'general';
+  const c = raw.trim().toLowerCase();
+  if (['insta', 'instagram', 'ig', 'reels', 'story'].includes(c)) return 'insta';
+  if (['tiktok', 'tt', 'tok'].includes(c)) return 'tiktok';
+  if (['youtube', 'yt', 'shorts'].includes(c)) return 'youtube';
+  if (['threads', 'th', 'twitter', 'x'].includes(c)) return 'threads';
+  if (['blog', 'cafe', 'naver'].includes(c)) return 'blog';
+  if (['kakao', 'kakaotalk', 'chat'].includes(c)) return 'kakao';
+  return 'general';
+}
+
 // 클릭 기록 (Supabase + Local 동기화)
-export async function recordReferralClickAsync(slugOrQuery: string, creatorId: string) {
-  const res = recordReferralClick(slugOrQuery, creatorId);
+export async function recordReferralClickAsync(slugOrQuery: string, creatorId: string, channelInput?: string) {
+  const channel = normalizeChannel(channelInput);
+  const res = recordReferralClick(slugOrQuery, creatorId, channel);
 
   try {
     // Supabase inch_products total_clicks 증가
@@ -322,7 +335,7 @@ export async function recordReferralClickAsync(slugOrQuery: string, creatorId: s
   return res;
 }
 
-export function recordReferralClick(slugOrQuery: string, creatorId: string): {
+export function recordReferralClick(slugOrQuery: string, creatorId: string, channelInput?: string): {
   product: ProductItem;
   creatorStat: CreatorStat;
   redirectUrl: string;
@@ -333,6 +346,7 @@ export function recordReferralClick(slugOrQuery: string, creatorId: string): {
   }
 
   const safeCreator = (creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'anonymous';
+  const channel = normalizeChannel(channelInput);
   const statKey = `${safeCreator}:${product.slug}`;
 
   const products = readProducts();
@@ -349,16 +363,30 @@ export function recordReferralClick(slugOrQuery: string, creatorId: string): {
     clicks: 0,
     estimatedEarnings: 0,
     lastClickAt: new Date().toISOString(),
+    channelStats: {},
   };
 
   current.clicks += 1;
   current.estimatedEarnings = Math.round(current.clicks * 35);
   current.lastClickAt = new Date().toISOString();
 
+  if (!current.channelStats) {
+    current.channelStats = {};
+  }
+  const chData = current.channelStats[channel] || {
+    clicks: 0,
+    estimatedEarnings: 0,
+    lastClickAt: new Date().toISOString(),
+  };
+  chData.clicks += 1;
+  chData.estimatedEarnings = Math.round(chData.clicks * 35);
+  chData.lastClickAt = new Date().toISOString();
+  current.channelStats[channel] = chData;
+
   stats[statKey] = current;
   writeStats(stats);
 
-  const redirectUrl = buildCoupangLinkWithRef(product.queryOrUrl, safeCreator, product.slug);
+  const redirectUrl = buildCoupangLinkWithRef(product.queryOrUrl, safeCreator, product.slug, channel);
 
   return { product, creatorStat: current, redirectUrl };
 }
@@ -486,7 +514,7 @@ export function getAllLinks(): ProductLink[] {
   });
 }
 
-export function getLinkBySlug(slug: string, refCreator?: string): ProductLink | null {
+export function getLinkBySlug(slug: string, refCreator?: string, channelInput?: string): ProductLink | null {
   let product = getProductBySlugOrQuery(slug);
   if (!product) {
     // 요청된 상품명이 카탈로그에 없는 경우, 실시간 온디맨드로 바로 생성
@@ -499,24 +527,31 @@ export function getLinkBySlug(slug: string, refCreator?: string): ProductLink | 
   }
 
   const creatorId = refCreator || 'official';
+  const channel = normalizeChannel(channelInput);
   const statKey = `${creatorId}:${product.slug}`;
   const stats = readStats();
   const stat = stats[statKey];
+
+  const subId = channel && channel !== 'general'
+    ? `inch_${creatorId}_${channel}_${product.slug}`
+    : `inch_${creatorId}_${product.slug}`;
 
   return {
     slug: product.slug,
     productName: product.name,
     category: product.category,
     creatorId,
+    channel,
     tagline: product.tagline,
     originalQueryOrUrl: product.queryOrUrl,
-    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug),
-    subId: `inch_${creatorId}_${product.slug}`,
+    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug, channel),
+    subId,
     clicks: stat?.clicks || product.totalClicks,
     estimatedEarnings: stat?.estimatedEarnings || Math.round(product.totalClicks * 35),
     priceHint: product.priceHint,
     imageUrl: product.imageUrl,
     iframeUrl: product.iframeUrl,
+    channelStats: stat?.channelStats,
     createdAt: product.createdAt,
   };
 }
@@ -532,16 +567,22 @@ export function createProductLink(payload: CreateLinkPayload): ProductLink {
   });
 
   const creatorId = (payload.creatorId || 'anonymous').replace(/[^a-zA-Z0-9_-]/g, '') || 'creator';
+  const channel = normalizeChannel(payload.channel);
+
+  const subId = channel && channel !== 'general'
+    ? `inch_${creatorId}_${channel}_${product.slug}`
+    : `inch_${creatorId}_${product.slug}`;
 
   return {
     slug: product.slug,
     productName: product.name,
     category: product.category,
     creatorId,
+    channel,
     tagline: product.tagline,
     originalQueryOrUrl: product.queryOrUrl,
-    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug),
-    subId: `inch_${creatorId}_${product.slug}`,
+    coupangUrl: buildCoupangLinkWithRef(product.queryOrUrl, creatorId, product.slug, channel),
+    subId,
     clicks: 0,
     estimatedEarnings: 0,
     priceHint: product.priceHint,
@@ -549,20 +590,25 @@ export function createProductLink(payload: CreateLinkPayload): ProductLink {
   };
 }
 
-export function recordClick(slug: string, creatorId?: string): ProductLink | null {
-  const res = recordReferralClick(slug, creatorId || 'official');
+export function recordClick(slug: string, creatorId?: string, channelInput?: string): ProductLink | null {
+  const channel = normalizeChannel(channelInput);
+  const res = recordReferralClick(slug, creatorId || 'official', channel);
   return {
     slug: res.product.slug,
     productName: res.product.name,
     category: res.product.category,
     creatorId: res.creatorStat.creatorId,
+    channel,
     tagline: res.product.tagline,
     originalQueryOrUrl: res.product.queryOrUrl,
     coupangUrl: res.redirectUrl,
-    subId: `inch_${res.creatorStat.creatorId}_${res.product.slug}`,
+    subId: channel !== 'general'
+      ? `inch_${res.creatorStat.creatorId}_${channel}_${res.product.slug}`
+      : `inch_${res.creatorStat.creatorId}_${res.product.slug}`,
     clicks: res.creatorStat.clicks,
     estimatedEarnings: res.creatorStat.estimatedEarnings,
     priceHint: res.product.priceHint,
+    channelStats: res.creatorStat.channelStats,
     createdAt: res.product.createdAt,
   };
 }

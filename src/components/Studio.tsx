@@ -20,11 +20,21 @@ interface StudioProps {
   }>;
 }
 
+const CHANNELS = [
+  { id: 'insta', name: '인스타그램', shortName: '인스타', icon: '📸', desc: '릴스 / 프로필 링크 / 스토리' },
+  { id: 'tiktok', name: '틱톡', shortName: '틱톡', icon: '🎵', desc: '숏폼 영상 / 바이오 링크' },
+  { id: 'youtube', name: '유튜브', shortName: '유튜브', icon: '🎬', desc: '쇼츠 고정댓글 / 영상 더보기' },
+  { id: 'threads', name: '스레드 / X', shortName: '스레드/X', icon: '🧵', desc: '실시간 피드 포스팅' },
+  { id: 'blog', name: '블로그 / 카페', shortName: '블로그', icon: '📝', desc: '리뷰 포스팅 / 커뮤니티' },
+  { id: 'general', name: '공통 (통합)', shortName: '공통', icon: '🌐', desc: '기본 통합 링크' },
+] as const;
+
 export default function Studio({ initialLinks }: StudioProps) {
   // Form State
   const [productName, setProductName] = useState('코카콜라 제로 355ml 24캔');
   const [category, setCategory] = useState('식음료/음료');
   const [creatorId, setCreatorId] = useState('my_uuid_100');
+  const [selectedChannel, setSelectedChannel] = useState<string>('insta');
   const [tagline, setTagline] = useState('칼로리 걱정 없는 짜릿함! 쿠팡 로켓배송 최저가 보장');
   const [priceHint, setPriceHint] = useState('19,900원');
   const [queryOrUrl, setQueryOrUrl] = useState('https://link.coupang.com/a/ikoqLZW3zg');
@@ -35,10 +45,12 @@ export default function Studio({ initialLinks }: StudioProps) {
     slug: string;
     creatorId: string;
     productName: string;
+    channel?: string;
   } | null>({
     slug: '제로콜라',
     creatorId: 'my_uuid_100',
     productName: '코카콜라 제로',
+    channel: 'insta',
   });
   const [copiedType, setCopiedType] = useState<string | null>(null);
   const [clicksSlider, setClicksSlider] = useState(100);
@@ -71,6 +83,7 @@ export default function Studio({ initialLinks }: StudioProps) {
           productName,
           category,
           creatorId: activeCreator,
+          channel: selectedChannel,
           tagline,
           priceHint,
           queryOrUrl: queryOrUrl || productName,
@@ -83,6 +96,7 @@ export default function Studio({ initialLinks }: StudioProps) {
           slug: data.link.slug,
           creatorId: activeCreator,
           productName: data.link.productName,
+          channel: selectedChannel,
         });
         confetti({
           particleCount: 80,
@@ -106,14 +120,18 @@ export default function Studio({ initialLinks }: StudioProps) {
     return 'https://inchsales.vercel.app';
   };
 
-  // 포맷 1: ?q=두쫀쿠&id=uuid (사용자 요청 포맷)
-  const getQueryUrl = (name: string, id: string) => {
-    return `${getBaseOrigin()}?q=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+  // 포맷 1: ?q=두쫀쿠&id=uuid&ch=insta (사용자 요청 포맷)
+  const getQueryUrl = (name: string, id: string, ch?: string) => {
+    const base = `${getBaseOrigin()}?q=${encodeURIComponent(name)}&id=${encodeURIComponent(id)}`;
+    const channel = ch !== undefined ? ch : selectedChannel;
+    return channel && channel !== 'general' ? `${base}&ch=${channel}` : base;
   };
 
-  // 포맷 2: /p/slug?ref=uuid (경로형 포맷)
-  const getPathUrl = (slug: string, id: string) => {
-    return `${getBaseOrigin()}/p/${slug}?ref=${encodeURIComponent(id)}`;
+  // 포맷 2: /p/slug?ref=uuid&ch=insta (경로형 포맷)
+  const getPathUrl = (slug: string, id: string, ch?: string) => {
+    const base = `${getBaseOrigin()}/p/${encodeURIComponent(slug)}?ref=${encodeURIComponent(id)}`;
+    const channel = ch !== undefined ? ch : selectedChannel;
+    return channel && channel !== 'general' ? `${base}&ch=${channel}` : base;
   };
 
   const copyToClipboard = (text: string, type: string) => {
@@ -245,6 +263,42 @@ export default function Studio({ initialLinks }: StudioProps) {
                     <p className="text-[11px] text-blue-700 mt-1.5">
                       이 ID로 유입된 모든 클릭과 쿠팡 구매 실적이 개별 인플루언서에게 귀속됩니다.
                     </p>
+
+                    {/* Channel Segmentation Tabs */}
+                    <div className="mt-4 pt-3.5 border-t border-blue-100/90">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-blue-950 flex items-center gap-1">
+                          <span>📢 유입 채널별 분기 설정</span>
+                          <span className="text-[10px] font-normal text-blue-600">(인스타 / 틱톡 / 유튜브 등)</span>
+                        </span>
+                        <span className="text-[10px] font-mono text-blue-700 bg-white/90 px-2 py-0.5 rounded border border-blue-200">
+                          {selectedChannel === 'general' ? '통합' : `&ch=${selectedChannel}`}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                        {CHANNELS.map((ch) => {
+                          const isSelected = selectedChannel === ch.id;
+                          return (
+                            <button
+                              key={ch.id}
+                              type="button"
+                              onClick={() => setSelectedChannel(ch.id)}
+                              className={`px-2 py-2 rounded-xl text-center flex flex-col items-center justify-center gap-0.5 transition-all text-xs ${
+                                isSelected
+                                  ? 'bg-blue-600 text-white font-bold shadow-sm shadow-blue-500/30 ring-2 ring-blue-600/20'
+                                  : 'bg-white/80 hover:bg-white text-slate-700 border border-blue-100/80 font-medium'
+                              }`}
+                            >
+                              <span className="text-sm">{ch.icon}</span>
+                              <span className="text-[11px]">{ch.shortName}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <p className="text-[10.5px] text-slate-500 mt-2 leading-relaxed">
+                        선택한 채널에 따라 링크에 <code className="text-blue-700 font-mono font-bold bg-white px-1 py-0.5 rounded">&ch={selectedChannel}</code>가 자동 부여되어, 쿠팡 subId에서도 <strong>인스타 vs 틱톡 vs 유튜브</strong> 유입 전환율을 100% 분리 분석합니다.
+                      </p>
+                    </div>
                   </div>
 
                   {/* Product Name */}
@@ -395,6 +449,43 @@ export default function Studio({ initialLinks }: StudioProps) {
                       </div>
                     </div>
 
+                    {/* Platform Tailored Quick Copy Grid */}
+                    <div className="mt-3 pt-3 border-t border-emerald-200/70">
+                      <span className="text-[11px] font-extrabold text-emerald-950 block mb-2 flex items-center justify-between">
+                        <span>🚀 주요 SNS 채널별 즉시 복사 (개별 파라미터 자동 적용)</span>
+                        <span className="text-[10px] text-emerald-700 font-semibold">채널별 클릭 분리 추적</span>
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {CHANNELS.filter(c => c.id !== 'general').map((ch) => {
+                          const chUrl = getPathUrl(createdInfo.slug, createdInfo.creatorId, ch.id);
+                          const isCopied = copiedType === `ch_${ch.id}`;
+                          return (
+                            <div key={ch.id} className="bg-white p-2 rounded-xl border border-emerald-200/80 flex items-center justify-between gap-2 shadow-2xs">
+                              <div className="flex items-center gap-1.5 min-w-0">
+                                <span className="text-base">{ch.icon}</span>
+                                <div className="truncate">
+                                  <span className="text-[11px] font-bold text-slate-800 block truncate">{ch.name}</span>
+                                  <span className="text-[9.5px] text-slate-400 font-mono block truncate">{ch.desc}</span>
+                                </div>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => copyToClipboard(chUrl, `ch_${ch.id}`)}
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 flex items-center gap-1 ${
+                                  isCopied
+                                    ? 'bg-emerald-600 text-white'
+                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                }`}
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                                <span>{isCopied ? '복사됨!' : '링크 복사'}</span>
+                              </button>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     {/* FTC & Anti-Spam Compliance Guidelines */}
                     <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/80 text-[11px] text-amber-950 space-y-2">
                       <div className="flex items-center justify-between">
@@ -435,7 +526,7 @@ export default function Studio({ initialLinks }: StudioProps) {
                         구매자 화면 열기 <ExternalLink className="w-3 h-3" />
                       </Link>
                       <Link
-                        href={`/d/${createdInfo.slug}?ref=${createdInfo.creatorId}`}
+                        href={`/d/${createdInfo.slug}?ref=${createdInfo.creatorId}&ch=${createdInfo.channel || selectedChannel}`}
                         className="text-blue-700 hover:text-blue-900 inline-flex items-center gap-1"
                       >
                         내 실시간 수익 대시보드 <ArrowRight className="w-3 h-3" />
@@ -452,6 +543,7 @@ export default function Studio({ initialLinks }: StudioProps) {
                 productName={productName}
                 category={category}
                 creatorId={creatorId}
+                channel={selectedChannel}
                 tagline={tagline}
                 priceHint={priceHint}
                 slug={createdInfo?.slug || 'preview'}

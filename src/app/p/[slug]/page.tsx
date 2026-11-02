@@ -8,14 +8,15 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata(
   props: {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ ref?: string; id?: string }>;
+    searchParams: Promise<{ ref?: string; id?: string; ch?: string; channel?: string }>;
   }
 ): Promise<Metadata> {
   const params = await props.params;
   const decodedSlug = decodeURIComponent(params.slug);
   const searchParams = await props.searchParams;
   const creatorId = searchParams.ref || searchParams.id;
-  const link = getLinkBySlug(decodedSlug, creatorId);
+  const channel = searchParams.ch || searchParams.channel;
+  const link = getLinkBySlug(decodedSlug, creatorId, channel);
 
   if (!link) {
     return {
@@ -39,15 +40,16 @@ export async function generateMetadata(
 export default async function ProductPage(
   props: {
     params: Promise<{ slug: string }>;
-    searchParams: Promise<{ ref?: string; id?: string }>;
+    searchParams: Promise<{ ref?: string; id?: string; ch?: string; channel?: string }>;
   }
 ) {
   const params = await props.params;
   const decodedSlug = decodeURIComponent(params.slug);
   const searchParams = await props.searchParams;
   const creatorId = searchParams.ref || searchParams.id;
+  const channel = searchParams.ch || searchParams.channel;
 
-  const link = getLinkBySlug(decodedSlug, creatorId);
+  const link = getLinkBySlug(decodedSlug, creatorId, channel);
 
   if (!link) {
     notFound();
