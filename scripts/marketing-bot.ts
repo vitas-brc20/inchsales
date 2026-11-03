@@ -11,6 +11,7 @@ import {
   fetchRealtimeTikTokVideos,
   analyzeAndMatchProduct,
 } from '../src/lib/realtime-discovery';
+import { getPostedCommentRecords } from '../src/lib/storage';
 
 const execAsync = promisify(exec);
 
@@ -25,6 +26,19 @@ const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const LOG_FILE = path.join(process.cwd(), 'logs', 'marketing-activity.log');
 const CAMPAIGN_DIR = path.join(process.cwd(), 'logs', 'campaigns');
 const OUTREACH_FILE = path.join(process.cwd(), 'logs', 'outreach-queue.json');
+
+// 이미 댓글을 게시했거나 시도한 URL 목록을 로드하여 동일 영상에 대한 중복 댓글을 100% 원천 차단
+export function getAlreadyCommentedUrls(): Set<string> {
+  const set = new Set<string>();
+  try {
+    const list = getPostedCommentRecords(1000);
+    for (const item of list) {
+      if (item.targetUrl) set.add(item.targetUrl.trim());
+      if (item.postUrl) set.add(item.postUrl.trim());
+    }
+  } catch {}
+  return set;
+}
 
 // ============================================================================
 // 유명 크리에이터 검증 풀 및 카테고리 엄격 매핑 정의 (불일치 제품 댓글 원천 차단)
@@ -62,449 +76,16 @@ export function isCreatorExcluded(identifier?: string): boolean {
   });
 }
 
-export const VERIFIED_CREATORS: VerifiedCreator[] = [
-  // 1. 먹방 / 디저트 분야 (간식, 음료, 디저트만 엄격 매핑)
-  // [Mega 크리에이터]
-  {
-    channelName: '입짧은햇님',
-    handle: 'short_mouth_sun',
-    youtubeHandle: 'short_mouth_sun',
-    instagramHandle: 'cnstka99',
-    tier: 'mega',
-    searchKeyword: '입짧은햇님',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
-    relevanceKeywords: ['디저트', '쿠키', '먹방', '간식', '초콜릿', '음료'],
-  },
-  {
-    channelName: '쯔양',
-    handle: 'tzuyang6145',
-    youtubeHandle: 'tzuyang6145',
-    instagramHandle: 'tzuyang70',
-    tier: 'mega',
-    searchKeyword: '쯔양',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie', '제로콜라', 'coca-cola-zero', '펩시제로'],
-    relevanceKeywords: ['먹방', '간식', '디저트', '음료', '쿠키'],
-  },
-  {
-    channelName: '여수언니 정혜영',
-    handle: 'yeosuunnie',
-    youtubeHandle: 'yeosuunnie',
-    instagramHandle: 'yeosuunnie',
-    tier: 'mega',
-    searchKeyword: '여수언니 정혜영',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', 'ddu-zon-cookie'],
-    relevanceKeywords: ['디저트', '약과', '쿠키', '빵', '베이커리'],
-  },
-  {
-    channelName: '나도Nado',
-    handle: 'nado_eat',
-    youtubeHandle: 'nado_eat',
-    instagramHandle: 'nado_eat',
-    tier: 'mega',
-    searchKeyword: '나도Nado',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['디저트', '쿠키', '먹방', '초콜릿'],
-  },
-  {
-    channelName: '조이 ASMR',
-    handle: 'zoey_asmr',
-    youtubeHandle: 'zoey_asmr',
-    instagramHandle: 'zoey_asmr',
-    tier: 'micro',
-    searchKeyword: '조이 ASMR 두바이 쿠키 디저트',
-    platform: 'all',
-    category: '먹방/디저트',
-    allowedSlugs: ['두쫀쿠', '카다이프두쫀쿠', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['asmr', '디저트', '쿠키', '먹방', '초콜릿'],
-  },
-  {
-    channelName: '회사원A',
-    handle: 'calarygirl',
-    youtubeHandle: 'calarygirl',
-    instagramHandle: 'calarygirl_a',
-    tier: 'mega',
-    searchKeyword: '회사원A',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물미역트리트먼트', '물미역헤어에센스', '미역헤어에센스', '물광피부로션', '미백치약', '미백크림', '블랙헤드제거'],
-    relevanceKeywords: ['머릿결', '트리트먼트', '스킨케어', '올영', '뷰티'],
-  },
-  {
-    channelName: '이사배',
-    handle: 'RISABAE',
-    youtubeHandle: 'RISABAE',
-    instagramHandle: 'risabae_art',
-    tiktokHandle: 'risabae_art',
-    tier: 'mega',
-    searchKeyword: '이사배',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['미백크림', '물광피부로션', '블랙헤드제거', '물미역트리트먼트'],
-    relevanceKeywords: ['메이크업', '피부표현', '톤업', '베이스', '스킨케어'],
-  },
-  {
-    channelName: '레오제이',
-    handle: 'LeoJMakeup',
-    youtubeHandle: 'LeoJMakeup',
-    instagramHandle: 'leojmakeup',
-    tiktokHandle: 'leojmakeup',
-    tier: 'mega',
-    searchKeyword: '레오제이',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '미백치약'],
-    relevanceKeywords: ['피부관리', '물광', '스킨케어', '모공케어', '미백'],
-  },
-  {
-    channelName: 'simplysofia',
-    handle: 'simplysofia',
-    tiktokHandle: 'simplysofia',
-    instagramHandle: 'simplysofia',
-    tier: 'mega',
-    searchKeyword: 'simplysofia',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플에어팟', '애플아이폰', '로지텍키보드', '스탠드조명'],
-    relevanceKeywords: ['아이폰', '데스크셋업', '핑크', '애플', '테크'],
-  },
-  {
-    channelName: '핏블리',
-    handle: 'fitvely_diet',
-    youtubeHandle: 'fitvely_diet',
-    instagramHandle: 'fitvely_moon',
-    tier: 'mega',
-    searchKeyword: '핏블리 FITVELY',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로', '샥즈오픈핏'],
-    relevanceKeywords: ['다이어트', '닭가슴살', '식단', '프로틴', '단백질'],
-  },
-  {
-    channelName: '피지컬갤러리',
-    handle: 'physicalgallery',
-    youtubeHandle: 'physicalgallery',
-    instagramHandle: 'physical_gallery_egg',
-    tier: 'mega',
-    searchKeyword: '피지컬갤러리',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['운동이어폰', '단백질식단', '헬스', '닭가슴살'],
-  },
-  {
-    channelName: '언더케이지',
-    handle: 'Underkg',
-    youtubeHandle: 'Underkg',
-    instagramHandle: 'underkg',
-    tier: 'mega',
-    searchKeyword: 'UNDERkg',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['샥즈오픈핏', '애플에어팟', '애플아이폰', '노트북거치대'],
-    relevanceKeywords: ['이어폰', '오픈핏', '블루투스', '전자기기', '테크'],
-  },
-  {
-    channelName: '틱톡 뷰티꿀팁 (TikTok)',
-    handle: 'tiktok_beauty_room',
-    tier: 'mega',
-    searchKeyword: '틱톡 올영세일 꿀템 추천',
-    platform: 'tiktok',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물미역트리트먼트', '물광피부로션', '블랙헤드제거', '미백크림'],
-    relevanceKeywords: ['올영세일', '물광피부', '블랙헤드제거'],
-  },
-  // [Micro 소형 크리에이터]
-  {
-    channelName: '쇼곰 (SHOW_GOM)',
-    handle: 'show_gom_hair',
-    tier: 'micro',
-    searchKeyword: '쇼곰 손상모 물미역 트리트먼트 헤어케어',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물미역트리트먼트', '물미역헤어에센스', '미역헤어에센스'],
-    relevanceKeywords: ['손상모', '물미역트리트먼트', '헤어케어', '올영세일'],
-  },
-  {
-    channelName: '뷰티 사르나이',
-    handle: 'sarna2_beauty',
-    tier: 'micro',
-    searchKeyword: '사르나이 물미역 트리트먼트 물광 스킨케어',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물미역트리트먼트', '물광피부로션', '미백크림'],
-    relevanceKeywords: ['트리트먼트', '물광피부', '스킨케어', '올영추천'],
-  },
-  {
-    channelName: '올영탐구 채소',
-    handle: 'chaeso_beauty',
-    tier: 'micro',
-    searchKeyword: '올영세일 피지 블랙헤드 코팩 톤업크림',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['블랙헤드제거', '미백크림', '물광피부로션'],
-    relevanceKeywords: ['블랙헤드', '코팩', '톤업크림', '올영세일'],
-  },
+// 사용자 지침: 하드코딩된 특정 채널, 고정 링크, 중복 도배 방지를 위해 고정 크리에이터 목록을 완전 삭제함
+export const VERIFIED_CREATORS: VerifiedCreator[] = [];
 
-  // 3. 덴탈 / 모공 전문 분야
-  {
-    channelName: '피부임상연구소',
-    handle: 'dr_skin_lab',
-    tier: 'mega',
-    searchKeyword: '피부과 의사 모공 블랙헤드 치아미백',
-    platform: 'all',
-    category: '스킨케어/덴탈',
-    allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
-    relevanceKeywords: ['피부과', '치아미백', '블랙헤드', '모공청소'],
-  },
-  {
-    channelName: '유경쌤의 미소학개론',
-    handle: '미소학개론',
-    youtubeHandle: '미소학개론',
-    tier: 'micro',
-    searchKeyword: '미소학개론 치과의사 미백템 치아미백',
-    platform: 'all',
-    category: '스킨케어/덴탈',
-    allowedSlugs: ['미백치약', '물광피부로션', '블랙헤드제거'],
-    relevanceKeywords: ['치아미백', '미백치약', '뷰센', '구강관리', '미소학개론'],
-  },
-
-  // 4. IT / 테크 / 전자기기 분야 (애플 정품, 음향기기만 엄격 매핑)
-  // [Mega 크리에이터]
-  {
-    channelName: '잇섭 (ITSub)',
-    handle: 'itsub',
-    youtubeHandle: 'itsub',
-    tier: 'mega',
-    searchKeyword: '잇섭',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플아이폰', '아이폰', '애플맥북', '맥북', '애플아이패드', '아이패드', '애플에어팟', '샥즈오픈핏'],
-    relevanceKeywords: ['아이폰', '맥북', '아이패드', '애플', '전자기기', '테크'],
-  },
-  {
-    channelName: '주연 (ZUYONI)',
-    handle: 'zuyoni1',
-    youtubeHandle: 'zuyoni1',
-    tier: 'mega',
-    searchKeyword: '주연 ZUYONI',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플아이폰', '아이폰', '애플아이패드', '아이패드', '애플맥북', '맥북', '애플에어팟'],
-    relevanceKeywords: ['아이패드', '애플신제품', '맥북에어', '자급제'],
-  },
-  {
-    channelName: '테크몽',
-    handle: 'techmong',
-    youtubeHandle: 'techmong',
-    tier: 'mega',
-    searchKeyword: '테크몽',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플아이패드', '아이패드', '애플맥북', '맥북', '애플아이폰', '아이폰'],
-    relevanceKeywords: ['아이패드활용법', '맥북프로', '태블릿추천'],
-  },
-  {
-    channelName: '뻘짓연구소',
-    handle: 'BullsLab',
-    youtubeHandle: 'BullsLab',
-    tier: 'mega',
-    searchKeyword: '뻘짓연구소',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플맥북', '맥북', '애플아이폰', '아이폰', '애플에어팟', '샥즈오픈핏'],
-    relevanceKeywords: ['M5맥북', '오픈핏이어폰', '하드웨어'],
-  },
-  {
-    channelName: '틱톡 테크트렌드 (TikTok)',
-    handle: 'tiktok_it_trend',
-    tier: 'mega',
-    searchKeyword: '틱톡 아이폰 맥북 꿀팁',
-    platform: 'tiktok',
-    category: 'IT/테크',
-    allowedSlugs: ['애플아이폰', '애플맥북', '애플아이패드', '샥즈오픈핏'],
-    relevanceKeywords: ['아이폰꿀팁', '맥북세팅', '에어팟'],
-  },
-  // [Micro 소형 테크 크리에이터]
-  {
-    channelName: '심플 데스크테리어',
-    handle: 'simple_desk_setup',
-    tier: 'micro',
-    searchKeyword: '심플 Simple 맥북 데스크테리어 셋업',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플맥북', '애플아이패드', '애플아이폰', '샥즈오픈핏'],
-    relevanceKeywords: ['데스크셋업', '맥북', '아이패드', '테크'],
-  },
-  {
-    channelName: '떼끄 테크룸',
-    handle: 'tteggu_tech',
-    tier: 'micro',
-    searchKeyword: '떼끄 아이폰 맥북 가성비 악세서리',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['애플아이폰', '애플맥북', '애플아이패드', '애플에어팟'],
-    relevanceKeywords: ['아이폰', '맥북', '애플', '아이패드'],
-  },
-  {
-    channelName: '러너스 하이',
-    handle: 'runner_gear_lab',
-    tier: 'micro',
-    searchKeyword: '러닝 오픈형 이어폰 샥즈 오픈핏 솔직후기',
-    platform: 'all',
-    category: 'IT/테크',
-    allowedSlugs: ['샥즈오픈핏'],
-    relevanceKeywords: ['샥즈', '오픈핏', '러닝이어폰', '운동'],
-  },
-
-  // 5. 헬스 / 식단 분야 (닭가슴살, 제로음료, 운동기기만 엄격 매핑)
-  // [Mega 크리에이터]
-  {
-    channelName: '핏블리 (FITVELY)',
-    handle: 'fitvely',
-    youtubeHandle: 'fitvely',
-    tier: 'mega',
-    searchKeyword: '핏블리',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로', '샥즈오픈핏'],
-    relevanceKeywords: ['식단관리', '닭가슴살', '다이어트', '단백질', '운동'],
-  },
-  {
-    channelName: '피지컬갤러리 (김계란)',
-    handle: 'physicalgallery',
-    youtubeHandle: 'physicalgallery',
-    tier: 'mega',
-    searchKeyword: '피지컬갤러리',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['운동이어폰', '단백질식단', '헬스', '닭가슴살'],
-  },
-  // [Micro 소형 헬스/식단 크리에이터]
-  {
-    channelName: '직장인 다이어트 브이로그',
-    handle: 'diet_vlog',
-    youtubeHandle: 'diet_vlog',
-    tier: 'micro',
-    searchKeyword: '직장인 다이어트 식단 브이로그 닭가슴살 제로콜라',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['식단일기', '닭가슴살', '다이어트', '제로콜라'],
-  },
-  {
-    channelName: '웨이트 덕코치',
-    handle: 'duck_coach_fit',
-    tier: 'micro',
-    searchKeyword: '웨이트연구소 덕코치 닭가슴살 추천',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '샥즈오픈핏', '제로콜라'],
-    relevanceKeywords: ['닭가슴살', '단백질', '식단', '헬스이어폰'],
-  },
-  {
-    channelName: '살빼라 장혁',
-    handle: 'diet_janghyuk',
-    tier: 'micro',
-    searchKeyword: '살빼라장혁 닭가슴살 식단 다이어트',
-    platform: 'all',
-    category: '헬스/식단',
-    allowedSlugs: ['굽네닭가슴살', '제로콜라', '펩시제로'],
-    relevanceKeywords: ['다이어트식단', '닭가슴살', '제로콜라'],
-  },
-
-  // 6. 캐릭터 / 키덜트 분야 (먼작귀 치이카와만 엄격 매핑)
-  {
-    channelName: '치이카와 굿즈룸',
-    handle: 'chii_goods',
-    tier: 'mega',
-    searchKeyword: '치이카와 정품 인형 언박싱',
-    platform: 'all',
-    category: '캐릭터/키덜트',
-    allowedSlugs: ['치이카와'],
-    relevanceKeywords: ['치이카와', '먼작귀', '인형', '키링', '소품샵'],
-  },
-  {
-    channelName: '먼작귀 덕후룸',
-    handle: 'chii_collector',
-    tier: 'micro',
-    searchKeyword: '치이카와 신상 인형 키링 언박싱 먼작귀',
-    platform: 'all',
-    category: '캐릭터/키덜트',
-    allowedSlugs: ['치이카와'],
-    relevanceKeywords: ['치이카와', '먼작귀', '인형', '소품샵'],
-  },
-
-  // 7. 크리스마스 / 홈파티 / 시즌선물 분야
-  {
-    channelName: '오늘의 감성홈',
-    handle: 'home_interior_cafe',
-    tier: 'mega',
-    searchKeyword: '크리스마스 트리 풀세트 인테리어',
-    platform: 'all',
-    category: '크리스마스/홈파티',
-    allowedSlugs: ['크리스마스트리', '한정판스타벅스'],
-    relevanceKeywords: ['크리스마스', '오르골', '홈파티', '연말선물', '트리', '스타벅스'],
-  },
-  {
-    channelName: '자취방 겨울감성',
-    handle: 'cozy_winter_home',
-    tier: 'micro',
-    searchKeyword: '자취방 크리스마스 트리 꾸미기 홈파티',
-    platform: 'all',
-    category: '크리스마스/홈파티',
-    allowedSlugs: ['크리스마스트리'],
-    relevanceKeywords: ['크리스마스', '트리', '홈카페', '인테리어'],
-  },
-];
-
-// 크리에이터-상품 매칭 엄격 안전 검증기
-// (소형 크리에이터 micro를 65% 확률로 우선 선택하여 고정댓글 수용 및 반응율 극대화)
+// 하드코딩된 고정 채널을 쓰지 않고 오직 실시간 발견된 새 콘텐츠만 대상으로 함
 export function matchCreatorSafely(
   targetSlug: string,
   targetCategory: string,
   requestedPlatform?: 'youtube' | 'tiktok' | 'instagram'
 ): VerifiedCreator | null {
-  const eligible = VERIFIED_CREATORS.filter((creator) => {
-    if (isCreatorExcluded(creator.handle) || isCreatorExcluded(creator.channelName) || isCreatorExcluded(creator.youtubeHandle) || isCreatorExcluded(creator.instagramHandle) || isCreatorExcluded(creator.tiktokHandle)) {
-      return false;
-    }
-    const slugMatch = creator.allowedSlugs.includes(targetSlug);
-    if (!slugMatch) return false;
-    if (requestedPlatform === 'instagram') {
-      return Boolean(creator.instagramHandle);
-    }
-    if (requestedPlatform === 'tiktok') {
-      return creator.platform === 'tiktok' || Boolean(creator.tiktokHandle) || Boolean(creator.searchKeyword);
-    }
-    if (requestedPlatform === 'youtube') {
-      return creator.platform === 'all' || creator.platform === 'youtube';
-    }
-    return true;
-  });
-
-  if (eligible.length === 0) {
-    // 일치하는 크리에이터가 없으면 무관한 크리에이터에게 엉뚱한 댓글을 달지 않도록 무조건 null 반환
-    return null;
-  }
-
-  const microEligible = eligible.filter((c) => c.tier === 'micro');
-  const megaEligible = eligible.filter((c) => c.tier !== 'micro');
-
-  // 소형/마이크로 크리에이터(인기 적은 크리에이터)가 존재할 경우 90% 이상 최우선 지원 배정
-  if (microEligible.length > 0 && (megaEligible.length === 0 || Math.random() < 0.90)) {
-    return microEligible[Math.floor(Math.random() * microEligible.length)];
-  }
-
-  return eligible[Math.floor(Math.random() * eligible.length)];
+  return null;
 }
 
 // ============================================================================
@@ -1127,9 +708,15 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
   let browserTaskResult: any = null;
 
   try {
+    const alreadyCommented = getAlreadyCommentedUrls();
+
     if (selectedPlatform === 'youtube') {
       const liveVideos = await fetchRealtimeYouTubeVideos();
       for (const v of liveVideos) {
+        if (alreadyCommented.has(v.videoUrl.trim())) {
+          console.log(`[${timestamp}] ⏭️ [이미 작성된 영상 스킵] ${v.videoUrl}`);
+          continue;
+        }
         const prod = await analyzeAndMatchProduct(v.title, v.caption);
         if (prod) {
           realtimeTarget = v;
@@ -1140,6 +727,10 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
     } else if (selectedPlatform === 'instagram') {
       const livePosts = await fetchRealtimeInstagramPosts();
       for (const p of livePosts) {
+        if (alreadyCommented.has(p.videoUrl.trim())) {
+          console.log(`[${timestamp}] ⏭️ [이미 작성된 게시물 스킵] ${p.videoUrl}`);
+          continue;
+        }
         const prod = await analyzeAndMatchProduct(p.title, p.caption);
         if (prod) {
           realtimeTarget = p;
@@ -1150,6 +741,10 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
     } else {
       const liveTikToks = await fetchRealtimeTikTokVideos();
       for (const t of liveTikToks) {
+        if (alreadyCommented.has(t.videoUrl.trim())) {
+          console.log(`[${timestamp}] ⏭️ [이미 작성된 틱톡 영상 스킵] ${t.videoUrl}`);
+          continue;
+        }
         const prod = await analyzeAndMatchProduct(t.title, t.caption);
         if (prod) {
           realtimeTarget = t;
@@ -1159,7 +754,7 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
       }
     }
   } catch (err) {
-    console.warn(`[${timestamp}] 실시간 피드 탐색 경고 (기존 검증 풀로 자동 전환):`, err);
+    console.warn(`[${timestamp}] 실시간 피드 탐색 경고:`, err);
   }
 
   // 실시간 발굴 성공 시 -> 실시간 영상과 핫 크리에이터에 즉시 타깃팅!
@@ -1275,143 +870,7 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
       console.warn('Failed to update outreach queue:', e);
     }
   } else {
-    // 실시간 탐색 결과가 없을 경우 -> 기존 검증 풀(VERIFIED_CREATORS)로 안전하게 fallback
-    const matchedCreator = matchCreatorSafely(target.slug, target.category, selectedPlatform);
-
-    if (matchedCreator) {
-      let resolvedVideo: Awaited<ReturnType<typeof resolveFirstYouTubeVideo>> = null;
-      let targetUrl = '';
-      let commentText = '';
-
-      if (selectedPlatform === 'youtube') {
-        const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
-        const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;
-        resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
-        if (!resolvedVideo) {
-          resolvedVideo = await resolveFirstYouTubeVideo(`${matchedCreator.channelName} ${target.slug}`);
-        }
-        if (!resolvedVideo && matchedCreator.searchKeyword) {
-          resolvedVideo = await resolveFirstYouTubeVideo(matchedCreator.searchKeyword);
-        }
-        if (resolvedVideo) {
-          if (resolvedVideo.channelHandle) {
-            matchedCreator.handle = resolvedVideo.channelHandle;
-            matchedCreator.youtubeHandle = resolvedVideo.channelHandle;
-          }
-          if (resolvedVideo.channelName) {
-            matchedCreator.channelName = resolvedVideo.channelName;
-          }
-          console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] 채널: @${matchedCreator.handle} (${matchedCreator.channelName}) / 영상: "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
-        }
-
-        creatorOutreachBundle = generateCreatorCommentBundle(
-          matchedCreator,
-          target,
-          resolvedVideo?.videoTitle,
-          resolvedVideo?.videoUrl
-        );
-
-        const rawYt = matchedCreator.youtubeHandle || matchedCreator.handle;
-        const cleanYt = rawYt.replace(/^@+/, '').trim();
-        targetUrl = resolvedVideo?.videoUrl || `https://www.youtube.com/@${encodeURIComponent(cleanYt)}/videos`;
-        commentText = creatorOutreachBundle.ytComment;
-      } else if (selectedPlatform === 'instagram') {
-        const rawIg = matchedCreator.instagramHandle || matchedCreator.handle;
-        const igHandle = rawIg.replace(/^@+/, '').trim();
-        creatorOutreachBundle = generateCreatorCommentBundle(
-          { ...matchedCreator, handle: igHandle },
-          target
-        );
-        targetUrl = `https://www.instagram.com/${encodeURIComponent(igHandle)}/`;
-        commentText = creatorOutreachBundle.instaComment;
-        console.log(`[${timestamp}] 📸 [인스타그램 타깃 매칭 성공] 계정: @${igHandle} (${matchedCreator.channelName}) -> ${targetUrl}`);
-      } else {
-        // tiktok (404 원천 차단: 검증된 핸들 또는 실제 검색어 직행)
-        const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
-        if (matchedCreator.tiktokHandle) {
-          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle.replace(/^@/, ''))}`;
-        } else if (matchedCreator.handle) {
-          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.handle.replace(/^@/, ''))}`;
-        } else {
-          targetUrl = `https://www.tiktok.com/foryou`;
-        }
-        creatorOutreachBundle = generateCreatorCommentBundle(
-          matchedCreator,
-          target
-        );
-        commentText = creatorOutreachBundle.tiktokComment;
-        console.log(`[${timestamp}] 🎵 [틱톡 타깃 매칭 성공] ${matchedCreator.channelName} -> ${targetUrl}`);
-      }
-
-      // 4-2. 공식 API 백그라운드 직접 전송 시도
-      try {
-        const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(matchedCreator.handle, creatorOutreachBundle.ytComment) : null;
-        const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(matchedCreator.handle, creatorOutreachBundle.instaComment) : null;
-        const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(matchedCreator.handle, creatorOutreachBundle.tiktokComment) : null;
-
-        apiPublishStatus = {
-          youtube: ytResult,
-          instagram: igResult,
-          tiktok: ttResult,
-        };
-      } catch (e) {
-        console.warn('API direct publish check error:', e);
-      }
-      
-      // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화
-      try {
-        const prodContext = PRODUCT_VIDEO_CONTEXTS[target.slug];
-        const keywords = [
-          target.name,
-          prodContext?.shortName,
-          target.slug,
-          ...(matchedCreator.relevanceKeywords || []),
-        ].filter(Boolean) as string[];
-
-        browserTaskResult = await dispatchBrowserOutreach({
-          platform: selectedPlatform,
-          creatorHandle: matchedCreator.handle,
-          creatorName: matchedCreator.channelName,
-          targetUrl,
-          commentText,
-          productName: creatorOutreachBundle.productDisplayName || target.name,
-          expectedKeywords: keywords,
-        });
-      } catch (e) {
-        console.warn('Browser outreach dispatch error:', e);
-      }
-
-      // outreach-queue.json 에도 추가/갱신
-      try {
-        let currentOutreach: any = { targets: [] };
-        if (fs.existsSync(OUTREACH_FILE)) {
-          currentOutreach = JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8'));
-        }
-        currentOutreach.generatedAt = timestamp;
-        currentOutreach.latestAutoMatch = {
-          ...creatorOutreachBundle,
-          selectedPlatform,
-          targetUrl,
-          apiPublishStatus,
-          browserTaskResult,
-        };
-        if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
-        currentOutreach.targets = [
-          {
-            ...creatorOutreachBundle,
-            selectedPlatform,
-            targetUrl,
-            apiPublishStatus,
-            browserTaskResult,
-          },
-          ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== matchedCreator.handle),
-        ].slice(0, 20);
-
-        fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
-      } catch (e) {
-        console.warn('Failed to update outreach queue:', e);
-      }
-    }
+    console.log();
   }
 
   const campaignData = {
