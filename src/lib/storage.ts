@@ -605,8 +605,8 @@ export function normalizeCreatorHandle(handle?: string | null): string {
       break;
     }
   }
-  // 선행 골뱅이(@)를 모두 제거하고 허용 문자(한글, 영문, 숫자, 하이픈, 언더바)만 유지
-  const clean = decoded.replace(/^@+/, '').replace(/[^a-zA-Z0-9_\-\uAC00-\uD7A3]/g, '');
+  // 선행 골뱅이(@)를 모두 제거하고 허용 문자(한글, 영문, 숫자, 하이픈, 언더바, 마침표)만 유지
+  const clean = decoded.replace(/^@+/, '').replace(/[^a-zA-Z0-9_\-\.\uAC00-\uD7A3]/g, '');
   return clean || 'anonymous';
 }
 

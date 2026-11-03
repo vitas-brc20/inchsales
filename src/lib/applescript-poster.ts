@@ -335,15 +335,13 @@ export async function postInstagramViaAppleScript(
     // 댓글 패널/textarea 렌더링 대기
     await delay(1500);
 
-    // (5) 댓글 텍스트 주입 및 [게시] 버튼 클릭
-    const jsInjectAndSubmitComment = `
+    // (5) 댓글 텍스트 주입: textarea 포커스 후 OS 네이티브 Cmd+V (key code 9) 입력
+    const jsFocusTextarea = `
       (function() {
         try {
-          // (1) 댓글 입력창 탐색
           var ta = document.querySelector('textarea[aria-label*="댓글"], textarea[placeholder*="댓글"], textarea[aria-label*="Comment"], textarea[placeholder*="Add a comment"], textarea');
           
           if (!ta) {
-            // 말풍선 아이콘 다시 클릭 시도
             var svgs = Array.from(document.querySelectorAll('svg'));
             var commentIcon = svgs.find(function(s) {
               var aria = s.getAttribute('aria-label') || '';
@@ -356,102 +354,93 @@ export async function postInstagramViaAppleScript(
             ta = document.querySelector('textarea');
           }
 
-          if (!ta) {
-            var editable = document.querySelector('div[contenteditable="true"][role="textbox"]');
-            if (editable) {
-              editable.focus();
-              document.execCommand('selectAll', false, null);
-              document.execCommand('insertText', false, "${escapedComment}");
-              editable.dispatchEvent(new Event('input', { bubbles: true }));
-              
-              var postBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
-                var t = (b.innerText || '').trim();
-                return t === '게시' || t === 'Post';
-              });
-              if (postBtn) {
-                postBtn.removeAttribute('disabled');
-                postBtn.click();
-                return JSON.stringify({ success: true, method: 'contenteditable_post' });
-              }
-            }
-            return JSON.stringify({ success: false, reason: 'no_textarea_found' });
-          }
+          if (!ta) return JSON.stringify({ success: false, reason: 'no_textarea' });
 
-          // (2) 포커스 및 네이티브 execCommand 입력 (React 18 상태 100% 동기화)
+          window.focus();
           ta.focus();
           ta.click();
-          
-          var text = "${escapedComment}";
-          var execSuccess = false;
-          try {
-            document.execCommand('selectAll', false, null);
-            execSuccess = document.execCommand('insertText', false, text);
-          } catch(e) {}
-
-          // (3) React 18 prototype setter 보조 주입
-          if (!execSuccess || !ta.value || ta.value !== text) {
-            var proto = window.HTMLTextAreaElement.prototype;
-            var setter = Object.getOwnPropertyDescriptor(proto, 'value');
-            if (setter && setter.set) {
-              setter.set.call(ta, text);
-            } else {
-              ta.value = text;
-            }
-            ta.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
-            ta.dispatchEvent(new Event('input', { bubbles: true }));
-            ta.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-
-          // (4) [게시] 또는 [Post] 버튼 클릭 (버튼 활성화 대기 시뮬레이션)
-          var allBtns = Array.from(document.querySelectorAll('button, div[role="button"]'));
-          var postBtn = allBtns.find(function(b) {
-            var t = (b.innerText || '').trim();
-            return t === '게시' || t === 'Post';
-          });
-
-          if (postBtn) {
-            postBtn.removeAttribute('disabled');
-            postBtn.setAttribute('aria-disabled', 'false');
-            try {
-              postBtn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
-              postBtn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
-              postBtn.click();
-            } catch(e) {
-              postBtn.click();
-            }
-          }
-
-          // (5) Enter 키 이벤트 병행 전송 (인스타그램 폼 제출 확실성 보장)
-          try {
-            var enterEvt = new KeyboardEvent('keydown', {
-              bubbles: true,
-              cancelable: true,
-              key: 'Enter',
-              code: 'Enter',
-              keyCode: 13,
-              which: 13
-            });
-            ta.dispatchEvent(enterEvt);
-          } catch(e) {}
-
-          return JSON.stringify({ success: true, reason: 'submitted', buttonClicked: Boolean(postBtn) });
+          return JSON.stringify({ success: true, focused: true });
         } catch(err) {
           return JSON.stringify({ success: false, reason: err.message });
         }
       })()
     `;
 
-    const postResultRaw = await runAppleScript(`
+    await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          set res to execute javascript ${JSON.stringify(jsInjectAndSubmitComment)}
+          execute javascript ${JSON.stringify(jsFocusTextarea)}
+        end tell
+      end tell
+    `).catch(() => {});
+
+    await delay(400);
+
+    // 클립보드 적재 & Cmd+V 네이티브 전송 (React 18 상태 100% 동기화)
+    console.log(`[Instagram] 클립보드 적재 및 Cmd+V (key code 9) 네이티브 입력 실행`);
+    await runAppleScript(`
+      set commentText to "${escapedComment}"
+      set the clipboard to commentText
+      tell application "Google Chrome" to activate
+      delay 0.3
+      tell application "System Events"
+        key code 9 using command down
+      end tell
+    `);
+
+    // React 상태 정착 및 게시 버튼 활성화 대기 (1.5초)
+    await delay(1500);
+
+    // [게시] 버튼 클릭 & Return 키 병행 전송
+    const jsClickPostBtn = `
+      (function() {
+        var postBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
+          var t = (b.innerText || '').trim();
+          return t === '게시' || t === 'Post';
+        });
+
+        var clicked = false;
+        if (postBtn && !postBtn.hasAttribute('disabled')) {
+          try {
+            var opts = { bubbles: true, cancelable: true, view: window };
+            postBtn.dispatchEvent(new MouseEvent('mousedown', opts));
+            postBtn.dispatchEvent(new MouseEvent('mouseup', opts));
+            postBtn.click();
+            clicked = true;
+          } catch(e) {
+            postBtn.click();
+            clicked = true;
+          }
+        }
+
+        return JSON.stringify({
+          success: true,
+          clicked: clicked,
+          hasBtn: Boolean(postBtn)
+        });
+      })()
+    `;
+
+    const clickPostRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          set res to execute javascript ${JSON.stringify(jsClickPostBtn)}
           set curUrl to execute javascript "window.location.href"
           return curUrl & "###" & res
         end tell
       end tell
     `).catch(() => '');
 
-    const [finalUrl, jsonStr] = (postResultRaw || '').split('###');
+    // 인스타그램 폼 제출 확실성 보장: Return 키 전송
+    await runAppleScript(`
+      tell application "Google Chrome" to activate
+      delay 0.2
+      tell application "System Events"
+        key code 36
+      end tell
+    `).catch(() => {});
+
+    const [finalUrl, jsonStr] = (clickPostRaw || '').split('###');
     let parsed: any = {};
     try {
       parsed = JSON.parse(jsonStr || '{}');
@@ -488,7 +477,7 @@ export async function postInstagramViaAppleScript(
     } catch {}
 
     // 엄격 검증: 실제로 textarea가 비워졌거나 댓글 텍스트가 화면에 렌더링된 경우에만 성공으로 판정!
-    const isActuallyPosted = (parsed.success === true) && (verifyResult.isCleared || verifyResult.foundComment);
+    const isActuallyPosted = (verifyResult.isCleared === true) || (verifyResult.foundComment === true);
 
     // 사용자가 댓글 등록 상태를 직접 확인할 수 있도록 5초간 탭 유지
     await delay(5000);
@@ -523,12 +512,13 @@ export async function postInstagramViaAppleScript(
 
 /**
  * 틱톡 프로필/검색/영상 페이지 진입 시:
- * 1. 진입 즉시 '팔로우' 버튼 자동 클릭하여 크리에이터 팔로우 선행
- * 2. 목록/검색/프로필 페이지일 경우 3초 대기 및 재시도 루프를 통해 첫 번째 실제 비디오(/video/)로 반드시 직행
- * 3. 비디오 진입 후 비디오 일시정지 및 댓글 아이콘 클릭 (오작동 시 3초 대기 후 최대 3회 재시도)
- * 4. 댓글 입력창(DraftEditor)에 텍스트 주입 및 [게시] 버튼 클릭 (오작동 시 3초 대기 후 재시도)
- * 5. 실제 댓글 등록 여부 DOM 사후 검증
- * 6. 완료 후 임시 탭 자동 클린업
+ * 1. 탭 오픈 후 넉넉하게 5초 대기 (무거운 비디오/스크립트 로드 대기)
+ * 2. 목록/검색 페이지일 경우 3초 대기 루프를 통해 첫 번째 실제 비디오(/video/)로 반드시 직행
+ * 3. 비디오 일시정지 & 댓글 아이콘([data-e2e="comment-icon"]) 클릭 후 3초 대기하여 드로어 오픈
+ * 4. DraftEditor에 Selection 설정 및 DataTransfer/ClipboardEvent/TextEvent 3중 주입
+ * 5. 3초 대기하여 Draft.js React 상태 정착 및 [게시] 버튼 disabled 해제 확인 후 클릭
+ * 6. 4초 대기 후 댓글 목록에 실제 내 댓글이 렌더링되었는지 엄격 검증 (거짓 성공 원천 차단)
+ * 7. 완료 후 임시 탭 자동 클린업
  */
 export async function postTikTokViaAppleScript(
   searchOrProfileUrl: string,
@@ -543,12 +533,13 @@ export async function postTikTokViaAppleScript(
       .replace(/\n/g, '\\n')
       .replace(/\r/g, '');
 
-    // 1. 임시 탭 생성
+    // 1. 임시 탭 생성 & 넉넉한 초기 로딩 대기 (5초)
     const createTabScript = `
       set commentText to "${escapedComment}"
       set the clipboard to commentText
 
       tell application "Google Chrome"
+        activate
         if (count of windows) is 0 then
           make new window
         end if
@@ -566,10 +557,10 @@ export async function postTikTokViaAppleScript(
     tabId = (rawTabId || '').trim();
     if (!tabId) throw new Error('TikTok 탭 생성 실패');
 
-    // 초기 페이지 로딩 대기 (3.5초)
-    await delay(3500);
+    console.log(`[TikTok] 페이지 로딩 대기 중... (5초 대기)`);
+    await delay(5000);
 
-    // 2. 비디오 페이지 직행 네비게이션 (목록 페이지만 띄워놓고 멈추는 현상 완벽 방지: 3초 대기 & 최대 3회 재시도)
+    // 2. 비디오 페이지 직행 네비게이션 (목록에 멈추는 현상 원천 차단: 3초 대기 & 최대 3회 재시도)
     let isVideoPage = false;
     let actualVideoUrl = searchOrProfileUrl;
 
@@ -581,7 +572,7 @@ export async function postTikTokViaAppleScript(
             return JSON.stringify({ isVideo: true, url: cur });
           }
 
-          // 1) 프로필 페이지 팔로우 버튼 선행 클릭
+          // 1) 프로필 페이지 팔로우 버튼 클릭
           var followBtn = document.querySelector('[data-e2e="follow-button"]');
           if (!followBtn) {
             followBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
@@ -604,7 +595,6 @@ export async function postTikTokViaAppleScript(
             return JSON.stringify({ isVideo: false, navigated: true, url: a.href });
           }
 
-          // 비디오 카드가 아직 안 떴으면 살짝 스크롤하여 렌더링 유도
           window.scrollBy(0, 300);
           return JSON.stringify({ isVideo: false, navigated: false, url: cur });
         })()
@@ -624,63 +614,52 @@ export async function postTikTokViaAppleScript(
       if (navRes.isVideo) {
         isVideoPage = true;
         actualVideoUrl = navRes.url || actualVideoUrl;
+        console.log(`[TikTok] 비디오 페이지 확인 완료: ${actualVideoUrl}`);
         break;
       }
 
       if (navRes.navigated) {
-        // 비디오 페이지로 이동 시작됨 -> 3.5초 대기
         actualVideoUrl = navRes.url || actualVideoUrl;
-        await delay(3500);
+        console.log(`[TikTok] 영상 상세 페이지로 이동 중... ${actualVideoUrl} (5초 대기)`);
+        await delay(5000);
         isVideoPage = true;
         break;
       }
 
-      // 비디오 링크를 아직 못 찾았으면 3초 대기 후 재시도
       console.log(`[TikTok] 비디오 링크 로딩 대기 중... (시도 ${attempt}/3, 3초 대기)`);
       await delay(3000);
     }
 
-    // 3. 비디오 페이지 내부 진입 확인 및 댓글 드로어 열기 (3초 대기 & 최대 3회 재시도)
+    // 3. 비디오 일시정지 & 댓글 드로어 열기 (3초 대기 & 최대 3회 재시도)
     let drawerOpened = false;
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       const jsOpenDrawer = `
         (function() {
-          // 비디오 일시정지 (자동 스크롤 및 화면 흔들림 방지)
           var v = document.querySelector('video');
           if (v) v.pause();
 
-          // 이미 댓글창(DraftEditor)이 열려 있는지 확인
-          var existingEditor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable="true"]');
+          var existingEditor = document.querySelector('.public-DraftEditor-content');
           if (existingEditor) {
             existingEditor.focus();
             return JSON.stringify({ success: true, reason: 'already_open' });
           }
 
-          // 비디오 내 feed-follow 버튼 클릭
           var feedFollowBtn = document.querySelector('[data-e2e="feed-follow"][data-key-interaction="action_follow"]')
             || document.querySelector('[data-e2e="cinema-video-info-follow"]');
           if (feedFollowBtn) {
             try { feedFollowBtn.click(); } catch(e) {}
           }
 
-          // 댓글 아이콘 탐색 및 마우스 이벤트로 드로어 열기
           var icon = document.querySelector('[data-e2e="comment-icon"]')
-            || document.querySelector('[data-e2e="browse-comment-icon"]')
-            || Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
-              return b.getAttribute('aria-label') === '댓글' || b.getAttribute('aria-label') === 'Comments' || (b.innerText || '').includes('댓글');
-            });
+            || document.querySelector('[data-e2e="browse-comment-icon"]');
 
           if (icon) {
             var btn = icon.querySelector('button') || icon;
-            try {
-              var opts = { bubbles: true, cancelable: true, view: window };
-              btn.dispatchEvent(new MouseEvent('mousedown', opts));
-              btn.dispatchEvent(new MouseEvent('mouseup', opts));
-              btn.dispatchEvent(new MouseEvent('click', opts));
-            } catch(e) {
-              btn.click();
-            }
+            var opts = { bubbles: true, cancelable: true, view: window };
+            btn.dispatchEvent(new MouseEvent('mousedown', opts));
+            btn.dispatchEvent(new MouseEvent('mouseup', opts));
+            btn.dispatchEvent(new MouseEvent('click', opts));
             return JSON.stringify({ success: true, reason: 'icon_clicked' });
           }
 
@@ -701,151 +680,154 @@ export async function postTikTokViaAppleScript(
 
       if (drawerRes.success) {
         drawerOpened = true;
-        await delay(2000);
+        console.log(`[TikTok] 댓글 드로어 열기 성공 (${drawerRes.reason}), 3초 대기`);
+        await delay(3000);
         break;
       }
 
-      // 댓글 아이콘을 아직 못 열었으면 3초 대기 후 재시도
-      console.log(`[TikTok] 댓글창 열기 대기 중... (시도 ${attempt}/3, 3초 대기)`);
+      console.log(`[TikTok] 댓글창 열기 재시도 대기... (시도 ${attempt}/3, 3초 대기)`);
       await delay(3000);
     }
 
-    // 4. DraftEditor에 댓글 텍스트 주입 및 [게시] 버튼 클릭 (오작동 시 3초 대기 후 최대 3회 재시도)
-    let postSubmitted = false;
-    let lastPostResult = '';
-
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      const jsTypeAndPost = `
-        (function() {
-          // 비디오 일시정지 유지
-          var v = document.querySelector('video');
-          if (v) v.pause();
-
-          var editor = document.querySelector('.public-DraftEditor-content')
-            || document.querySelector('div[contenteditable="true"]')
-            || document.querySelector('[data-e2e="comment-input"]');
-
-          if (!editor) {
-            // 댓글창이 안 열려있으면 다시 댓글 아이콘 클릭 시도
-            var icon = document.querySelector('[data-e2e="comment-icon"]');
-            var btn = icon ? (icon.querySelector('button') || icon) : null;
-            if (btn) btn.click();
-            return JSON.stringify({ success: false, step: 'no_editor' });
-          }
-
-          // 1) 입력창 포커스 및 텍스트 주입
-          editor.focus();
-          try {
-            document.execCommand('selectAll', false, null);
-            document.execCommand('insertText', false, '${escapedComment}');
-          } catch(e) {}
-
-          // React/Draft.js 상태 트리거 발송
-          editor.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: '${escapedComment}' }));
-          editor.dispatchEvent(new Event('input', { bubbles: true }));
-          editor.dispatchEvent(new Event('change', { bubbles: true }));
-
-          // 2) 게시 버튼 탐색
-          var postBtn = document.querySelector('[data-e2e="comment-post"]')
-            || Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
-              var t = (b.innerText || '').trim();
-              return t === '게시' || t === 'Post';
-            });
-
-          if (!postBtn) {
-            // Enter 키 다운 폴백 전송
-            try {
-              var enterEvt = new KeyboardEvent('keydown', {
-                bubbles: true,
-                cancelable: true,
-                key: 'Enter',
-                code: 'Enter',
-                keyCode: 13,
-                which: 13
-              });
-              editor.dispatchEvent(enterEvt);
-              return JSON.stringify({ success: true, step: 'enter_dispatched' });
-            } catch(e) {
-              return JSON.stringify({ success: false, step: 'no_post_btn' });
-            }
-          }
-
-          // disabled 해제를 위한 보조 키 입력
-          if (postBtn.hasAttribute('disabled')) {
-            try {
-              document.execCommand('insertText', false, ' ');
-              document.execCommand('delete', false, null);
-            } catch(e) {}
-          }
-
-          // disabled 속성 강제 제거 및 마우스 이벤트 전송
-          postBtn.removeAttribute('disabled');
-          postBtn.setAttribute('aria-disabled', 'false');
-
-          try {
-            var opts = { bubbles: true, cancelable: true, view: window };
-            postBtn.dispatchEvent(new MouseEvent('mousedown', opts));
-            postBtn.dispatchEvent(new MouseEvent('mouseup', opts));
-            postBtn.click();
-          } catch(e) {
-            postBtn.click();
-          }
-
-          // Enter 키 이벤트도 병행 전송
-          try {
-            var enterEvt = new KeyboardEvent('keydown', {
-              bubbles: true,
-              cancelable: true,
-              key: 'Enter',
-              code: 'Enter',
-              keyCode: 13,
-              which: 13
-            });
-            editor.dispatchEvent(enterEvt);
-          } catch(e) {}
-
-          return JSON.stringify({ success: true, step: 'post_clicked' });
-        })()
-      `;
-
-      const postRaw = await runAppleScript(`
-        tell application "Google Chrome"
-          tell tab id ${tabId} of window 1
-            return execute javascript ${JSON.stringify(jsTypeAndPost)}
-          end tell
-        end tell
-      `).catch(() => '{}');
-
-      let postRes: any = {};
-      try { postRes = JSON.parse(postRaw || '{}'); } catch {}
-
-      if (postRes.success) {
-        postSubmitted = true;
-        lastPostResult = postRes.step || 'post_clicked';
-        break;
-      }
-
-      // 댓글창을 아직 못 찾았거나 입력 실패 시 3초 대기 후 재시도
-      console.log(`[TikTok] 댓글 작성 재시도 대기 중... (시도 ${attempt}/3, 3초 대기)`);
-      await delay(3000);
-    }
-
-    // 전송 반영 대기 (4초)
-    await delay(4000);
-
-    // 5. 실제 틱톡 댓글 등록 여부 DOM 정밀 검증
-    const jsVerifyTikTokComment = `
+    // 4. DraftEditor 포커스 및 내부 블록 커서 설정
+    console.log(`[TikTok] 댓글 입력창 포커스 및 커서 위치 설정 실행`);
+    const jsFocusDraftEditor = `
       (function() {
-        var comments = Array.from(document.querySelectorAll('[data-e2e="comment-level-1"], div[class*="DivCommentItem"]')).map(function(el) {
-          return el.innerText || '';
+        var v = document.querySelector('video');
+        if (v) v.pause();
+
+        window.focus();
+        var editor = document.querySelector('.public-DraftEditor-content');
+        if (!editor) return JSON.stringify({ success: false, reason: 'no_editor' });
+
+        editor.focus();
+
+        // Draft.js 내부 블록 span[data-offset-key]에 정확히 커서 배치
+        var span = editor.querySelector('span[data-offset-key]') || editor.querySelector('[data-text="true"]') || editor;
+        var sel = window.getSelection();
+        var range = document.createRange();
+        range.selectNodeContents(span);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        return JSON.stringify({
+          success: true,
+          spanFound: Boolean(span)
         });
-        var found = comments.some(function(c) {
-          return c.includes('inch.sale') || c.includes('최저가');
-        });
+      })()
+    `;
+
+    const focusRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(jsFocusDraftEditor)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
+    let focusRes: any = {};
+    try { focusRes = JSON.parse(focusRaw || '{}'); } catch {}
+    console.log(`[TikTok] Draft.js 포커스 결과:`, focusRes);
+
+    await delay(500);
+
+    // 5. [OS 네이티브 클립보드 붙여넣기] key code 9 (Cmd+V) 전송
+    // 한글 및 영문 키보드 레이아웃에 상관없이 물리적 Cmd+V를 정확하게 시뮬레이션하여 Draft.js에 텍스트 주입
+    console.log(`[TikTok] 클립보드 동기화 및 Cmd+V (key code 9) 네이티브 입력 실행`);
+    await runAppleScript(`
+      set commentText to "${escapedComment}"
+      set the clipboard to commentText
+      tell application "Google Chrome" to activate
+      delay 0.3
+      tell application "System Events"
+        key code 9 using command down
+      end tell
+    `);
+
+    // Draft.js React 상태 정착 및 게시 버튼 활성화 대기 (1.5초)
+    console.log(`[TikTok] Draft.js React 상태 정착 대기 (1.5초 대기)`);
+    await delay(1500);
+
+    // 6. [댓글 전송] DraftEditor 포커스 상태에서 Return 키(key code 36) 및 게시 버튼 클릭 병행 전송
+    console.log(`[TikTok] 댓글 제출: Return 키(key code 36) 전송 및 게시 버튼 클릭`);
+    const jsClickPostBtn = `
+      (function() {
+        var postBtn = document.querySelector('[data-e2e="comment-post"]')
+          || document.querySelector('button[class*="ArrowPostButton"]')
+          || document.querySelector('[data-e2e="comment-input"] button');
+
         var editor = document.querySelector('.public-DraftEditor-content');
         var editorText = editor ? (editor.innerText || '').trim() : '';
-        var isCleared = editorText === '' || editorText === '\\n';
-        return JSON.stringify({ verified: found || isCleared, count: comments.length, found: found, isCleared: isCleared });
+
+        var btnClicked = false;
+        if (postBtn && !postBtn.hasAttribute('disabled')) {
+          var opts = { bubbles: true, cancelable: true, view: window };
+          postBtn.dispatchEvent(new MouseEvent('mousedown', opts));
+          postBtn.dispatchEvent(new MouseEvent('mouseup', opts));
+          postBtn.click();
+          btnClicked = true;
+        }
+
+        return JSON.stringify({
+          editorTextLen: editorText.length,
+          hasBtn: Boolean(postBtn),
+          btnDisabled: postBtn ? postBtn.hasAttribute('disabled') : null,
+          btnClicked: btnClicked
+        });
+      })()
+    `;
+
+    const clickRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(jsClickPostBtn)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
+    let clickRes: any = {};
+    try { clickRes = JSON.parse(clickRaw || '{}'); } catch {}
+    console.log(`[TikTok] 게시 버튼 상태 및 클릭 결과:`, clickRes);
+
+    // 틱톡 데스크톱 웹의 공식 댓글 제출 트리거: Return 키 전송
+    await runAppleScript(`
+      tell application "Google Chrome" to activate
+      delay 0.2
+      tell application "System Events"
+        key code 36
+      end tell
+    `);
+
+    // 7. 서버 댓글 전송 반영 대기 (4초)
+    console.log(`[TikTok] 댓글 전송 서버 반영 대기 중 (4초 대기)`);
+    await delay(4000);
+
+    // 8. 실제 틱톡 댓글 등록 여부 DOM 정밀 사후 검증 (거짓 성공 판정 원천 차단)
+    const jsVerifyTikTokComment = `
+      (function() {
+        var editor = document.querySelector('.public-DraftEditor-content');
+        var editorText = editor ? (editor.innerText || '').trim() : '';
+        var isCleared = (editorText === '' || editorText === '\\n');
+
+        // 댓글 리스트 DOM에서 실제 내 댓글(inch.sale 또는 최저가) 렌더링 확인
+        var comments = Array.from(document.querySelectorAll('div[class*="CommentItem"], div[class*="DivCommentObjectWrapper"], [data-e2e*="comment"]')).map(function(c) {
+          return c.innerText || '';
+        });
+        var foundInList = comments.some(function(c) {
+          return c.includes('inch.sale') || c.includes('최저가 찾았어요') || c.includes('최저가');
+        });
+
+        var bodyText = document.body ? document.body.innerText : '';
+        var foundInBody = bodyText.includes('inch.sale');
+
+        return JSON.stringify({
+          isCleared: isCleared,
+          foundInList: foundInList,
+          foundInBody: foundInBody,
+          editorTextRemaining: editorText,
+          totalCommentsCount: comments.length
+        });
       })()
     `;
 
@@ -858,13 +840,16 @@ export async function postTikTokViaAppleScript(
     `).catch(() => '{}');
 
     let verifyResult: any = {};
-    try {
-      verifyResult = JSON.parse(verifyRaw);
-    } catch {}
+    try { verifyResult = JSON.parse(verifyRaw); } catch {}
+    console.log(`[TikTok] DOM 사후 정밀 검증 결과:`, verifyResult);
 
-    const isActuallyPosted = (postSubmitted === true) && (verifyResult.verified === true);
+    // 엄격 검증:
+    // (1) 댓글 목록(List)에 내 댓글 텍스트/링크가 실제로 렌더링되었거나
+    // (2) 댓글 전송 후 DraftEditor가 완전히 비워진(isCleared) 경우에만 실제 성공으로 인정!
+    const postSubmitted = Boolean(clickRes.btnClicked || clickRes.editorTextLen > 5);
+    const isActuallyPosted = postSubmitted && (verifyResult.foundInList || (verifyResult.isCleared && verifyResult.editorTextRemaining === ''));
 
-    // 6. 사용자가 게시된 댓글을 눈으로 직접 확인할 수 있도록 5초간 대기 후 원래 탭 복구
+    // 9. 사용자가 게시된 댓글을 직접 눈으로 확인할 수 있도록 5초간 대기 후 원래 탭 복구
     if (isActuallyPosted) {
       await delay(5000);
     }
@@ -884,7 +869,7 @@ export async function postTikTokViaAppleScript(
       success: isActuallyPosted,
       message: isActuallyPosted
         ? `TikTok 크리에이터 팔로우 및 영상 댓글 무인 게시 완료 (검증됨: ${actualVideoUrl})`
-        : `TikTok 댓글 게시 미반영 (결과: ${lastPostResult}, 게시버튼: ${postSubmitted ? '클릭완료' : '미클릭'})`,
+        : `TikTok 댓글 게시 미반영 (제출시도: ${postSubmitted}, 사후검증실패: 댓글 목록 미출력)`,
       videoUrl: actualVideoUrl,
     };
   } catch (err: any) {

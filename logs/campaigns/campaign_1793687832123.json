@@ -1,0 +1,86 @@
+{
+  "campaignId": "camp_mw0bf8zf",
+  "generatedAt": "2026-11-03T06:37:10.804Z",
+  "selectedPlatform": "youtube",
+  "targetProduct": "미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)",
+  "targetSlug": "블랙헤드제거",
+  "trackingId": "AF5232288",
+  "newlyDiscovered": false,
+  "landingUrl": "https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf",
+  "localLandingUrl": "https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf",
+  "directCoupangUrl": "https://link.coupang.com/re/AFFSDP?pageKey=25470019&itemId=931146193&lptag=AF5232288&subid=inch_pub_camp_mw0bf8zf",
+  "matchedCreator": {
+    "name": "탑셀러즈",
+    "handle": "@탑셀러즈-q6w",
+    "category": "뷰티/스킨케어",
+    "platform": "youtube"
+  },
+  "targetedCreatorOutreach": {
+    "creatorHandle": "@탑셀러즈-q6w",
+    "creatorName": "탑셀러즈",
+    "creatorTier": "search_matched",
+    "creatorCategory": "뷰티/스킨케어",
+    "videoTitle": "꿀조합! 블랙헤드 코팩 득템 후기: 비타할로+3단+미팩토리 알짜 모음",
+    "targetVideoUrl": "https://www.youtube.com/watch?v=o6a8pLgpOt0",
+    "productDisplayName": "미팩토리 3단 돼지 코팩",
+    "targetProductSlug": "블랙헤드제거",
+    "targetProductName": "미팩토리 3단 돼지 코팩",
+    "landingUrl": "https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40%ED%83%91%EC%85%80%EB%9F%AC%EC%A6%88-q6w&ch=youtube",
+    "commentText": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40%ED%83%91%EC%85%80%EB%9F%AC%EC%A6%88-q6w&ch=youtube",
+    "ytComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40%ED%83%91%EC%85%80%EB%9F%AC%EC%A6%88-q6w&ch=youtube",
+    "instaComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40%ED%83%91%EC%85%80%EB%9F%AC%EC%A6%88-q6w&ch=youtube",
+    "tiktokComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40%ED%83%91%EC%85%80%EB%9F%AC%EC%A6%88-q6w&ch=youtube",
+    "selectedPlatform": "youtube",
+    "apiPublishStatus": {
+      "youtube": {
+        "platform": "youtube",
+        "targetHandle": "@탑셀러즈-q6w",
+        "success": true,
+        "status": "TOKEN_REQUIRED",
+        "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+      },
+      "instagram": null,
+      "tiktok": null
+    }
+  },
+  "complianceNotice": {
+    "title": "🚨 [필독] 쿠팡 파트너스 Google 검색 광고 운영 시 주의사항",
+    "negativeKeywords": [
+      "쿠팡",
+      "coupang",
+      "Coupang",
+      "COUPANG",
+      "로켓배송",
+      "로켓와우",
+      "쿠팡와우",
+      "쿠팡플레이",
+      "쿠팡이츠"
+    ],
+    "rule": "‘쿠팡’, ‘coupang’을 반드시 제외 키워드로 등록 / 이외 연관 브랜드 키워드를 활용한 광고 금지",
+    "description": "쿠팡 파트너스에서는 \"쿠팡\" 및 쿠팡 브랜드 키워드를 활용한 검색 광고를 엄격하게 금지하고 있습니다. 제외 키워드를 등록하지 않을 경우 구글 확장 검색 로직에 의해 자동 매칭되어 상표권 침해로 서비스 해지 및 수익금 몰수 조치될 수 있습니다."
+  },
+  "socialPosts": {
+    "naverBlog": {
+      "title": "[솔직후기] 미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기) 실사용 장단점 & 쿠팡 로켓배송 최저가 혜택 총정리",
+      "content": "안녕하세요! 오늘은 최근 SNS와 입소문으로 큰 화제를 모으고 있는 [미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)] 실사용 리뷰 및 최저가 정보를 정리해 드립니다.\n\n📌 1. 왜 이렇게 인기일까?\n딸기코 탈출! 모공 속 묵은 블랙헤드와 피지를 뿌리째 뽑아주는 3단 코팩\n1단계 열어주고, 2단계 쏙 뽑고, 3단계 조여주는 3스텝 완벽 모공 케어! 피지 쾌감을 느껴보세요.\n\n📌 2. 핵심 포인트 및 가격 정보\n- 현재 할인가: 7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송)\n- 배송: 쿠팡 와우회원 로켓배송 (자정 전 주문 시 내일 아침 도착 보장)\n- 공식 보증: 쿠팡 공식 로켓배송 정품 보장으로 믿고 주문하실 수 있습니다.\n\n📌 3. 이런 분들께 강력 추천합니다!\n- 가성비와 품질 모두 챙긴 뷰티/스킨케어 추천템을 찾으시는 분\n- 품절 전에 빠른 로켓배송으로 받아보고 싶으신 분\n\n👇 실시간 할인가 및 재고 확인하기:\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=blog\n\n⚖️ 공정거래위원회 문구:\n\"이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\""
+    },
+    "youtubeShorts": {
+      "script": "[00:00~00:03] 🔥 Hook (시선집중)\n\"🐽 [피지폭발주의] 딸기코 구원투수! 3단 돼지코팩으로 블랙헤드 뿌리뽑기\"\n\n[00:03~00:09] 💡 Problem & Solution (핵심 특징)\n\"1단계 열어주고, 2단계 쏙 뽑고, 3단계 조여주는 3스텝 완벽 모공 케어! 피지 쾌감을 느껴보세요.\"\n\n[00:09~00:15] 💰 Price & Value (가격/혜택)\n\"지금 쿠팡 로켓배송으로 7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송) 특가에 풀렸습니다!\"\n\n[00:15~00:20] 🛒 Call To Action (구매 유도)\n\"품절되기 전에 고정 댓글이나 프로필 링크에서 지금 바로 확인해보세요!\"",
+      "pinnedComment": "📌 [영상 속 추천템 최저가 좌표]\n미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기) 👉 https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=youtube\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+    },
+    "community": {
+      "title": "[쿠팡/로켓] 미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기) (7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송))",
+      "content": "🐽 [피지폭발주의] 딸기코 구원투수! 3단 돼지코팩으로 블랙헤드 뿌리뽑기\n\n1단계 열어주고, 2단계 쏙 뽑고, 3단계 조여주는 3스텝 완벽 모공 케어! 피지 쾌감을 느껴보세요.\n\n와우회원 무료배송 및 카드 즉시할인 적용 기준입니다. 필요하신 분들 품절 전에 확인해보세요.\n\n구매 링크: https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=community\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)"
+    },
+    "telegramChannel": "⚡ [실시간 핫딜 알림] 미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)\n\n🏷️ 가격: 7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송)\n🚚 배송: 쿠팡 로켓배송 (내일 도착 보장)\n✨ 포인트: 딸기코 탈출! 모공 속 묵은 블랙헤드와 피지를 뿌리째 뽑아주는 3단 코팩\n\n👉 실시간 최저가 확인: https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=kakao\n\n* 쿠팡 파트너스 활동의 일환으로 수수료를 제공받습니다.",
+    "instagramCaption": "[영상 속 핫딜 좌표] 미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기)\n\n딸기코 탈출! 모공 속 묵은 블랙헤드와 피지를 뿌리째 뽑아주는 3단 코팩\n7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송)\n\n프로필 링크 또는 스토리 스티커를 확인해주세요!\n👉 https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=insta\n\n#쿠팡로켓배송 #추천템 #인스타공구 #핫딜 #쇼핑 #뷰티스킨케어\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+    "threads": "1단계 열어주고, 2단계 쏙 뽑고, 3단계 조여주는 3스텝 완벽 모공 케어! 피지 쾌감을 느껴보세요.\n\n👇 최저가 좌표 & 실시간 재고 확인:\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=threads\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
+    "twitterX": "🐽 [피지폭발주의] 딸기코 구원투수! 3단 돼지코팩으로 블랙헤드 뿌리뽑기\n\n👇 최저가 확인:\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=threads\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
+    "kakaoTalkShare": "[핫딜 알림] 미팩토리 3단 돼지 코팩 (피지/블랙헤드 뿌리뽑기) 최저가 떴습니다! 확인해보세요 👉 https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=pub_camp_mw0bf8zf&ch=kakao"
+  },
+  "systemStats": {
+    "totalClicks": 32,
+    "totalWithdrawals": 0,
+    "catalogSize": 35
+  }
+}

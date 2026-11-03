@@ -1,0 +1,86 @@
+{
+  "campaignId": "camp_mw08yvl3",
+  "generatedAt": "2026-11-03T05:28:26.482Z",
+  "selectedPlatform": "youtube",
+  "targetProduct": "코카콜라 제로 355ml 24캔",
+  "targetSlug": "제로콜라",
+  "trackingId": "AF5232288",
+  "newlyDiscovered": false,
+  "landingUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3",
+  "localLandingUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3",
+  "directCoupangUrl": "https://link.coupang.com/a/ikoqLZW3zg?subid=inch_pub_camp_mw08yvl3",
+  "matchedCreator": {
+    "name": "핫딜브리핑",
+    "handle": "@핫딜브리핑",
+    "category": "식음료/음료",
+    "platform": "youtube"
+  },
+  "targetedCreatorOutreach": {
+    "creatorHandle": "@핫딜브리핑",
+    "creatorName": "핫딜브리핑",
+    "creatorTier": "search_matched",
+    "creatorCategory": "식음료/음료",
+    "videoTitle": "다양한 음료를 한 번에! 코카콜라, 펩시, 스프라이트 등 24캔 묶음 할인!",
+    "targetVideoUrl": "https://www.youtube.com/watch?v=xC54u2-nvbA",
+    "productDisplayName": "코카콜라 제로 355ml 24캔",
+    "targetProductSlug": "제로콜라",
+    "targetProductName": "코카콜라 제로 355ml 24캔",
+    "landingUrl": "https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=%40%ED%95%AB%EB%94%9C%EB%B8%8C%EB%A6%AC%ED%95%91&ch=youtube",
+    "commentText": "오 영상에 나왔던 [코카콜라 제로 355ml 24캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=%40%ED%95%AB%EB%94%9C%EB%B8%8C%EB%A6%AC%ED%95%91&ch=youtube",
+    "ytComment": "오 영상에 나왔던 [코카콜라 제로 355ml 24캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=%40%ED%95%AB%EB%94%9C%EB%B8%8C%EB%A6%AC%ED%95%91&ch=youtube",
+    "instaComment": "오 영상에 나왔던 [코카콜라 제로 355ml 24캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=%40%ED%95%AB%EB%94%9C%EB%B8%8C%EB%A6%AC%ED%95%91&ch=youtube",
+    "tiktokComment": "오 영상에 나왔던 [코카콜라 제로 355ml 24캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=%40%ED%95%AB%EB%94%9C%EB%B8%8C%EB%A6%AC%ED%95%91&ch=youtube",
+    "selectedPlatform": "youtube",
+    "apiPublishStatus": {
+      "youtube": {
+        "platform": "youtube",
+        "targetHandle": "@핫딜브리핑",
+        "success": true,
+        "status": "TOKEN_REQUIRED",
+        "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+      },
+      "instagram": null,
+      "tiktok": null
+    }
+  },
+  "complianceNotice": {
+    "title": "🚨 [필독] 쿠팡 파트너스 Google 검색 광고 운영 시 주의사항",
+    "negativeKeywords": [
+      "쿠팡",
+      "coupang",
+      "Coupang",
+      "COUPANG",
+      "로켓배송",
+      "로켓와우",
+      "쿠팡와우",
+      "쿠팡플레이",
+      "쿠팡이츠"
+    ],
+    "rule": "‘쿠팡’, ‘coupang’을 반드시 제외 키워드로 등록 / 이외 연관 브랜드 키워드를 활용한 광고 금지",
+    "description": "쿠팡 파트너스에서는 \"쿠팡\" 및 쿠팡 브랜드 키워드를 활용한 검색 광고를 엄격하게 금지하고 있습니다. 제외 키워드를 등록하지 않을 경우 구글 확장 검색 로직에 의해 자동 매칭되어 상표권 침해로 서비스 해지 및 수익금 몰수 조치될 수 있습니다."
+  },
+  "socialPosts": {
+    "naverBlog": {
+      "title": "[솔직후기] 코카콜라 제로 355ml 24캔 실사용 장단점 & 쿠팡 로켓배송 최저가 혜택 총정리",
+      "content": "안녕하세요! 오늘은 최근 SNS와 입소문으로 큰 화제를 모으고 있는 [코카콜라 제로 355ml 24캔] 실사용 리뷰 및 최저가 정보를 정리해 드립니다.\n\n📌 1. 왜 이렇게 인기일까?\nundefined\n다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.\n\n📌 2. 핵심 포인트 및 가격 정보\n- 현재 할인가: 19,900원 (캔당 820원)\n- 배송: 쿠팡 와우회원 로켓배송 (자정 전 주문 시 내일 아침 도착 보장)\n- 공식 보증: 쿠팡 공식 로켓배송 정품 보장으로 믿고 주문하실 수 있습니다.\n\n📌 3. 이런 분들께 강력 추천합니다!\n- 가성비와 품질 모두 챙긴 식음료/음료 추천템을 찾으시는 분\n- 품절 전에 빠른 로켓배송으로 받아보고 싶으신 분\n\n👇 실시간 할인가 및 재고 확인하기:\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=blog\n\n⚖️ 공정거래위원회 문구:\n\"이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.\""
+    },
+    "youtubeShorts": {
+      "script": "[00:00~00:03] 🔥 Hook (시선집중)\n\"🔥 [핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다\"\n\n[00:03~00:09] 💡 Problem & Solution (핵심 특징)\n\"다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.\"\n\n[00:09~00:15] 💰 Price & Value (가격/혜택)\n\"지금 쿠팡 로켓배송으로 19,900원 (캔당 820원) 특가에 풀렸습니다!\"\n\n[00:15~00:20] 🛒 Call To Action (구매 유도)\n\"품절되기 전에 고정 댓글이나 프로필 링크에서 지금 바로 확인해보세요!\"",
+      "pinnedComment": "📌 [영상 속 추천템 최저가 좌표]\n코카콜라 제로 355ml 24캔 👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=youtube\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다."
+    },
+    "community": {
+      "title": "[쿠팡/로켓] 코카콜라 제로 355ml 24캔 (19,900원 (캔당 820원))",
+      "content": "🔥 [핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다\n\n다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.\n\n와우회원 무료배송 및 카드 즉시할인 적용 기준입니다. 필요하신 분들 품절 전에 확인해보세요.\n\n구매 링크: https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=community\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)"
+    },
+    "telegramChannel": "⚡ [실시간 핫딜 알림] 코카콜라 제로 355ml 24캔\n\n🏷️ 가격: 19,900원 (캔당 820원)\n🚚 배송: 쿠팡 로켓배송 (내일 도착 보장)\n✨ 포인트: undefined\n\n👉 실시간 최저가 확인: https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=kakao\n\n* 쿠팡 파트너스 활동의 일환으로 수수료를 제공받습니다.",
+    "instagramCaption": "[영상 속 핫딜 좌표] 코카콜라 제로 355ml 24캔\n\nundefined\n19,900원 (캔당 820원)\n\n프로필 링크 또는 스토리 스티커를 확인해주세요!\n👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=insta\n\n#쿠팡로켓배송 #추천템 #인스타공구 #핫딜 #쇼핑 #식음료음료\n\n* 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+    "threads": "다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.\n\n👇 최저가 좌표 & 실시간 재고 확인:\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=threads\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
+    "twitterX": "🔥 [핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다\n\n👇 최저가 확인:\nhttps://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=threads\n\n(이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.)",
+    "kakaoTalkShare": "[핫딜 알림] 코카콜라 제로 355ml 24캔 최저가 떴습니다! 확인해보세요 👉 https://inch.sale/p/%EC%A0%9C%EB%A1%9C%EC%BD%9C%EB%9D%BC?ref=pub_camp_mw08yvl3&ch=kakao"
+  },
+  "systemStats": {
+    "totalClicks": 32,
+    "totalWithdrawals": 0,
+    "catalogSize": 35
+  }
+}

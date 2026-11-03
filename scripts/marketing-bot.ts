@@ -772,7 +772,7 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
         }
       }
     } else if (selectedPlatform === 'instagram') {
-      const searchResults = await fetchRealtimeInstagramPosts(instaTag);
+      const searchResults = await fetchRealtimeInstagramPosts(instaTag, alreadyCommented);
       for (const p of searchResults) {
         if (!alreadyCommented.has(p.videoUrl.trim())) {
           discoveredTarget = p;

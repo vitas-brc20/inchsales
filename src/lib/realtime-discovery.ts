@@ -221,7 +221,7 @@ export async function fetchRealtimeYouTubeVideos(query?: string): Promise<Realti
 /**
  * 2. Instagram 실시간 인기 탐색 태그 스크랩 (Chrome 백그라운드 탭 & 무간섭)
  */
-export async function fetchRealtimeInstagramPosts(tag?: string): Promise<RealtimeVideoTarget[]> {
+export async function fetchRealtimeInstagramPosts(tag?: string, alreadyCommentedUrls?: Set<string>): Promise<RealtimeVideoTarget[]> {
   const selectedTag = tag || INSTAGRAM_TAGS[Math.floor(Math.random() * INSTAGRAM_TAGS.length)];
   const tagUrl = `https://www.instagram.com/explore/tags/${encodeURIComponent(selectedTag)}/`;
   let tabId = '';
@@ -234,7 +234,7 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
         end if
         tell window 1
           set newTab to make new tab with properties {URL:"${tagUrl}"}
-          return id of newTab
+          return id of newTab as string
         end tell
       end tell
     `;
@@ -242,59 +242,122 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
     tabId = (await runAppleScript(createScript)).trim();
     if (!tabId) return [];
 
-    await delay(3500);
+    await delay(4500);
 
-    const parseScript = `
-      tell application "Google Chrome"
-        tell tab id ${tabId} of window 1
-          return execute javascript "(function() {
-            var anchors = Array.from(document.querySelectorAll('a[href*=\\"/p/\\"], a[href*=\\"/reel/\\"]'));
-            var results = [];
-            for (var a of anchors) {
-              var img = a.querySelector('img');
-              var alt = img ? img.alt : '';
-              if (!alt || alt.length < 15) continue;
-              
-              var handleMatch = alt.match(/@([a-zA-Z0-9._-]+)/);
-              var handle = handleMatch ? ('@' + handleMatch[1]) : '@instagram_creator';
-              
-              results.push({
-                videoUrl: a.href,
-                title: alt.substring(0, 80).replace(/\\n/g, ' '),
-                caption: alt,
-                creatorName: handle,
-                creatorHandle: handle
-              });
-              if (results.length >= 6) break;
-            }
-            return JSON.stringify(results);
-          })()"
-        end tell
-      end tell
+    // 1단계: 검색/태그 페이지에서 모든 게시물/릴스 링크 수집 (img.alt 유무와 무관하게 모든 비디오/릴스/포스트 수집)
+    const getLinksScript = `
+      (function() {
+        var anchors = Array.from(document.querySelectorAll('a[href*="/p/"], a[href*="/reel/"]'));
+        var urls = [];
+        for (var a of anchors) {
+          var h = a.href || '';
+          if (h && (h.includes('/p/') || h.includes('/reel/')) && !urls.includes(h)) {
+            urls.push(h);
+          }
+        }
+        return JSON.stringify(urls);
+      })()
     `;
 
-    const raw = await runAppleScript(parseScript);
-    
+    let rawLinks = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(getLinksScript)}
+        end tell
+      end tell
+    `).catch(() => '[]');
+
+    let candidateUrls: string[] = [];
+    try {
+      candidateUrls = JSON.parse(rawLinks || '[]');
+    } catch {
+      candidateUrls = [];
+    }
+
+    // 이미 댓글 작성된 URL 제외
+    if (alreadyCommentedUrls && alreadyCommentedUrls.size > 0) {
+      candidateUrls = candidateUrls.filter(u => !alreadyCommentedUrls.has(u.trim()));
+    }
+
+    if (candidateUrls.length === 0) {
+      // 혹시 태그에 글이 없으면 탭 닫고 종료
+      await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+      return [];
+    }
+
+    // 2단계: 첫 번째 후보 게시물로 즉시 이동하여 실제 크리에이터 핸들(아이디) 정밀 추출
+    const targetPostUrl = candidateUrls[0];
+    await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          set URL to "${targetPostUrl}"
+        end tell
+      end tell
+    `).catch(() => {});
+
+    await delay(3500);
+
+    const getCreatorScript = `
+      (function() {
+        // (A) 작성자 프로필 링크 탐색 (header a, article a)
+        var links = Array.from(document.querySelectorAll('header a, [role="main"] a, article a'));
+        var ignored = ['/explore/', '/reels/', '/direct/', '/stories/', '/p/', '/reel/'];
+        var handle = '';
+        for (var a of links) {
+          var href = a.getAttribute('href') || '';
+          var text = (a.innerText || '').trim();
+          if (href.startsWith('/') && !ignored.some(ig => href.startsWith(ig)) && text.length > 0 && !text.includes('팔로우') && !text.includes('Follow')) {
+            handle = href.replace(/^\\/+/, '').replace(/\\/+$/, '');
+            break;
+          }
+        }
+
+        // (B) 텍스트/헤딩 보조 탐색
+        if (!handle) {
+          var h2s = Array.from(document.querySelectorAll('h2, span[dir="auto"]')).map(h => (h.innerText || '').trim());
+          var systemWords = ['홈', '검색', '탐색 탭', '릴스', '메시지', '알림', '만들기', '프로필', '더 보기', '댓글', '좋아요'];
+          var candidate = h2s.find(t => t.length > 1 && t.length < 30 && !systemWords.includes(t));
+          if (candidate) handle = candidate;
+        }
+
+        var title = document.title || 'Instagram 게시물';
+        return JSON.stringify({
+          handle: handle || 'instagram_creator',
+          title: title
+        });
+      })()
+    `;
+
+    const creatorRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(getCreatorScript)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
     // 탭 클린업
     await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
 
-    if (!raw || raw.trim() === '' || raw.trim() === 'missing value') return [];
-    let parsed: any[] = [];
+    let creatorInfo: any = {};
     try {
-      parsed = JSON.parse(raw);
+      creatorInfo = JSON.parse(creatorRaw || '{}');
     } catch {
-      return [];
+      creatorInfo = { handle: 'instagram_creator', title: 'Instagram' };
     }
-    return parsed
-      .map((p: any) => {
-        const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
-        return {
-          ...p,
-          creatorHandle: cleanHandle || 'instagram_creator',
-          platform: 'instagram' as const,
-        };
-      })
-      .filter((p: any) => !isBlacklisted(p.creatorHandle) && !isBlacklisted(p.creatorName));
+
+    const cleanHandle = safeDecodeHandle(creatorInfo.handle || 'instagram_creator');
+    const finalHandle = cleanHandle.startsWith('@') ? cleanHandle : `@${cleanHandle}`;
+
+    if (isBlacklisted(finalHandle)) return [];
+
+    return [{
+      platform: 'instagram',
+      videoUrl: targetPostUrl,
+      title: creatorInfo.title || `${selectedTag} 릴스/게시물`,
+      creatorName: cleanHandle,
+      creatorHandle: finalHandle,
+    }];
   } catch (err) {
     if (tabId) {
       await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
