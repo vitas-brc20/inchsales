@@ -782,14 +782,27 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
         }
       }
     } else {
-      // tiktok
-      const searchResults = await fetchRealtimeTikTokVideos(searchQuery);
+      // tiktok: 틱톡 알고리즘에 최적화된 핵심 숏폼 키워드로 검색
+      const ttQuery = (target as any).tiktokQuery || target.instaTag || target.slug;
+      console.log(`[${timestamp}] 🎵 틱톡 알고리즘 최적화 검색 키워드: "${ttQuery}"`);
+      const searchResults = await fetchRealtimeTikTokVideos(ttQuery);
       for (const t of searchResults) {
         if (!alreadyCommented.has(t.videoUrl.trim())) {
           discoveredTarget = t;
           break;
         } else {
           console.log(`[${timestamp}] ⏭️ [이미 댓글 작성된 틱톡 영상 스킵] ${t.videoUrl}`);
+        }
+      }
+
+      // 혹시 비어있으면 2차 시도
+      if (!discoveredTarget && ttQuery !== searchQuery) {
+        const fallbackResults = await fetchRealtimeTikTokVideos(searchQuery);
+        for (const t of fallbackResults) {
+          if (!alreadyCommented.has(t.videoUrl.trim())) {
+            discoveredTarget = t;
+            break;
+          }
         }
       }
     }

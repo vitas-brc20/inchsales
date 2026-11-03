@@ -344,7 +344,6 @@ export async function fetchRealtimeTikTokVideos(customQuery?: string): Promise<R
               
               var descEl = card.querySelector('[data-e2e=\\"search-card-video-caption\\"], div[class*=\\"DivCaption\\"]');
               var desc = descEl ? descEl.innerText.trim() : '';
-              if (!desc || desc.length < 5) continue;
               
               var authorA = card.querySelector('a[href*=\\"/@\\"]');
               var handle = authorA ? authorA.href.split('/@')[1].split('/')[0].split('?')[0] : '';
@@ -352,7 +351,7 @@ export async function fetchRealtimeTikTokVideos(customQuery?: string): Promise<R
               
               results.push({
                 videoUrl: a.href,
-                title: desc.slice(0, 100),
+                title: desc.slice(0, 100) || '틱톡 추천 영상',
                 caption: desc,
                 creatorName: authorName || handle || 'tiktok_creator',
                 creatorHandle: handle ? ('@' + handle) : '@tiktok_creator'
@@ -365,18 +364,22 @@ export async function fetchRealtimeTikTokVideos(customQuery?: string): Promise<R
       end tell
     `;
 
-    const raw = await runAppleScript(parseScript);
+    let raw = await runAppleScript(parseScript);
+    let parsed: any[] = [];
+    try { parsed = JSON.parse(raw); } catch {}
+
+    // 카드가 아직 안 떴으면 3초 대기 후 재시도
+    if (!parsed || parsed.length === 0) {
+      console.log('[TikTok] 검색 결과 대기 중... (3초 추가 대기)');
+      await delay(3000);
+      raw = await runAppleScript(parseScript);
+      try { parsed = JSON.parse(raw); } catch {}
+    }
 
     // 탭 클린업
     await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
 
-    if (!raw || raw.trim() === '' || raw.trim() === 'missing value') return [];
-    let parsed: any[] = [];
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      return [];
-    }
+    if (!parsed || !Array.isArray(parsed) || parsed.length === 0) return [];
     return parsed
       .map((p: any) => {
         const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
