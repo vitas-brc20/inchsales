@@ -2,6 +2,7 @@ import { exec, spawn } from 'child_process';
 import { promisify } from 'util';
 import { isCDPAvailable, postYouTubeCommentViaCDP } from './cdp-automation';
 import { postYouTubeCommentViaAppleScript, postInstagramViaAppleScript, postTikTokViaAppleScript } from './applescript-poster';
+import { savePostedCommentRecord } from './storage';
 
 const execAsync = promisify(exec);
 
@@ -14,6 +15,11 @@ export interface BrowserOutreachTask {
   productName: string;
   expectedKeywords?: string[];
   silent?: boolean;
+}
+
+function extractInchSaleUrl(text: string): string {
+  const match = text.match(/https?:\/\/inch\.sale\/p\/[^\s\n]+/);
+  return match ? match[0] : '';
 }
 
 function copyToMacClipboard(text: string): Promise<void> {
@@ -54,6 +60,22 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     // 1) 유튜브: 첫 영상 직접 작성 & 제출
     if (task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
       const asRes = await postYouTubeCommentViaAppleScript(task.targetUrl, task.commentText);
+      
+      savePostedCommentRecord({
+        platform: 'youtube',
+        creatorHandle: tag,
+        creatorName: task.creatorName,
+        productName: task.productName,
+        targetUrl: task.targetUrl,
+        commentText: task.commentText,
+        inchSaleUrl: extractInchSaleUrl(task.commentText),
+        success: asRes.success,
+        verified: asRes.success,
+        verifiedMethod: 'DOM_STRICT_VERIFIED',
+        postUrl: task.targetUrl,
+        message: asRes.message,
+      });
+
       if (asRes.success) {
         const notifScript = `
           display notification "첫 영상에 댓글 자동 등록 완료!" with title "✅ [100% 무인 전송] ${cleanTag}" subtitle "${cleanProduct}"
@@ -63,16 +85,38 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[100% 완전 자동 전송 완료] ${tag} 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!`,
+          details: `[100% 완전 자동 전송 완료] ${tag} 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료! URL: ${task.targetUrl}`,
         };
       } else {
         console.warn('AppleScript auto-submit notice:', asRes.message);
+        return {
+          success: false,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[유튜브 댓글 작성 미반영] ${asRes.message}`,
+        };
       }
     }
 
     // 2) 인스타그램: 팔로우 선행 클릭 + 프로필 목록 대신 첫 번째 실제 릴스/게시물로 즉시 직행 및 댓글 무인 게시
     if (task.platform === 'instagram') {
       const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText, task.expectedKeywords);
+      const actualPostUrl = igRes.postUrl || task.targetUrl;
+
+      savePostedCommentRecord({
+        platform: 'instagram',
+        creatorHandle: tag,
+        creatorName: task.creatorName,
+        productName: task.productName,
+        targetUrl: actualPostUrl,
+        commentText: task.commentText,
+        inchSaleUrl: extractInchSaleUrl(task.commentText),
+        success: igRes.success,
+        verified: igRes.success,
+        verifiedMethod: 'DOM_STRICT_VERIFIED',
+        postUrl: actualPostUrl,
+        message: igRes.message,
+      });
+
       if (igRes.success) {
         const notifScript = `
           display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "📸 [인스타 팔로우+댓글 완료] ${cleanTag}" subtitle "${cleanProduct}"
@@ -82,13 +126,13 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[인스타그램 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 게시물 댓글 등록: ${igRes.postUrl || task.targetUrl}`,
+          details: `[인스타그램 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 게시물 댓글 등록: ${actualPostUrl}`,
         };
       } else {
         return {
           success: false,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[인스타그램 댓글 스킵] ${igRes.message}`,
+          details: `[인스타그램 댓글 미반영] ${igRes.message} (게시물 URL: ${actualPostUrl})`,
         };
       }
     }
@@ -97,6 +141,23 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     if (task.platform === 'tiktok') {
       const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText, task.expectedKeywords);
       console.log('TikTok post result message:', ttRes.message);
+      const actualVideoUrl = ttRes.videoUrl || task.targetUrl;
+
+      savePostedCommentRecord({
+        platform: 'tiktok',
+        creatorHandle: tag,
+        creatorName: task.creatorName,
+        productName: task.productName,
+        targetUrl: actualVideoUrl,
+        commentText: task.commentText,
+        inchSaleUrl: extractInchSaleUrl(task.commentText),
+        success: ttRes.success,
+        verified: ttRes.success,
+        verifiedMethod: 'DOM_STRICT_VERIFIED',
+        postUrl: actualVideoUrl,
+        message: ttRes.message,
+      });
+
       if (ttRes.success) {
         const notifScript = `
           display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "🎵 [틱톡 팔로우+댓글 완료] ${cleanTag}" subtitle "${cleanProduct}"
@@ -106,13 +167,13 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[틱톡 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 영상 댓글 등록: ${ttRes.videoUrl || task.targetUrl}`,
+          details: `[틱톡 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 영상 댓글 등록: ${actualVideoUrl}`,
         };
       } else {
         return {
           success: false,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[틱톡 댓글 스킵] ${ttRes.message}`,
+          details: `[틱톡 댓글 미반영] ${ttRes.message} (영상 URL: ${actualVideoUrl})`,
         };
       }
     }

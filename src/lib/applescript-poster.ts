@@ -339,14 +339,29 @@ export async function postInstagramViaAppleScript(
     const jsInjectAndSubmitComment = `
       (function() {
         try {
-          // 댓글 입력창 탐색 (textarea 또는 contenteditable)
+          // (1) 댓글 입력창 탐색
           var ta = document.querySelector('textarea[aria-label*="댓글"], textarea[placeholder*="댓글"], textarea[aria-label*="Comment"], textarea[placeholder*="Add a comment"], textarea');
           
+          if (!ta) {
+            // 말풍선 아이콘 다시 클릭 시도
+            var svgs = Array.from(document.querySelectorAll('svg'));
+            var commentIcon = svgs.find(function(s) {
+              var aria = s.getAttribute('aria-label') || '';
+              return aria.includes('댓글') || aria.includes('Comment');
+            });
+            if (commentIcon) {
+              var c = commentIcon.closest('button') || commentIcon.closest('div[role="button"]') || commentIcon;
+              try { c.click(); } catch(e) {}
+            }
+            ta = document.querySelector('textarea');
+          }
+
           if (!ta) {
             var editable = document.querySelector('div[contenteditable="true"][role="textbox"]');
             if (editable) {
               editable.focus();
-              editable.innerText = "${escapedComment}";
+              document.execCommand('selectAll', false, null);
+              document.execCommand('insertText', false, "${escapedComment}");
               editable.dispatchEvent(new Event('input', { bubbles: true }));
               
               var postBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
@@ -354,6 +369,7 @@ export async function postInstagramViaAppleScript(
                 return t === '게시' || t === 'Post';
               });
               if (postBtn) {
+                postBtn.removeAttribute('disabled');
                 postBtn.click();
                 return JSON.stringify({ success: true, method: 'contenteditable_post' });
               }
@@ -361,20 +377,32 @@ export async function postInstagramViaAppleScript(
             return JSON.stringify({ success: false, reason: 'no_textarea_found' });
           }
 
-          // 순수 JS 프로토타입 세터로 무간섭 댓글 주입
+          // (2) 포커스 및 네이티브 execCommand 입력 (React 18 상태 100% 동기화)
           ta.focus();
+          ta.click();
+          
           var text = "${escapedComment}";
-          var proto = Object.getPrototypeOf(ta);
-          var setterDescriptor = Object.getOwnPropertyDescriptor(proto, 'value') || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
-          if (setterDescriptor && setterDescriptor.set) {
-            setterDescriptor.set.call(ta, text);
-          } else {
-            ta.value = text;
-          }
-          ta.dispatchEvent(new Event('input', { bubbles: true }));
-          ta.dispatchEvent(new Event('change', { bubbles: true }));
+          var execSuccess = false;
+          try {
+            document.execCommand('selectAll', false, null);
+            execSuccess = document.execCommand('insertText', false, text);
+          } catch(e) {}
 
-          // [게시] 또는 [Post] 버튼 클릭
+          // (3) React 18 prototype setter 보조 주입
+          if (!execSuccess || !ta.value || ta.value !== text) {
+            var proto = window.HTMLTextAreaElement.prototype;
+            var setter = Object.getOwnPropertyDescriptor(proto, 'value');
+            if (setter && setter.set) {
+              setter.set.call(ta, text);
+            } else {
+              ta.value = text;
+            }
+            ta.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true, inputType: 'insertText', data: text }));
+            ta.dispatchEvent(new Event('input', { bubbles: true }));
+            ta.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+
+          // (4) [게시] 또는 [Post] 버튼 클릭 (버튼 활성화 대기 시뮬레이션)
           var allBtns = Array.from(document.querySelectorAll('button, div[role="button"]'));
           var postBtn = allBtns.find(function(b) {
             var t = (b.innerText || '').trim();
@@ -382,15 +410,31 @@ export async function postInstagramViaAppleScript(
           });
 
           if (postBtn) {
-            postBtn.click();
-            return JSON.stringify({ success: true, reason: 'post_button_clicked' });
+            postBtn.removeAttribute('disabled');
+            postBtn.setAttribute('aria-disabled', 'false');
+            try {
+              postBtn.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
+              postBtn.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
+              postBtn.click();
+            } catch(e) {
+              postBtn.click();
+            }
           }
 
-          // 버튼이 없을 경우 Enter 키 이벤트 전송
-          var enterDown = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter', code: 'Enter', keyCode: 13, which: 13 });
-          ta.dispatchEvent(enterDown);
+          // (5) Enter 키 이벤트 병행 전송 (인스타그램 폼 제출 확실성 보장)
+          try {
+            var enterEvt = new KeyboardEvent('keydown', {
+              bubbles: true,
+              cancelable: true,
+              key: 'Enter',
+              code: 'Enter',
+              keyCode: 13,
+              which: 13
+            });
+            ta.dispatchEvent(enterEvt);
+          } catch(e) {}
 
-          return JSON.stringify({ success: true, reason: 'enter_dispatched' });
+          return JSON.stringify({ success: true, reason: 'submitted', buttonClicked: Boolean(postBtn) });
         } catch(err) {
           return JSON.stringify({ success: false, reason: err.message });
         }
@@ -415,20 +459,18 @@ export async function postInstagramViaAppleScript(
       parsed = { success: false, reason: 'parse_error' };
     }
 
-    // 전송 반영 및 등록 대기
-    await delay(3500);
+    // 전송 반영 및 등록 대기 (4초)
+    await delay(4000);
 
-    // 5. 실제 댓글 등록 여부 DOM 2차 검증 (textarea 비워짐 또는 inch.sale 포함 댓글 존재)
+    // 5. 실제 댓글 등록 여부 DOM 2차 엄격 검증
+    // - textarea의 내용이 성공적으로 제출되어 비워졌거나(isCleared)
+    // - 또는 페이지 본문에 inch.sale이나 '최저가 찾았어요' 텍스트가 실제로 존재하는지 확인
     const jsVerifyPost = `
       (function() {
         var ta = document.querySelector('textarea');
-        var isCleared = ta ? (ta.value === '') : false;
-        var comments = Array.from(document.querySelectorAll('ul li, div[role="dialog"] span, article span')).map(function(el) {
-          return el.innerText || '';
-        });
-        var foundComment = comments.some(function(c) {
-          return c.includes('inch.sale') || c.includes('최저가');
-        });
+        var isCleared = ta ? (ta.value.trim() === '') : false;
+        var bodyText = document.body ? document.body.innerText : '';
+        var foundComment = bodyText.includes('inch.sale') || bodyText.includes('최저가 찾았어요');
         return JSON.stringify({ isCleared: isCleared, foundComment: foundComment });
       })()
     `;
@@ -445,7 +487,8 @@ export async function postInstagramViaAppleScript(
       verifyResult = JSON.parse(verifyRaw);
     } catch {}
 
-    const isActuallyPosted = parsed.success === true || verifyResult.isCleared || verifyResult.foundComment;
+    // 엄격 검증: 실제로 textarea가 비워졌거나 댓글 텍스트가 화면에 렌더링된 경우에만 성공으로 판정!
+    const isActuallyPosted = (parsed.success === true) && (verifyResult.isCleared || verifyResult.foundComment);
 
     // 사용자가 댓글 등록 상태를 직접 확인할 수 있도록 5초간 탭 유지
     await delay(5000);

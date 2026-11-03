@@ -85,3 +85,20 @@ export interface CreateLinkPayload {
   iframeUrl?: string;
   customSlug?: string;
 }
+
+export interface PostedCommentRecord {
+  id: string;
+  timestamp: string;
+  platform: 'youtube' | 'tiktok' | 'instagram';
+  creatorHandle: string;
+  creatorName: string;
+  productName: string;
+  targetUrl: string;
+  commentText: string;
+  inchSaleUrl: string;
+  success: boolean;
+  verified: boolean;
+  verifiedMethod?: string;
+  postUrl?: string;
+  message?: string;
+}

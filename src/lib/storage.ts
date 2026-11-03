@@ -1,14 +1,17 @@
 import fs from 'fs';
 import path from 'path';
 import { supabase } from './supabase';
-import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest, CreatorAccount } from './types';
+import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest, CreatorAccount, PostedCommentRecord } from './types';
 import { inferCategory } from './categories';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
+const LOGS_DIR = path.join(process.cwd(), 'logs');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const STATS_FILE = path.join(DATA_DIR, 'creator_stats.json');
 const WITHDRAWALS_FILE = path.join(DATA_DIR, 'withdrawals.json');
 const CREATOR_ACCOUNTS_FILE = path.join(DATA_DIR, 'creator-accounts.json');
+const POSTED_COMMENTS_FILE = path.join(LOGS_DIR, 'posted-comments.json');
+const POSTED_COMMENTS_LOG = path.join(LOGS_DIR, 'posted-comments.log');
 
 // 기본 공유 상품 카탈로그 (인플루언서들이 공통으로 가져다 쓸 수 있는 상품들)
 const INITIAL_PRODUCTS: Record<string, ProductItem> = {
@@ -1123,4 +1126,52 @@ export function verifyCreatorOwnership(
   }
 
   return { allowed: true, account };
+}
+
+/**
+ * 실제로 작성된 댓글 링크 및 내역을 영구 저장합니다.
+ */
+export function savePostedCommentRecord(record: Omit<PostedCommentRecord, 'id' | 'timestamp'> & { id?: string; timestamp?: string }): PostedCommentRecord {
+  if (!fs.existsSync(LOGS_DIR)) {
+    fs.mkdirSync(LOGS_DIR, { recursive: true });
+  }
+
+  const completeRecord: PostedCommentRecord = {
+    id: record.id || `comment_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    timestamp: record.timestamp || new Date().toISOString(),
+    ...record,
+  };
+
+  let list: PostedCommentRecord[] = [];
+  if (fs.existsSync(POSTED_COMMENTS_FILE)) {
+    try {
+      list = JSON.parse(fs.readFileSync(POSTED_COMMENTS_FILE, 'utf8'));
+    } catch {
+      list = [];
+    }
+  }
+
+  list.unshift(completeRecord); // 최신순 상단 배치
+  fs.writeFileSync(POSTED_COMMENTS_FILE, JSON.stringify(list, null, 2), 'utf8');
+
+  // 사람이 읽기 쉬운 로그 파일에도 1줄 추가
+  const logLine = `[${completeRecord.timestamp}] [${completeRecord.platform.toUpperCase()}] ${completeRecord.success ? '✅ 게시성공' : '❌ 실패/스킵'} | 크리에이터: ${completeRecord.creatorHandle} (${completeRecord.creatorName}) | 영상/게시물: ${completeRecord.targetUrl} | 상품: ${completeRecord.productName} | 정산링크: ${completeRecord.inchSaleUrl} | 사유: ${completeRecord.message || ''}\n`;
+  try {
+    fs.appendFileSync(POSTED_COMMENTS_LOG, logLine, 'utf8');
+  } catch {}
+
+  return completeRecord;
+}
+
+/**
+ * 실제로 작성된 댓글 링크 목록을 조회합니다.
+ */
+export function getPostedCommentRecords(limit = 100): PostedCommentRecord[] {
+  if (!fs.existsSync(POSTED_COMMENTS_FILE)) return [];
+  try {
+    const list: PostedCommentRecord[] = JSON.parse(fs.readFileSync(POSTED_COMMENTS_FILE, 'utf8'));
+    return list.slice(0, limit);
+  } catch {
+    return [];
+  }
 }

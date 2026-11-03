@@ -75,8 +75,19 @@ export default function CampaignsPage() {
 
   // Campaigns list state
   const [campaigns, setCampaigns] = useState<CampaignItem[]>([]);
+  const [postedComments, setPostedComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+
+  const fetchComments = async () => {
+    try {
+      const res = await fetch('/api/comments');
+      const data = await res.json();
+      if (data.success && data.comments) {
+        setPostedComments(data.comments);
+      }
+    } catch {}
+  };
 
   // Check auth on mount
   useEffect(() => {
@@ -88,6 +99,7 @@ export default function CampaignsPage() {
       setIsAuthorized(true);
       fetchKeys(savedPin || 'qwer1234!');
       fetchCampaigns();
+      fetchComments();
     }
     setCheckingAuth(false);
   }, []);
@@ -387,6 +399,98 @@ export default function CampaignsPage() {
               <span className="text-[9px] font-mono text-slate-800 font-bold mt-1">&amp;ch=threads</span>
             </div>
           </div>
+        </div>
+
+        {/* Posted Comments Realtime Audit Section */}
+        <div className="mb-8 p-6 rounded-3xl bg-white border border-slate-200/90 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-slate-100">
+            <div>
+              <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <span>💬 실제 게시된 댓글 링크 및 작업 증적</span>
+                <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">
+                  실시간 {postedComments.length}건 기록
+                </span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                유튜브 · 인스타그램 · 틱톡에 실제로 작성된 영상/게시물 URL과 댓글 원문이 100% 투명하게 영구 저장됩니다.
+              </p>
+            </div>
+            <button
+              onClick={fetchComments}
+              className="px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700 transition-colors flex items-center gap-1 self-start sm:self-auto cursor-pointer"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>내역 새로고침</span>
+            </button>
+          </div>
+
+          {postedComments.length === 0 ? (
+            <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <p className="text-xs font-semibold text-slate-500">아직 전송된 댓글 작업 기록이 없습니다.</p>
+              <p className="text-[11px] text-slate-400 mt-1">10분 스케줄러가 돌아가며 댓글을 작성할 때마다 실제 게시물 URL과 증적이 여기에 실시간 누적됩니다.</p>
+            </div>
+          ) : (
+            <div className="space-y-3 max-h-[420px] overflow-y-auto pr-1">
+              {postedComments.slice(0, 15).map((c: any) => (
+                <div key={c.id} className="p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200 hover:border-slate-300 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase ${
+                        c.platform === 'youtube' ? 'bg-red-100 text-red-700' :
+                        c.platform === 'instagram' ? 'bg-pink-100 text-pink-700' :
+                        'bg-slate-900 text-white'
+                      }`}>
+                        {c.platform}
+                      </span>
+                      <span className="text-xs font-extrabold text-slate-900">
+                        {c.creatorHandle} ({c.creatorName})
+                      </span>
+                      <span className="text-[11px] text-slate-400 font-mono">
+                        {new Date(c.timestamp).toLocaleTimeString('ko-KR')}
+                      </span>
+                      {c.success ? (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 flex items-center gap-1">
+                          <Check className="w-3 h-3 text-emerald-600" />
+                          게시 성공
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700">
+                          {c.message ? c.message.slice(0, 25) : '미반영'}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-slate-700 font-medium">
+                      상품: <span className="font-bold text-slate-900">{c.productName}</span>
+                    </p>
+                    <p className="text-[11px] text-slate-500 line-clamp-1 font-sans">
+                      💬 &quot;{c.commentText.replace(/\n/g, ' ').slice(0, 70)}...&quot;
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    <button
+                      onClick={() => handleCopy(c.commentText, `cmt_${c.id}`)}
+                      className="px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-semibold flex items-center gap-1 transition-colors"
+                      title="댓글 전문 복사"
+                    >
+                      {copiedKey === `cmt_${c.id}` ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                      <span>{copiedKey === `cmt_${c.id}` ? '복사됨' : '댓글복사'}</span>
+                    </button>
+                    <a
+                      href={c.targetUrl || c.postUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1 transition-colors shadow-xs"
+                      title="댓글이 달린 영상/게시물 직접 열기"
+                    >
+                      <span>실제 게시물 열기</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Campaign List */}
