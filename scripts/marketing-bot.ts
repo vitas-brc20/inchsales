@@ -5,6 +5,12 @@ import { promisify } from 'util';
 import { createClient } from '@supabase/supabase-js';
 import { publishYouTubeComment, publishInstagramComment, publishTikTokComment } from '../src/lib/sns-api';
 import { dispatchBrowserOutreach } from '../src/lib/browser-automation';
+import {
+  fetchRealtimeYouTubeVideos,
+  fetchRealtimeInstagramPosts,
+  fetchRealtimeTikTokVideos,
+  analyzeAndMatchProduct,
+} from '../src/lib/realtime-discovery';
 
 const execAsync = promisify(exec);
 
@@ -1101,105 +1107,105 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
   // 4. 캠페인 포스팅 번들 저장 (다채널 6대 홍보 채널 자동 생성)
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
 
-  // 4-1. 선택된 플랫폼에 최적화된 유명 크리에이터 맞춤 댓글 홍보 매칭
-  const matchedCreator = matchCreatorSafely(target.slug, target.category, selectedPlatform);
+  // 4-1. [실시간 핫 트렌드 크리에이터 발굴 엔진] (1순위)
+  // 고정 목록에 의존하지 않고, 지금 유튜브/인스타/틱톡 실시간 급상승 및 추천 피드를 스크랩하여 핫 크리에이터를 즉시 발굴
+  let realtimeTarget: any = null;
+  let matchedProduct: any = null;
   let creatorOutreachBundle: any = null;
   let apiPublishStatus: any = null;
   let browserTaskResult: any = null;
 
-  if (matchedCreator) {
-    let resolvedVideo: Awaited<ReturnType<typeof resolveFirstYouTubeVideo>> = null;
-    let targetUrl = '';
-    let commentText = '';
-
+  try {
     if (selectedPlatform === 'youtube') {
-      const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
-      const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;
-      resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
-      if (!resolvedVideo) {
-        resolvedVideo = await resolveFirstYouTubeVideo(`${matchedCreator.channelName} ${target.slug}`);
-      }
-      if (!resolvedVideo && matchedCreator.searchKeyword) {
-        resolvedVideo = await resolveFirstYouTubeVideo(matchedCreator.searchKeyword);
-      }
-      if (resolvedVideo) {
-        if (resolvedVideo.channelHandle) {
-          matchedCreator.handle = resolvedVideo.channelHandle;
-          matchedCreator.youtubeHandle = resolvedVideo.channelHandle;
+      const liveVideos = await fetchRealtimeYouTubeVideos();
+      for (const v of liveVideos) {
+        const prod = await analyzeAndMatchProduct(v.title, v.caption);
+        if (prod) {
+          realtimeTarget = v;
+          matchedProduct = prod;
+          break;
         }
-        if (resolvedVideo.channelName) {
-          matchedCreator.channelName = resolvedVideo.channelName;
-        }
-        console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] 채널: @${matchedCreator.handle} (${matchedCreator.channelName}) / 영상: "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
       }
-
-      creatorOutreachBundle = generateCreatorCommentBundle(
-        matchedCreator,
-        target,
-        resolvedVideo?.videoTitle,
-        resolvedVideo?.videoUrl
-      );
-
-      targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
-        ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
-        : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
-      commentText = creatorOutreachBundle.ytComment;
     } else if (selectedPlatform === 'instagram') {
-      const igHandle = matchedCreator.instagramHandle || matchedCreator.handle;
-      creatorOutreachBundle = generateCreatorCommentBundle(
-        { ...matchedCreator, handle: igHandle },
-        target
-      );
-      targetUrl = `https://www.instagram.com/${encodeURIComponent(igHandle)}/`;
-      commentText = creatorOutreachBundle.instaComment;
-      console.log(`[${timestamp}] 📸 [인스타그램 타깃 매칭 성공] 계정: @${igHandle} (${matchedCreator.channelName}) -> ${targetUrl}`);
-    } else {
-      // tiktok (404 원천 차단: 검증된 핸들 또는 실제 검색어 직행)
-      const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
-      if (matchedCreator.tiktokHandle) {
-        targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle)}`;
-      } else {
-        const query = `${matchedCreator.channelName} ${shortProductName}`.trim();
-        targetUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+      const livePosts = await fetchRealtimeInstagramPosts();
+      for (const p of livePosts) {
+        const prod = await analyzeAndMatchProduct(p.title, p.caption);
+        if (prod) {
+          realtimeTarget = p;
+          matchedProduct = prod;
+          break;
+        }
       }
-      creatorOutreachBundle = generateCreatorCommentBundle(
-        matchedCreator,
-        target
-      );
-      commentText = creatorOutreachBundle.tiktokComment;
-      console.log(`[${timestamp}] 🎵 [틱톡 타깃 매칭 성공] ${matchedCreator.channelName} -> ${targetUrl}`);
+    } else {
+      const liveTikToks = await fetchRealtimeTikTokVideos();
+      for (const t of liveTikToks) {
+        const prod = await analyzeAndMatchProduct(t.title, t.caption);
+        if (prod) {
+          realtimeTarget = t;
+          matchedProduct = prod;
+          break;
+        }
+      }
     }
+  } catch (err) {
+    console.warn(`[${timestamp}] 실시간 피드 탐색 경고 (기존 검증 풀로 자동 전환):`, err);
+  }
 
-    // 4-2. 공식 API 백그라운드 직접 전송 시도
+  // 실시간 발굴 성공 시 -> 실시간 영상과 핫 크리에이터에 즉시 타깃팅!
+  if (realtimeTarget && matchedProduct) {
+    console.log(`[${timestamp}] 🔥 [실시간 핫 크리에이터 발굴 성공!] 플랫폼: ${selectedPlatform.toUpperCase()} | 채널: ${realtimeTarget.creatorName} (${realtimeTarget.creatorHandle}) | 영상: "${realtimeTarget.title}"`);
+    console.log(`[${timestamp}] 🎯 [영상 내용 기반 제품 매칭] -> [${matchedProduct.displayName}] (슬러그: ${matchedProduct.slug})`);
+
+    const cleanH = (realtimeTarget.creatorHandle || '').replace(/^@+/, '');
+    const fullHandle = `@${cleanH}`;
+    const targetUrl = realtimeTarget.videoUrl;
+    const prodLandingUrl = `${BASE_URL}/p/${encodeURIComponent(matchedProduct.slug)}?ref=${encodeURIComponent(fullHandle)}&ch=${selectedPlatform}`;
+    const commentText = `오 영상에 나왔던 [${matchedProduct.displayName}] 최저가 찾았어요 ! ✨\n${prodLandingUrl}`;
+
+    console.log(`[${timestamp}] 💬 [실시간 댓글 전송 준비] "${commentText}"`);
+
+    creatorOutreachBundle = {
+      creatorHandle: fullHandle,
+      creatorName: realtimeTarget.creatorName,
+      creatorTier: 'realtime_trending',
+      creatorCategory: '실시간핫트렌드',
+      videoTitle: realtimeTarget.title,
+      targetVideoUrl: targetUrl,
+      productDisplayName: matchedProduct.displayName,
+      targetProductSlug: matchedProduct.slug,
+      targetProductName: matchedProduct.displayName,
+      landingUrl: prodLandingUrl,
+      commentText,
+      ytComment: commentText,
+      instaComment: commentText,
+      tiktokComment: commentText,
+    };
+
+    // 공식 API 백그라운드 전송 시도
     try {
-      const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(matchedCreator.handle, creatorOutreachBundle.ytComment) : null;
-      const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(matchedCreator.handle, creatorOutreachBundle.instaComment) : null;
-      const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(matchedCreator.handle, creatorOutreachBundle.tiktokComment) : null;
-
-      apiPublishStatus = {
-        youtube: ytResult,
-        instagram: igResult,
-        tiktok: ttResult,
-      };
+      const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(fullHandle, commentText) : null;
+      const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(fullHandle, commentText) : null;
+      const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(fullHandle, commentText) : null;
+      apiPublishStatus = { youtube: ytResult, instagram: igResult, tiktok: ttResult };
     } catch (e) {
-      console.warn('API direct publish check error:', e);
+      console.warn('API publish check warning:', e);
     }
-    
-    // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화
+
+    // Chrome 브라우저 자동화 무인 전송
     try {
       browserTaskResult = await dispatchBrowserOutreach({
         platform: selectedPlatform,
-        creatorHandle: matchedCreator.handle,
-        creatorName: matchedCreator.channelName,
+        creatorHandle: fullHandle,
+        creatorName: realtimeTarget.creatorName,
         targetUrl,
         commentText,
-        productName: creatorOutreachBundle.productDisplayName || target.name,
+        productName: matchedProduct.displayName,
       });
     } catch (e) {
       console.warn('Browser outreach dispatch error:', e);
     }
 
-    // outreach-queue.json 에도 추가/갱신
+    // outreach-queue.json 기록
     try {
       let currentOutreach: any = { targets: [] };
       if (fs.existsSync(OUTREACH_FILE)) {
@@ -1222,12 +1228,139 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
           apiPublishStatus,
           browserTaskResult,
         },
-        ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== matchedCreator.handle),
+        ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== fullHandle),
       ].slice(0, 20);
 
       fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
     } catch (e) {
       console.warn('Failed to update outreach queue:', e);
+    }
+  } else {
+    // 실시간 탐색 결과가 없을 경우 -> 기존 검증 풀(VERIFIED_CREATORS)로 안전하게 fallback
+    const matchedCreator = matchCreatorSafely(target.slug, target.category, selectedPlatform);
+
+    if (matchedCreator) {
+      let resolvedVideo: Awaited<ReturnType<typeof resolveFirstYouTubeVideo>> = null;
+      let targetUrl = '';
+      let commentText = '';
+
+      if (selectedPlatform === 'youtube') {
+        const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
+        const ytQuery = `${matchedCreator.channelName} ${shortProductName}`;
+        resolvedVideo = await resolveFirstYouTubeVideo(ytQuery);
+        if (!resolvedVideo) {
+          resolvedVideo = await resolveFirstYouTubeVideo(`${matchedCreator.channelName} ${target.slug}`);
+        }
+        if (!resolvedVideo && matchedCreator.searchKeyword) {
+          resolvedVideo = await resolveFirstYouTubeVideo(matchedCreator.searchKeyword);
+        }
+        if (resolvedVideo) {
+          if (resolvedVideo.channelHandle) {
+            matchedCreator.handle = resolvedVideo.channelHandle;
+            matchedCreator.youtubeHandle = resolvedVideo.channelHandle;
+          }
+          if (resolvedVideo.channelName) {
+            matchedCreator.channelName = resolvedVideo.channelName;
+          }
+          console.log(`[${timestamp}] 🎬 [유튜브 첫 영상 직행 탐색 성공] 채널: @${matchedCreator.handle} (${matchedCreator.channelName}) / 영상: "${resolvedVideo.videoTitle}" -> ${resolvedVideo.videoUrl}`);
+        }
+
+        creatorOutreachBundle = generateCreatorCommentBundle(
+          matchedCreator,
+          target,
+          resolvedVideo?.videoTitle,
+          resolvedVideo?.videoUrl
+        );
+
+        targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
+          ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
+          : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
+        commentText = creatorOutreachBundle.ytComment;
+      } else if (selectedPlatform === 'instagram') {
+        const igHandle = matchedCreator.instagramHandle || matchedCreator.handle;
+        creatorOutreachBundle = generateCreatorCommentBundle(
+          { ...matchedCreator, handle: igHandle },
+          target
+        );
+        targetUrl = `https://www.instagram.com/${encodeURIComponent(igHandle)}/`;
+        commentText = creatorOutreachBundle.instaComment;
+        console.log(`[${timestamp}] 📸 [인스타그램 타깃 매칭 성공] 계정: @${igHandle} (${matchedCreator.channelName}) -> ${targetUrl}`);
+      } else {
+        // tiktok (404 원천 차단: 검증된 핸들 또는 실제 검색어 직행)
+        const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
+        if (matchedCreator.tiktokHandle) {
+          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle)}`;
+        } else {
+          const query = `${matchedCreator.channelName} ${shortProductName}`.trim();
+          targetUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+        }
+        creatorOutreachBundle = generateCreatorCommentBundle(
+          matchedCreator,
+          target
+        );
+        commentText = creatorOutreachBundle.tiktokComment;
+        console.log(`[${timestamp}] 🎵 [틱톡 타깃 매칭 성공] ${matchedCreator.channelName} -> ${targetUrl}`);
+      }
+
+      // 4-2. 공식 API 백그라운드 직접 전송 시도
+      try {
+        const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(matchedCreator.handle, creatorOutreachBundle.ytComment) : null;
+        const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(matchedCreator.handle, creatorOutreachBundle.instaComment) : null;
+        const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(matchedCreator.handle, creatorOutreachBundle.tiktokComment) : null;
+
+        apiPublishStatus = {
+          youtube: ytResult,
+          instagram: igResult,
+          tiktok: ttResult,
+        };
+      } catch (e) {
+        console.warn('API direct publish check error:', e);
+      }
+      
+      // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화
+      try {
+        browserTaskResult = await dispatchBrowserOutreach({
+          platform: selectedPlatform,
+          creatorHandle: matchedCreator.handle,
+          creatorName: matchedCreator.channelName,
+          targetUrl,
+          commentText,
+          productName: creatorOutreachBundle.productDisplayName || target.name,
+        });
+      } catch (e) {
+        console.warn('Browser outreach dispatch error:', e);
+      }
+
+      // outreach-queue.json 에도 추가/갱신
+      try {
+        let currentOutreach: any = { targets: [] };
+        if (fs.existsSync(OUTREACH_FILE)) {
+          currentOutreach = JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8'));
+        }
+        currentOutreach.generatedAt = timestamp;
+        currentOutreach.latestAutoMatch = {
+          ...creatorOutreachBundle,
+          selectedPlatform,
+          targetUrl,
+          apiPublishStatus,
+          browserTaskResult,
+        };
+        if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
+        currentOutreach.targets = [
+          {
+            ...creatorOutreachBundle,
+            selectedPlatform,
+            targetUrl,
+            apiPublishStatus,
+            browserTaskResult,
+          },
+          ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== matchedCreator.handle),
+        ].slice(0, 20);
+
+        fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
+      } catch (e) {
+        console.warn('Failed to update outreach queue:', e);
+      }
     }
   }
 
