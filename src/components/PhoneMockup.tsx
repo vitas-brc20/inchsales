@@ -26,7 +26,8 @@ export default function PhoneMockup({
 }: PhoneMockupProps) {
   const displayTitle = productName || '두바이 쫀득 쿠키 (두쫀쿠)';
   const displayCategory = category || inferCategory(displayTitle);
-  const displayCreator = creatorId ? `@${creatorId}` : '@tiktok_sweet';
+  const cleanCreator = creatorId ? creatorId.replace(/^@+/, '') : '';
+  const displayCreator = cleanCreator ? `@${cleanCreator}` : '@tiktok_sweet';
   const displayTagline = tagline || '틱톡 150만뷰 화제의 그 두바이 쿠키! 품절 전 바로가기';
   const displayPrice = priceHint || '16,900원';
   const channelBadge = channel === 'insta' ? '📸 인스타' : channel === 'tiktok' ? '🎵 틱톡' : channel === 'youtube' ? '🎬 유튜브' : channel === 'threads' ? '🧵 스레드' : channel === 'blog' ? '📝 블로그' : '';

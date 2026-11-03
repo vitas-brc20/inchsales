@@ -846,11 +846,12 @@ export function getLinkBySlug(slug: string, refCreator?: string, channelInput?: 
     });
   }
 
-  const creatorId = refCreator || 'official';
+  const rawCreator = refCreator || 'official';
+  const creatorId = rawCreator === 'official' ? 'official' : normalizeCreatorHandle(rawCreator);
   const channel = normalizeChannel(channelInput);
   const statKey = `${creatorId}:${product.slug}`;
   const stats = readStats();
-  const stat = stats[statKey];
+  const stat = stats[statKey] || (rawCreator !== creatorId ? stats[`${rawCreator}:${product.slug}`] : undefined);
 
   const subId = channel && channel !== 'general'
     ? `inch_${creatorId}_${channel}_${product.slug}`

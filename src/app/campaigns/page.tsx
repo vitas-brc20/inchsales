@@ -446,7 +446,7 @@ export default function CampaignsPage() {
                       <span className="text-xs font-black text-purple-950 flex items-center gap-1.5">
                         <span>🎯 30분 사이클 타겟 크리에이터 매칭:</span>
                         <span className="text-indigo-600 bg-white px-2 py-0.5 rounded-md border border-purple-200 font-bold">
-                          @{camp.targetedCreatorOutreach.creatorHandle} ({camp.targetedCreatorOutreach.creatorName})
+                          @{camp.targetedCreatorOutreach.creatorHandle.replace(/^@+/, '')} ({camp.targetedCreatorOutreach.creatorName})
                         </span>
                         <span className="text-[10px] text-purple-700 font-semibold bg-purple-100/70 px-1.5 py-0.5 rounded">
                           {camp.targetedCreatorOutreach.creatorCategory} 카테고리 엄격 매칭
@@ -475,7 +475,8 @@ export default function CampaignsPage() {
                               type="button"
                               onClick={() => {
                                 handleCopy(camp.targetedCreatorOutreach?.ytComment || '', `yt_out_${camp.campaignId}`);
-                                const ytUrl = camp.targetedCreatorOutreach?.targetVideoUrl || (camp.targetedCreatorOutreach?.creatorHandle ? `https://www.youtube.com/@${encodeURIComponent(camp.targetedCreatorOutreach.creatorHandle)}/videos` : 'https://www.youtube.com');
+                                const rawH = camp.targetedCreatorOutreach?.creatorHandle ? camp.targetedCreatorOutreach.creatorHandle.replace(/^@+/, '') : '';
+                                const ytUrl = camp.targetedCreatorOutreach?.targetVideoUrl || (rawH ? `https://www.youtube.com/@${encodeURIComponent(rawH)}/videos` : 'https://www.youtube.com');
                                 window.open(ytUrl, '_blank');
                               }}
                               className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-900 text-white hover:bg-slate-800 transition-colors flex items-center gap-0.5"
@@ -510,7 +511,8 @@ export default function CampaignsPage() {
                               type="button"
                               onClick={() => {
                                 handleCopy(camp.targetedCreatorOutreach?.instaComment || '', `insta_out_${camp.campaignId}`);
-                                window.open(`https://www.instagram.com/${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}/`, '_blank');
+                                const cleanH = (camp.targetedCreatorOutreach?.creatorHandle || '').replace(/^@+/, '');
+                                window.open(`https://www.instagram.com/${encodeURIComponent(cleanH)}/`, '_blank');
                               }}
                               className="text-[10px] font-bold px-2 py-0.5 rounded bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 transition-opacity flex items-center gap-0.5"
                               title="댓글 복사 + 인스타그램 새 탭 열기"
@@ -544,7 +546,8 @@ export default function CampaignsPage() {
                               type="button"
                               onClick={() => {
                                 handleCopy(camp.targetedCreatorOutreach?.tiktokComment || '', `tt_out_${camp.campaignId}`);
-                                window.open(`https://www.tiktok.com/@${encodeURIComponent(camp.targetedCreatorOutreach?.creatorHandle || '')}`, '_blank');
+                                const cleanH = (camp.targetedCreatorOutreach?.creatorHandle || '').replace(/^@+/, '');
+                                window.open(`https://www.tiktok.com/@${encodeURIComponent(cleanH)}`, '_blank');
                               }}
                               className="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-800 text-white hover:bg-black transition-colors flex items-center gap-0.5"
                               title="댓글 복사 + 틱톡 새 탭 열기"
@@ -555,7 +558,7 @@ export default function CampaignsPage() {
                           </div>
                         </div>
                         <p className="text-[10.5px] text-slate-600 font-sans line-clamp-2 select-all">
-                          {camp.targetedCreatorOutreach.tiktokComment || `@${camp.targetedCreatorOutreach.creatorHandle} 틱톡 영상 보고 구매처 문의 많길래 전용 정산 링크 준비했어요!`}
+                          {camp.targetedCreatorOutreach.tiktokComment || `@${(camp.targetedCreatorOutreach.creatorHandle || '').replace(/^@+/, '')} 틱톡 영상 보고 구매처 문의 많길래 전용 정산 링크 준비했어요!`}
                         </p>
                       </div>
                     </div>

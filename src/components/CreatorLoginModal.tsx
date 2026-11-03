@@ -288,9 +288,11 @@ export default function CreatorLoginModal({ isOpen, onClose, initialHandle }: Cr
     setErrorMsg('');
   };
 
+  const pureBound = cleanHandle(boundHandle);
+
   const handleCopyLink = (slug: string) => {
-    if (!boundHandle) return;
-    const url = `https://inch.sale/p/${encodeURIComponent(slug)}?ref=@${encodeURIComponent(boundHandle)}&ch=${platform}`;
+    if (!pureBound) return;
+    const url = `https://inch.sale/p/${encodeURIComponent(slug)}?ref=@${encodeURIComponent(pureBound)}&ch=${platform}`;
     navigator.clipboard.writeText(url);
     setCopiedSlug(slug);
     setTimeout(() => setCopiedSlug(null), 2000);
@@ -352,8 +354,8 @@ export default function CreatorLoginModal({ isOpen, onClose, initialHandle }: Cr
 
   if (!isOpen) return null;
 
-  const displayHandle = boundHandle ? `@${boundHandle}` : '';
-  const avatarLetter = (boundHandle ? boundHandle.charAt(0) : 'C').toUpperCase();
+  const displayHandle = pureBound ? `@${pureBound}` : '';
+  const avatarLetter = (pureBound ? pureBound.charAt(0) : 'C').toUpperCase();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
@@ -735,7 +737,7 @@ export default function CreatorLoginModal({ isOpen, onClose, initialHandle }: Cr
                             {copiedSlug === link.slug ? '복사됨!' : '링크 복사'}
                           </button>
                           <a
-                            href={`/p/${encodeURIComponent(link.slug)}?ref=@${encodeURIComponent(boundHandle)}&ch=${platform}`}
+                            href={`/p/${encodeURIComponent(link.slug)}?ref=@${encodeURIComponent(pureBound)}&ch=${platform}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"

@@ -42,7 +42,8 @@ export async function generateMetadata(
     };
   }
 
-  const creatorPrefix = creatorId && creatorId !== 'official' ? `@${creatorId} 님의 추천 - ` : '';
+  const cleanCreator = (creatorId || '').replace(/^@+/, '');
+  const creatorPrefix = cleanCreator && cleanCreator !== 'official' ? `@${cleanCreator} 님의 추천 - ` : '';
 
   return {
     title: `${creatorPrefix}${link.productName} 최저가 바로가기 | inchsales`,

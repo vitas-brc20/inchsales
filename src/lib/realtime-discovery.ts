@@ -278,7 +278,7 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
         const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
         return {
           ...p,
-          creatorHandle: cleanHandle ? `@${cleanHandle}` : '@instagram_creator',
+          creatorHandle: cleanHandle || 'instagram_creator',
           platform: 'instagram' as const,
         };
       })
@@ -370,7 +370,7 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
         const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
         return {
           ...p,
-          creatorHandle: cleanHandle ? `@${cleanHandle}` : '@tiktok_creator',
+          creatorHandle: cleanHandle || 'tiktok_creator',
           platform: 'tiktok' as const,
         };
       })

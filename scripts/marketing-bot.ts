@@ -1311,12 +1311,13 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
           resolvedVideo?.videoUrl
         );
 
-        targetUrl = resolvedVideo?.videoUrl || (matchedCreator.youtubeHandle
-          ? `https://www.youtube.com/@${encodeURIComponent(matchedCreator.youtubeHandle)}/videos`
-          : `https://www.youtube.com/@${encodeURIComponent(matchedCreator.handle)}/videos`);
+        const rawYt = matchedCreator.youtubeHandle || matchedCreator.handle;
+        const cleanYt = rawYt.replace(/^@+/, '').trim();
+        targetUrl = resolvedVideo?.videoUrl || `https://www.youtube.com/@${encodeURIComponent(cleanYt)}/videos`;
         commentText = creatorOutreachBundle.ytComment;
       } else if (selectedPlatform === 'instagram') {
-        const igHandle = matchedCreator.instagramHandle || matchedCreator.handle;
+        const rawIg = matchedCreator.instagramHandle || matchedCreator.handle;
+        const igHandle = rawIg.replace(/^@+/, '').trim();
         creatorOutreachBundle = generateCreatorCommentBundle(
           { ...matchedCreator, handle: igHandle },
           target
@@ -1474,15 +1475,17 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
   fs.writeFileSync(campaignFile, JSON.stringify(campaignData, null, 2), 'utf8');
 
   // 5. 마케팅 활동 로그 기록
+  const cleanLogHandle = creatorOutreachBundle ? creatorOutreachBundle.creatorHandle.replace(/^@+/, '') : '';
   const creatorLog = creatorOutreachBundle
-    ? ` | 🎯크리에이터 댓글홍보: ${creatorOutreachBundle.creatorHandle.startsWith('@') ? '' : '@'}${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${selectedPlatform})`
+    ? ` | 🎯크리에이터 댓글홍보: @${cleanLogHandle} (${creatorOutreachBundle.creatorName} - ${selectedPlatform})`
     : '';
   const logMessage = `[${timestamp}] [정기 사이클 · ${selectedPlatform.toUpperCase()}] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl}${creatorLog} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
   fs.appendFileSync(LOG_FILE, logMessage, 'utf8');
 
   console.log(`[${timestamp}] ✅ 마케팅 캠페인 번들 생성 완료: ${target.name} (${landingUrl})`);
   if (creatorOutreachBundle) {
-    const displayTag = creatorOutreachBundle.creatorHandle.startsWith('@') ? creatorOutreachBundle.creatorHandle : `@${creatorOutreachBundle.creatorHandle}`;
+    const cleanTag = creatorOutreachBundle.creatorHandle.replace(/^@+/, '');
+    const displayTag = `@${cleanTag}`;
     console.log(`[${timestamp}] 🎯 [${selectedPlatform.toUpperCase()} 크리에이터 매칭] ${displayTag} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
     if (selectedPlatform === 'youtube') {
       console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment}"`);

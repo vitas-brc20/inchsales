@@ -24,7 +24,8 @@ export async function generateMetadata(
     };
   }
 
-  const creatorText = creatorId ? `@${creatorId} 님의 ` : '';
+  const cleanCreator = (creatorId || '').replace(/^@+/, '');
+  const creatorText = cleanCreator ? `@${cleanCreator} 님의 ` : '';
   return {
     title: `${creatorText}${link.productName} 실시간 정산 대시보드 | inchsales`,
     description: `크리에이터님의 실시간 클릭 및 예상 정산 내역`,
