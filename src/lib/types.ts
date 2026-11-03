@@ -39,6 +39,19 @@ export interface WithdrawalRequest {
   status: 'PENDING' | 'COMPLETED' | 'REJECTED';
   createdAt: string;
   processedAt?: string;
+  ownerUserId?: string;
+  ownerEmail?: string;
+}
+
+export interface CreatorAccount {
+  creatorId: string; // clean handle without @ (e.g. 'dhdhej48')
+  platform: 'youtube' | 'tiktok' | 'instagram';
+  ownerUserId: string; // OAuth user ID
+  ownerEmail?: string; // OAuth user email
+  ownerName?: string; // OAuth user display name
+  provider: 'kakao' | 'google' | 'custom';
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ProductLink {

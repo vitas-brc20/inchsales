@@ -1463,14 +1463,15 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
 
   // 5. 마케팅 활동 로그 기록
   const creatorLog = creatorOutreachBundle
-    ? ` | 🎯크리에이터 댓글홍보: @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${selectedPlatform})`
+    ? ` | 🎯크리에이터 댓글홍보: ${creatorOutreachBundle.creatorHandle.startsWith('@') ? '' : '@'}${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName} - ${selectedPlatform})`
     : '';
   const logMessage = `[${timestamp}] [정기 사이클 · ${selectedPlatform.toUpperCase()}] ${newlyAddedProduct ? '★신규등록★ ' : ''}타깃: ${target.name} | 랜딩URL: ${landingUrl}${creatorLog} | 누적클릭: ${totalClicks}회 | 상품수: ${Object.keys(currentProducts).length}개\n`;
   fs.appendFileSync(LOG_FILE, logMessage, 'utf8');
 
   console.log(`[${timestamp}] ✅ 마케팅 캠페인 번들 생성 완료: ${target.name} (${landingUrl})`);
   if (creatorOutreachBundle) {
-    console.log(`[${timestamp}] 🎯 [${selectedPlatform.toUpperCase()} 크리에이터 매칭] @${creatorOutreachBundle.creatorHandle} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
+    const displayTag = creatorOutreachBundle.creatorHandle.startsWith('@') ? creatorOutreachBundle.creatorHandle : `@${creatorOutreachBundle.creatorHandle}`;
+    console.log(`[${timestamp}] 🎯 [${selectedPlatform.toUpperCase()} 크리에이터 매칭] ${displayTag} (${creatorOutreachBundle.creatorName}) -> ${target.name}`);
     if (selectedPlatform === 'youtube') {
       console.log(`[${timestamp}] 💬 [유튜브 댓글] "${creatorOutreachBundle.ytComment}"`);
     } else if (selectedPlatform === 'instagram') {

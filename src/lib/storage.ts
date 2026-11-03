@@ -1,13 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 import { supabase } from './supabase';
-import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest } from './types';
+import { ProductItem, CreatorStat, ProductLink, CreateLinkPayload, WithdrawalRequest, CreatorAccount } from './types';
 import { inferCategory } from './categories';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const STATS_FILE = path.join(DATA_DIR, 'creator_stats.json');
 const WITHDRAWALS_FILE = path.join(DATA_DIR, 'withdrawals.json');
+const CREATOR_ACCOUNTS_FILE = path.join(DATA_DIR, 'creator-accounts.json');
 
 // 기본 공유 상품 카탈로그 (인플루언서들이 공통으로 가져다 쓸 수 있는 상품들)
 const INITIAL_PRODUCTS: Record<string, ProductItem> = {
@@ -587,10 +588,28 @@ export function upsertProduct(payload: {
 
 export function normalizeCreatorHandle(handle?: string | null): string {
   if (!handle) return 'anonymous';
-  const trimmed = handle.trim();
-  // 골뱅이(@)를 제거한 순수 핸들 (한글, 영문, 숫자, 하이픈, 언더바 허용)
-  const clean = trimmed.replace(/^@+/, '').replace(/[^a-zA-Z0-9_\-\uAC00-\uD7A3]/g, '');
+  let decoded = handle.trim();
+  for (let i = 0; i < 3; i++) {
+    if (decoded.includes('%')) {
+      try {
+        const next = decodeURIComponent(decoded);
+        if (next === decoded) break;
+        decoded = next;
+      } catch {
+        break;
+      }
+    } else {
+      break;
+    }
+  }
+  // 선행 골뱅이(@)를 모두 제거하고 허용 문자(한글, 영문, 숫자, 하이픈, 언더바)만 유지
+  const clean = decoded.replace(/^@+/, '').replace(/[^a-zA-Z0-9_\-\uAC00-\uD7A3]/g, '');
   return clean || 'anonymous';
+}
+
+export function formatDisplayHandle(handle?: string | null): string {
+  const norm = normalizeCreatorHandle(handle);
+  return norm && norm !== 'anonymous' ? `@${norm}` : '';
 }
 
 export function normalizeChannel(raw?: string): string {
@@ -972,4 +991,135 @@ export function getCreatorOverview(handle: string): CreatorOverview {
     withdrawnAmount,
     links,
   };
+}
+
+// ==========================================
+// 크리에이터 계정 소유권 및 OAuth 바인딩 보안 시스템
+// ==========================================
+
+export function readCreatorAccounts(): Record<string, CreatorAccount> {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    if (!fs.existsSync(CREATOR_ACCOUNTS_FILE)) {
+      fs.writeFileSync(CREATOR_ACCOUNTS_FILE, JSON.stringify({}, null, 2), 'utf-8');
+      return {};
+    }
+    const raw = fs.readFileSync(CREATOR_ACCOUNTS_FILE, 'utf-8');
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+export function writeCreatorAccounts(accounts: Record<string, CreatorAccount>): void {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(CREATOR_ACCOUNTS_FILE, JSON.stringify(accounts, null, 2), 'utf-8');
+  } catch (e) {
+    console.error('Failed to write creator accounts file:', e);
+  }
+}
+
+export function getCreatorAccount(creatorId: string): CreatorAccount | null {
+  const norm = normalizeCreatorHandle(creatorId);
+  const accounts = readCreatorAccounts();
+  return accounts[norm] || null;
+}
+
+export function getCreatorAccountsByOwner(ownerUserId: string): CreatorAccount[] {
+  if (!ownerUserId) return [];
+  const accounts = readCreatorAccounts();
+  return Object.values(accounts).filter((acc) => acc.ownerUserId === ownerUserId);
+}
+
+/**
+ * 크리에이터 채널 소유권 바인딩 (OAuth 인증 사용자 전용)
+ * 이미 다른 인증자에게 등록된 채널이면 거부하여 도용 및 정산 탈취 방지
+ */
+export function bindCreatorAccount(payload: {
+  creatorId: string;
+  platform: 'youtube' | 'tiktok' | 'instagram';
+  ownerUserId: string;
+  ownerEmail?: string;
+  ownerName?: string;
+  provider: 'kakao' | 'google' | 'custom';
+}): { success: boolean; error?: string; account?: CreatorAccount } {
+  const norm = normalizeCreatorHandle(payload.creatorId);
+  if (!norm || norm === 'anonymous') {
+    return { success: false, error: '유효하지 않은 채널 아이디입니다.' };
+  }
+  if (!payload.ownerUserId) {
+    return { success: false, error: 'OAuth 로그인이 필요합니다.' };
+  }
+
+  const accounts = readCreatorAccounts();
+  const existing = accounts[norm];
+
+  if (existing) {
+    // 기존에 다른 사람의 계정으로 묶여있는 경우
+    if (existing.ownerUserId !== payload.ownerUserId) {
+      return {
+        success: false,
+        error: `이 채널(@${norm})은 이미 다른 인증 계정(${existing.provider.toUpperCase()} 소셜 로그인)에 안전하게 연결되어 있습니다. 본인 인증 계정으로 로그인해주세요.`,
+      };
+    }
+    // 동일인이면 업데이트
+    existing.platform = payload.platform;
+    existing.ownerEmail = payload.ownerEmail || existing.ownerEmail;
+    existing.ownerName = payload.ownerName || existing.ownerName;
+    existing.updatedAt = new Date().toISOString();
+    writeCreatorAccounts(accounts);
+    return { success: true, account: existing };
+  }
+
+  // 신규 등록 및 소유권 잠금(Lock)
+  const newAccount: CreatorAccount = {
+    creatorId: norm,
+    platform: payload.platform,
+    ownerUserId: payload.ownerUserId,
+    ownerEmail: payload.ownerEmail,
+    ownerName: payload.ownerName,
+    provider: payload.provider,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  accounts[norm] = newAccount;
+  writeCreatorAccounts(accounts);
+  return { success: true, account: newAccount };
+}
+
+/**
+ * 채널 소유권 검증 (정산 및 출금 시 필수 체크)
+ */
+export function verifyCreatorOwnership(
+  creatorId: string,
+  ownerUserId?: string
+): { allowed: boolean; reason?: string; account?: CreatorAccount | null } {
+  const norm = normalizeCreatorHandle(creatorId);
+  const account = getCreatorAccount(norm);
+
+  // 아직 소유권이 등록되지 않은 신규 채널의 경우
+  if (!account) {
+    return { allowed: true, account: null };
+  }
+
+  // 이미 소유자가 등록된 채널인 경우
+  if (!ownerUserId) {
+    return {
+      allowed: false,
+      reason: `이 채널(@${norm})은 보안 등록된 소유자(${account.provider.toUpperCase()} 인증) 전용입니다. OAuth 소셜 로그인 후 이용해주세요.`,
+      account,
+    };
+  }
+
+  if (account.ownerUserId !== ownerUserId) {
+    return {
+      allowed: false,
+      reason: '채널 소유자 계정과 일치하지 않습니다. 도용 방지를 위해 본인 인증된 계정으로 로그인해주세요.',
+      account,
+    };
+  }
+
+  return { allowed: true, account };
 }

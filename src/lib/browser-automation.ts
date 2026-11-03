@@ -46,21 +46,23 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     await copyToMacClipboard(task.commentText);
 
     // 2-1. [AppleScript 100% 무인 자동화 시도]
+    const tag = task.creatorHandle.startsWith('@') ? task.creatorHandle : `@${task.creatorHandle}`;
+    const cleanTag = tag.replace(/["'\\]/g, ' ');
+    const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
+
     // 1) 유튜브: 첫 영상 직접 작성 & 제출
     if (task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
       const asRes = await postYouTubeCommentViaAppleScript(task.targetUrl, task.commentText);
       if (asRes.success) {
-        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
-        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "첫 영상에 댓글 자동 등록 완료!" with title "✅ [100% 무인 전송] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "첫 영상에 댓글 자동 등록 완료!" with title "✅ [100% 무인 전송] ${cleanTag}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[100% 완전 자동 전송 완료] @${task.creatorHandle} 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!`,
+          details: `[100% 완전 자동 전송 완료] ${tag} 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료!`,
         };
       } else {
         console.warn('AppleScript auto-submit notice:', asRes.message);
@@ -71,17 +73,15 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     if (task.platform === 'instagram') {
       const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText);
       if (igRes.success) {
-        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
-        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "📸 [인스타 팔로우+댓글 완료] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "📸 [인스타 팔로우+댓글 완료] ${cleanTag}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[인스타그램 팔로우+댓글 무인 전송 완료] @${task.creatorHandle} 팔로우 완료 및 게시물 댓글 등록: ${igRes.postUrl || task.targetUrl}`,
+          details: `[인스타그램 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 게시물 댓글 등록: ${igRes.postUrl || task.targetUrl}`,
         };
       }
     }
@@ -91,17 +91,15 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
       const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText);
       console.log('TikTok post result message:', ttRes.message);
       if (ttRes.success) {
-        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
-        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "🎵 [틱톡 팔로우+댓글 완료] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "🎵 [틱톡 팔로우+댓글 완료] ${cleanTag}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[틱톡 팔로우+댓글 무인 전송 완료] @${task.creatorHandle} 팔로우 완료 및 영상 댓글 등록: ${ttRes.videoUrl || task.targetUrl}`,
+          details: `[틱톡 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 영상 댓글 등록: ${ttRes.videoUrl || task.targetUrl}`,
         };
       }
     }
@@ -111,17 +109,15 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     if (cdpReady && task.platform === 'youtube' && task.targetUrl.includes('watch?v=')) {
       const cdpRes = await postYouTubeCommentViaCDP(task.targetUrl, task.commentText);
       if (cdpRes.success) {
-        const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
-        const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "댓글 자동 등록 완료!" with title "✅ [CDP 무인 완료] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "댓글 자동 등록 완료!" with title "✅ [CDP 무인 완료] ${cleanTag}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'CDP_FULL_AUTO',
-          details: `[CDP 100% 무인 전송] @${task.creatorHandle} 첫 영상에 댓글 입력 및 등록 버튼 클릭까지 무인 완료!`,
+          details: `[CDP 100% 무인 전송] ${tag} 첫 영상에 댓글 입력 및 등록 버튼 클릭까지 무인 완료!`,
         };
       }
     }
@@ -130,7 +126,7 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
       return {
         success: true,
         method: 'SILENT_QUEUE',
-        details: `[완전 사일런트 모드] 브라우저 화면 팝업 없이 클립보드 복사 및 큐 등록 완료 (@${task.creatorHandle})`,
+        details: `[완전 사일런트 모드] 브라우저 화면 팝업 없이 클립보드 복사 및 큐 등록 완료 (${tag})`,
       };
     }
 
@@ -142,17 +138,15 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     }
 
     // 4. 저방해 맥OS 시스템 알림 배너
-    const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
-    const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
     const notifScript = `
-      display notification "백그라운드 탭 준비 완료! Cmd+V 로 등록 가능" with title "🎯 [${task.platform.toUpperCase()}] @${cleanHandle}" subtitle "${cleanProduct}"
+      display notification "백그라운드 탭 준비 완료! Cmd+V 로 등록 가능" with title "🎯 [${task.platform.toUpperCase()}] ${cleanTag}" subtitle "${cleanProduct}"
     `;
     await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
     return {
       success: true,
       method: 'BACKGROUND_CHROME',
-      details: `[백그라운드 반자동 모드] @${task.creatorHandle} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료`,
+      details: `[백그라운드 반자동 모드] ${tag} (${task.platform}) 백그라운드 탭 열기 & 클립보드 복사 완료`,
     };
   } catch (err: any) {
     try {
