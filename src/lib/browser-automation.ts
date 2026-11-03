@@ -12,6 +12,7 @@ export interface BrowserOutreachTask {
   targetUrl: string;
   commentText: string;
   productName: string;
+  expectedKeywords?: string[];
   silent?: boolean;
 }
 
@@ -71,7 +72,7 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
 
     // 2) 인스타그램: 팔로우 선행 클릭 + 프로필 목록 대신 첫 번째 실제 릴스/게시물로 즉시 직행 및 댓글 무인 게시
     if (task.platform === 'instagram') {
-      const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText);
+      const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText, task.expectedKeywords);
       if (igRes.success) {
         const notifScript = `
           display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "📸 [인스타 팔로우+댓글 완료] ${cleanTag}" subtitle "${cleanProduct}"
@@ -83,12 +84,18 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
           method: 'APPLESCRIPT_FULL_AUTO',
           details: `[인스타그램 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 게시물 댓글 등록: ${igRes.postUrl || task.targetUrl}`,
         };
+      } else {
+        return {
+          success: false,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[인스타그램 댓글 스킵] ${igRes.message}`,
+        };
       }
     }
 
     // 3) 틱톡: 팔로우 선행 클릭 + 첫 번째 실제 영상 직행 및 댓글 무인 게시
     if (task.platform === 'tiktok') {
-      const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText);
+      const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText, task.expectedKeywords);
       console.log('TikTok post result message:', ttRes.message);
       if (ttRes.success) {
         const notifScript = `
@@ -100,6 +107,12 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
           details: `[틱톡 팔로우+댓글 무인 전송 완료] ${tag} 팔로우 완료 및 영상 댓글 등록: ${ttRes.videoUrl || task.targetUrl}`,
+        };
+      } else {
+        return {
+          success: false,
+          method: 'APPLESCRIPT_FULL_AUTO',
+          details: `[틱톡 댓글 스킵] ${ttRes.message}`,
         };
       }
     }

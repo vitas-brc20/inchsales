@@ -405,12 +405,18 @@ export async function analyzeAndMatchProduct(
 
   const allProducts = getAllLinks();
 
-  // 1차: 기존 카탈로그의 슬러그 또는 제품명과 직접 매칭
+  // 1차: 기존 카탈로그의 슬러그 또는 제품명과 직접 매칭 (반드시 영상 fullText에 포함되어야 함!)
   for (const p of allProducts) {
     if (!p || !p.slug) continue;
-    const slugLower = p.slug.toLowerCase();
-    const nameLower = (p.productName || p.slug || '').toLowerCase();
-    if (fullText.includes(slugLower) || (slugLower.length >= 3 && nameLower.includes(slugLower))) {
+    const slugLower = p.slug.toLowerCase().trim();
+    const nameLower = (p.productName || p.slug || '').toLowerCase().trim();
+    
+    // 슬러그가 2글자 이상이고 영상 텍스트에 포함되어 있거나,
+    // 제품명의 핵심 키워드가 영상 텍스트에 확실하게 포함되어 있는 경우에만 일치!
+    const slugMatched = slugLower.length >= 2 && fullText.includes(slugLower);
+    const nameMatched = nameLower.length >= 3 && fullText.includes(nameLower);
+
+    if (slugMatched || nameMatched) {
       return { slug: p.slug, displayName: (p.productName || p.slug).replace(/\(.*\)/g, '').trim() };
     }
   }

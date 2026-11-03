@@ -270,6 +270,24 @@ export async function postInstagramViaAppleScript(
           var captionEl = document.querySelector('h1') || document.querySelector('ul li span');
           var caption = (captionEl ? captionEl.innerText : '').replace(/\\n/g, ' ').slice(0, 100);
 
+          // (2-1) 콘텐츠 관련성 엄격 검증: 캡션에 상품 키워드가 없으면 엉뚱한 댓글 작성 즉시 중단
+          var expected = ${JSON.stringify(expectedKeywords || [])};
+          if (expected && expected.length > 0) {
+            var lowerCap = caption.toLowerCase();
+            var matched = expected.some(function(kw) {
+              return lowerCap.includes(kw.toLowerCase());
+            });
+            if (!matched) {
+              return JSON.stringify({
+                success: false,
+                reason: 'content_mismatch',
+                followed: postFollowed,
+                caption: caption,
+                message: '게시물 내용과 상품이 불일치하여 스팸 방지를 위해 댓글을 건너뜁니다.'
+              });
+            }
+          }
+
           // (3) 댓글 textarea 탐색
           var ta = document.querySelector('textarea');
           if (!ta) {
@@ -393,7 +411,8 @@ export async function postInstagramViaAppleScript(
  */
 export async function postTikTokViaAppleScript(
   searchOrProfileUrl: string,
-  commentText: string
+  commentText: string,
+  expectedKeywords?: string[]
 ): Promise<{ success: boolean; message: string; videoUrl?: string }> {
   let tabId = '';
   try {
@@ -484,6 +503,26 @@ export async function postTikTokViaAppleScript(
         var v = document.querySelector('video');
         if (v) v.pause();
 
+        // (1-1) 비디오 설명(desc) 추출 및 콘텐츠 관련성 엄격 검증
+        var descEl = document.querySelector('[data-e2e="video-desc"]') || document.querySelector('[data-e2e="browse-video-desc"]');
+        var desc = (descEl ? descEl.innerText : '').replace(/\\n/g, ' ');
+        var expected = ${JSON.stringify(expectedKeywords || [])};
+        if (expected && expected.length > 0) {
+          var lowerDesc = desc.toLowerCase();
+          var matched = expected.some(function(kw) {
+            return lowerDesc.includes(kw.toLowerCase());
+          });
+          if (!matched) {
+            return JSON.stringify({
+              videoFollowed: false,
+              hasEditor: false,
+              aborted: true,
+              reason: 'content_mismatch',
+              desc: desc
+            });
+          }
+        }
+
         // (2) 비디오 내 feed-follow(팔로우 플러스) 버튼이 있으면 클릭
         var feedFollowBtn = document.querySelector('[data-e2e="feed-follow"][data-key-interaction="action_follow"]')
           || document.querySelector('[data-e2e="cinema-video-info-follow"]')
@@ -516,13 +555,27 @@ export async function postTikTokViaAppleScript(
         return JSON.stringify({ videoFollowed: videoFollowed, hasEditor: !!editor });
       })()
     `;
-    await runAppleScript(`
+    const drawerRaw = await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          execute javascript ${JSON.stringify(jsOpenVideoAndDrawer)}
+          return execute javascript ${JSON.stringify(jsOpenVideoAndDrawer)}
         end tell
       end tell
-    `).catch(() => {});
+    `).catch(() => '{}');
+
+    let drawerRes: any = {};
+    try {
+      drawerRes = JSON.parse(drawerRaw || '{}');
+    } catch {}
+
+    if (drawerRes.aborted) {
+      await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+      return {
+        success: false,
+        message: `콘텐츠 불일치로 댓글 작성 건너뜀: 영상 내용("${(drawerRes.desc || '').slice(0, 40)}")에 상품 관련 키워드가 없습니다.`,
+        videoUrl: navRes.url || searchOrProfileUrl,
+      };
+    }
 
     await delay(2500);
 

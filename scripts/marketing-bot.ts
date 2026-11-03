@@ -492,12 +492,8 @@ export function matchCreatorSafely(
   });
 
   if (eligible.length === 0) {
-    const fallback = VERIFIED_CREATORS.filter((creator) => {
-      if (requestedPlatform === 'instagram') return Boolean(creator.instagramHandle);
-      return creator.allowedSlugs.includes(targetSlug);
-    });
-    if (fallback.length === 0) return null;
-    return fallback[Math.floor(Math.random() * fallback.length)];
+    // 일치하는 크리에이터가 없으면 무관한 크리에이터에게 엉뚱한 댓글을 달지 않도록 무조건 null 반환
+    return null;
   }
 
   const microEligible = eligible.filter((c) => c.tier === 'micro');
@@ -1229,6 +1225,12 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
 
     // Chrome 브라우저 자동화 무인 전송
     try {
+      const keywords = [
+        matchedProduct.displayName,
+        matchedProduct.slug,
+        matchedProduct.name,
+      ].filter(Boolean);
+
       browserTaskResult = await dispatchBrowserOutreach({
         platform: selectedPlatform,
         creatorHandle: fullHandle,
@@ -1236,6 +1238,7 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
         targetUrl,
         commentText,
         productName: matchedProduct.displayName,
+        expectedKeywords: keywords,
       });
     } catch (e) {
       console.warn('Browser outreach dispatch error:', e);
@@ -1356,6 +1359,14 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
       
       // 4-3. 사용자의 실제 로그인된 Chrome 브라우저 자동화
       try {
+        const prodContext = PRODUCT_VIDEO_CONTEXTS[target.slug];
+        const keywords = [
+          target.name,
+          prodContext?.shortName,
+          target.slug,
+          ...(matchedCreator.relevanceKeywords || []),
+        ].filter(Boolean) as string[];
+
         browserTaskResult = await dispatchBrowserOutreach({
           platform: selectedPlatform,
           creatorHandle: matchedCreator.handle,
@@ -1363,6 +1374,7 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
           targetUrl,
           commentText,
           productName: creatorOutreachBundle.productDisplayName || target.name,
+          expectedKeywords: keywords,
         });
       } catch (e) {
         console.warn('Browser outreach dispatch error:', e);
