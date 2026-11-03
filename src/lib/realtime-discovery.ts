@@ -118,29 +118,34 @@ export async function fetchRealtimeYouTubeVideos(query?: string): Promise<Realti
 }
 
 /**
- * 2. Instagram 실시간 인기 탐색 태그 스크랩 (Chrome AppleScript)
+ * 2. Instagram 실시간 인기 탐색 태그 스크랩 (Chrome 백그라운드 탭 & 무간섭)
  */
 export async function fetchRealtimeInstagramPosts(tag?: string): Promise<RealtimeVideoTarget[]> {
   const selectedTag = tag || INSTAGRAM_TAGS[Math.floor(Math.random() * INSTAGRAM_TAGS.length)];
   const tagUrl = `https://www.instagram.com/explore/tags/${encodeURIComponent(selectedTag)}/`;
+  let tabId = '';
 
   try {
-    const script = `
+    const createScript = `
       tell application "Google Chrome"
-        activate
         if (count of windows) is 0 then
           make new window
         end if
         tell window 1
           set newTab to make new tab with properties {URL:"${tagUrl}"}
-          set active tab index to (count of tabs)
+          return id of newTab
         end tell
       end tell
+    `;
 
-      delay 3.5
+    tabId = (await runAppleScript(createScript)).trim();
+    if (!tabId) return [];
 
+    await delay(3500);
+
+    const parseScript = `
       tell application "Google Chrome"
-        tell active tab of window 1
+        tell tab id ${tabId} of window 1
           return execute javascript "(function() {
             var anchors = Array.from(document.querySelectorAll('a[href*=\\"/p/\\"], a[href*=\\"/reel/\\"]'));
             var results = [];
@@ -149,7 +154,6 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
               var alt = img ? img.alt : '';
               if (!alt || alt.length < 15) continue;
               
-              // alt 안에 들어있는 @계정명 추출
               var handleMatch = alt.match(/@([a-zA-Z0-9._-]+)/);
               var handle = handleMatch ? ('@' + handleMatch[1]) : '@instagram_creator';
               
@@ -168,7 +172,11 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
       end tell
     `;
 
-    const raw = await runAppleScript(script);
+    const raw = await runAppleScript(parseScript);
+    
+    // 탭 클린업
+    await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return parsed.map((p: any) => ({
@@ -176,32 +184,40 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
       platform: 'instagram',
     }));
   } catch (err) {
+    if (tabId) {
+      await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+    }
     console.warn('Realtime Instagram scrape warning:', err);
     return [];
   }
 }
 
 /**
- * 3. TikTok 실시간 추천 피드/탐색 스크랩 (Chrome AppleScript)
+ * 3. TikTok 실시간 추천 피드/탐색 스크랩 (Chrome 백그라운드 탭 & 무간섭)
  */
 export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]> {
+  let tabId = '';
   try {
-    const script = `
+    const createScript = `
       tell application "Google Chrome"
-        activate
         if (count of windows) is 0 then
           make new window
         end if
         tell window 1
           set newTab to make new tab with properties {URL:"https://www.tiktok.com/foryou"}
-          set active tab index to (count of tabs)
+          return id of newTab
         end tell
       end tell
+    `;
 
-      delay 3.5
+    tabId = (await runAppleScript(createScript)).trim();
+    if (!tabId) return [];
 
+    await delay(3500);
+
+    const parseScript = `
       tell application "Google Chrome"
-        tell active tab of window 1
+        tell tab id ${tabId} of window 1
           return execute javascript "(function() {
             var authorAnchor = Array.from(document.querySelectorAll('a'))
               .find(a => a.href.includes('/@') && !a.href.includes('/@inchsale'));
@@ -221,7 +237,11 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
       end tell
     `;
 
-    const raw = await runAppleScript(script);
+    const raw = await runAppleScript(parseScript);
+
+    // 탭 클린업
+    await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!parsed.creatorHandle || parsed.creatorHandle === '@') return [];
@@ -230,6 +250,9 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
       ...parsed,
     }];
   } catch (err) {
+    if (tabId) {
+      await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
+    }
     console.warn('Realtime TikTok scrape warning:', err);
     return [];
   }
