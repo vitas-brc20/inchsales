@@ -114,6 +114,17 @@ export default function DashboardView({ link }: DashboardViewProps) {
     }
   };
 
+  // 크리에이터명 디코드 정규화
+  const cleanCreatorId = (() => {
+    let id = (link.creatorId || '').trim();
+    for (let i = 0; i < 3; i++) {
+      if (id.includes('%')) {
+        try { id = decodeURIComponent(id); } catch { break; }
+      } else { break; }
+    }
+    return id.replace(/^@+/, '') || 'official';
+  })();
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] py-10 px-4 font-sans">
       <div className="max-w-4xl mx-auto">
@@ -133,13 +144,43 @@ export default function DashboardView({ link }: DashboardViewProps) {
           </div>
         </div>
 
+        {/* Google Ads Compliance Warning Banner */}
+        <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <span className="text-xl">⚠️</span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200">
+                  활동 필독 가이드
+                </span>
+                <span className="text-xs font-extrabold text-amber-900">
+                  Google 검색 광고 진행 시 ‘쿠팡’, ‘coupang’ 제외 키워드 등록 필수
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-800 mt-1 leading-relaxed">
+                쿠팡 파트너스 정책상 <strong>‘쿠팡’ 브랜드 키워드 검색 광고는 엄격히 금지</strong>됩니다. 구글 확장 검색 자동 매칭으로 상표권 침해가 발생하지 않도록
+                제외 키워드(Negative Keywords)에 <code className="bg-amber-200/60 px-1 py-0.5 rounded font-mono font-bold text-rose-800">쿠팡, coupang, 로켓배송, 로켓와우</code>를 필히 등록하여 활동해 주시기 바랍니다.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText('쿠팡\ncoupang\nCoupang\n로켓배송\n로켓와우\n쿠팡플레이\n쿠팡이츠');
+              alert('제외 키워드(Negative Keywords)가 클립보드에 복사되었습니다.');
+            }}
+            className="shrink-0 px-3 py-1.5 rounded-xl bg-amber-200/80 hover:bg-amber-300 text-amber-950 text-xs font-bold transition-colors cursor-pointer border border-amber-300 flex items-center gap-1"
+          >
+            📋 제외 키워드 복사
+          </button>
+        </div>
+
         {/* Header Title Banner */}
         <div className="bg-white rounded-3xl border border-slate-200/90 p-6 sm:p-8 shadow-xs mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
                 <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-100">
-                  @{link.creatorId}
+                  @{cleanCreatorId}
                 </span>
                 <span className="text-xs text-slate-400">전용 파트너스 대시보드</span>
               </div>

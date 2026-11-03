@@ -303,6 +303,36 @@ export default function CampaignsPage() {
           </div>
         </div>
 
+        {/* Google Ads Compliance Warning Banner */}
+        <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-amber-950 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <span className="text-xl">⚠️</span>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-rose-700 bg-rose-100 px-2 py-0.5 rounded-full border border-rose-200">
+                  필독 · 활동 가이드
+                </span>
+                <span className="text-xs font-extrabold text-amber-900">
+                  Google 검색 광고 시 ‘쿠팡’, ‘coupang’ 제외 키워드(Negative Keyword) 등록 필수
+                </span>
+              </div>
+              <p className="text-[11px] text-amber-800 mt-1 leading-relaxed">
+                쿠팡 파트너스에서는 <strong>‘쿠팡’ 및 관련 브랜드 키워드 검색 광고를 엄격히 금지</strong>합니다. 구글 확장 검색 자동 매칭으로 상표권 침해가 발생하지 않도록 
+                반드시 구글 애즈 계정의 제외 키워드에 <code className="bg-amber-200/60 px-1 py-0.5 rounded font-mono font-bold text-rose-800">쿠팡, coupang, 로켓배송, 로켓와우</code>를 등록하세요. (미준수 시 서비스 해지 및 수익금 몰수 조치)
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText('쿠팡\ncoupang\nCoupang\n로켓배송\n로켓와우\n쿠팡플레이\n쿠팡이츠');
+              alert('제외 키워드(Negative Keywords) 7개가 클립보드에 복사되었습니다. Google Ads 제외 키워드 목록에 붙여넣으세요.');
+            }}
+            className="shrink-0 px-3 py-1.5 rounded-xl bg-amber-200/80 hover:bg-amber-300 text-amber-950 text-xs font-bold transition-colors cursor-pointer border border-amber-300 flex items-center gap-1.5"
+          >
+            📋 제외 키워드 일괄 복사
+          </button>
+        </div>
+
         {/* Multi-Channel Distribution Status Banner */}
         <div className="mb-8 p-5 rounded-3xl bg-white border border-slate-200/90 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">

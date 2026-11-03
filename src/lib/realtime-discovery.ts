@@ -5,6 +5,32 @@ dotenv.config();
 import { runAppleScript, delay } from './applescript-utils';
 import { getLinkBySlug, getAllLinks, createProductLink } from './storage';
 
+// 제외 크리에이터 블랙리스트 (유트루 등)
+const BLACKLIST_IDENTIFIERS = ['yootrue', 'yootrue5502', 'yootrue_beauty', '유트루'];
+
+export function isBlacklisted(str?: string): boolean {
+  if (!str) return false;
+  const lower = str.toLowerCase().replace(/[@\s_\-]/g, '');
+  return BLACKLIST_IDENTIFIERS.some((b) => lower.includes(b));
+}
+
+export function safeDecodeHandle(input: string): string {
+  if (!input) return '';
+  let str = input.trim();
+  for (let i = 0; i < 3; i++) {
+    if (str.includes('%')) {
+      try {
+        str = decodeURIComponent(str);
+      } catch {
+        break;
+      }
+    } else {
+      break;
+    }
+  }
+  return str.replace(/^@+/, '');
+}
+
 export interface RealtimeVideoTarget {
   platform: 'youtube' | 'instagram' | 'tiktok';
   videoUrl: string;
@@ -93,18 +119,14 @@ export async function fetchRealtimeYouTubeVideos(query?: string): Promise<Realti
               let handle = '';
               if (handleUrl.includes('/@')) {
                 const rawHandle = handleUrl.split('/@')[1].split('/')[0];
-                try {
-                  handle = '@' + decodeURIComponent(rawHandle);
-                } catch {
-                  handle = '@' + rawHandle;
-                }
+                handle = '@' + safeDecodeHandle(rawHandle);
               } else if (channelName) {
-                handle = `@${channelName.replace(/[\s\-_]+/g, '')}`;
+                handle = `@${safeDecodeHandle(channelName).replace(/[\s\-_]+/g, '')}`;
               }
               const published = v.publishedTimeText?.simpleText || '';
               const views = v.viewCountText?.simpleText || '';
 
-              if (videoId && title) {
+              if (videoId && title && !isBlacklisted(handle) && !isBlacklisted(channelName)) {
                 results.push({
                   platform: 'youtube',
                   videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
@@ -206,10 +228,16 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
 
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return parsed.map((p: any) => ({
-      ...p,
-      platform: 'instagram',
-    }));
+    return parsed
+      .map((p: any) => {
+        const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
+        return {
+          ...p,
+          creatorHandle: cleanHandle ? `@${cleanHandle}` : '@instagram_creator',
+          platform: 'instagram' as const,
+        };
+      })
+      .filter((p: any) => !isBlacklisted(p.creatorHandle) && !isBlacklisted(p.creatorName));
   } catch (err) {
     if (tabId) {
       await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
@@ -278,10 +306,13 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
 
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    if (!parsed.creatorHandle || parsed.creatorHandle === '@') return [];
+    const cleanHandle = safeDecodeHandle(parsed.creatorHandle || '');
+    if (!cleanHandle || cleanHandle === '@') return [];
+    if (isBlacklisted(cleanHandle) || isBlacklisted(parsed.creatorName)) return [];
     return [{
       platform: 'tiktok',
       ...parsed,
+      creatorHandle: `@${cleanHandle}`,
     }];
   } catch (err) {
     if (tabId) {
@@ -306,9 +337,9 @@ export async function analyzeAndMatchProduct(
   for (const p of allProducts) {
     if (!p || !p.slug) continue;
     const slugLower = p.slug.toLowerCase();
-    const nameLower = (p.name || '').toLowerCase();
+    const nameLower = (p.productName || p.slug || '').toLowerCase();
     if (fullText.includes(slugLower) || (slugLower.length >= 3 && nameLower.includes(slugLower))) {
-      return { slug: p.slug, displayName: (p.name || p.slug).replace(/\(.*\)/g, '').trim() };
+      return { slug: p.slug, displayName: (p.productName || p.slug).replace(/\(.*\)/g, '').trim() };
     }
   }
 
@@ -342,6 +373,7 @@ export async function analyzeAndMatchProduct(
       // 만약 storage에 없으면 즉시 등록
       if (!getLinkBySlug(info.slug)) {
         createProductLink({
+          creatorId: 'official',
           customSlug: info.slug,
           productName: info.name,
           category: '실시간핫트렌드',
@@ -366,6 +398,7 @@ export async function analyzeAndMatchProduct(
     const displayName = `${dynamicKeyword} 추천템`;
 
     createProductLink({
+      creatorId: 'official',
       customSlug: dynamicSlug,
       productName: displayName,
       category: '실시간핫트렌드',

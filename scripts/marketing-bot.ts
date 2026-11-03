@@ -44,6 +44,24 @@ export interface VerifiedCreator {
   relevanceKeywords: string[];
 }
 
+// 사용자 요청으로 영구 제외된 크리에이터 블랙리스트 (타깃팅, 실시간 스크랩, 댓글 일체 금지)
+export const EXCLUDED_CREATORS = [
+  'yootrue',
+  'yootrue5502',
+  'yootrue_beauty',
+  '유트루',
+  'yootrue_onair',
+];
+
+export function isCreatorExcluded(identifier?: string): boolean {
+  if (!identifier) return false;
+  const lower = identifier.toLowerCase().replace(/[@\s_\-]/g, '');
+  return EXCLUDED_CREATORS.some((ex) => {
+    const exLower = ex.toLowerCase().replace(/[@\s_\-]/g, '');
+    return lower.includes(exLower) || exLower.includes(lower);
+  });
+}
+
 export const VERIFIED_CREATORS: VerifiedCreator[] = [
   // 1. 먹방 / 디저트 분야 (간식, 음료, 디저트만 엄격 매핑)
   // [Mega 크리에이터]
@@ -144,18 +162,6 @@ export const VERIFIED_CREATORS: VerifiedCreator[] = [
     category: '뷰티/헤어',
     allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '미백치약'],
     relevanceKeywords: ['피부관리', '물광', '스킨케어', '모공케어', '미백'],
-  },
-  {
-    channelName: '유트루',
-    handle: 'yootrue_beauty',
-    youtubeHandle: 'yootrue_beauty',
-    instagramHandle: 'yootrue5502',
-    tier: 'mega',
-    searchKeyword: '유트루',
-    platform: 'all',
-    category: '뷰티/헤어',
-    allowedSlugs: ['물광피부로션', '미백크림', '블랙헤드제거', '물미역트리트먼트', '미역헤어에센스'],
-    relevanceKeywords: ['기초케어', '물광', '진정세럼', '보습', '트리트먼트'],
   },
   {
     channelName: 'simplysofia',
@@ -468,6 +474,9 @@ export function matchCreatorSafely(
   requestedPlatform?: 'youtube' | 'tiktok' | 'instagram'
 ): VerifiedCreator | null {
   const eligible = VERIFIED_CREATORS.filter((creator) => {
+    if (isCreatorExcluded(creator.handle) || isCreatorExcluded(creator.channelName) || isCreatorExcluded(creator.youtubeHandle) || isCreatorExcluded(creator.instagramHandle) || isCreatorExcluded(creator.tiktokHandle)) {
+      return false;
+    }
     const slugMatch = creator.allowedSlugs.includes(targetSlug);
     if (!slugMatch) return false;
     if (requestedPlatform === 'instagram') {
@@ -581,10 +590,16 @@ export function generateCreatorCommentBundle(
   specificVideoUrl?: string
 ) {
   const baseDomain = BASE_URL;
-  // 핸들에 반드시 @가 포함되도록 풀네임 포맷팅
+  // 핸들에 반드시 @가 포함되도록 풀네임 포맷팅 (이중 인코딩 원천 방지)
   const fullHandle = (handle?: string) => {
-    const h = (handle || creator.handle || '').trim();
-    return h.startsWith('@') ? h : `@${h}`;
+    let raw = (handle || creator.handle || '').trim();
+    for (let i = 0; i < 3; i++) {
+      if (raw.includes('%')) {
+        try { raw = decodeURIComponent(raw); } catch { break; }
+      } else { break; }
+    }
+    const clean = raw.replace(/^@+/, '').trim();
+    return `@${clean}`;
   };
 
   const ytRef = fullHandle(creator.youtubeHandle || creator.handle);
@@ -1153,14 +1168,35 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
 
   // 실시간 발굴 성공 시 -> 실시간 영상과 핫 크리에이터에 즉시 타깃팅!
   if (realtimeTarget && matchedProduct) {
-    console.log(`[${timestamp}] 🔥 [실시간 핫 크리에이터 발굴 성공!] 플랫폼: ${selectedPlatform.toUpperCase()} | 채널: ${realtimeTarget.creatorName} (${realtimeTarget.creatorHandle}) | 영상: "${realtimeTarget.title}"`);
-    console.log(`[${timestamp}] 🎯 [영상 내용 기반 제품 매칭] -> [${matchedProduct.displayName}] (슬러그: ${matchedProduct.slug})`);
+    let cleanH = (realtimeTarget.creatorHandle || '').trim();
+    for (let i = 0; i < 3; i++) {
+      if (cleanH.includes('%')) {
+        try { cleanH = decodeURIComponent(cleanH); } catch { break; }
+      } else { break; }
+    }
+    cleanH = cleanH.replace(/^@+/, '').trim();
 
-    const cleanH = (realtimeTarget.creatorHandle || '').replace(/^@+/, '');
+    if (isCreatorExcluded(cleanH) || isCreatorExcluded(realtimeTarget.creatorName)) {
+      console.log(`[${timestamp}] 🚫 [제외 크리에이터 감지 건너뜀] ${cleanH} (${realtimeTarget.creatorName})`);
+      realtimeTarget = null;
+    }
+  }
+
+  if (realtimeTarget && matchedProduct) {
+    let cleanH = (realtimeTarget.creatorHandle || '').trim();
+    for (let i = 0; i < 3; i++) {
+      if (cleanH.includes('%')) {
+        try { cleanH = decodeURIComponent(cleanH); } catch { break; }
+      } else { break; }
+    }
+    cleanH = cleanH.replace(/^@+/, '').trim();
     const fullHandle = `@${cleanH}`;
     const targetUrl = realtimeTarget.videoUrl;
     const prodLandingUrl = `${BASE_URL}/p/${encodeURIComponent(matchedProduct.slug)}?ref=${encodeURIComponent(fullHandle)}&ch=${selectedPlatform}`;
     const commentText = `오 영상에 나왔던 [${matchedProduct.displayName}] 최저가 찾았어요 ! ✨\n${prodLandingUrl}`;
+
+    console.log(`[${timestamp}] 🔥 [실시간 핫 크리에이터 발굴 성공!] 플랫폼: ${selectedPlatform.toUpperCase()} | 채널: ${realtimeTarget.creatorName} (${fullHandle}) | 영상: "${realtimeTarget.title}"`);
+    console.log(`[${timestamp}] 🎯 [영상 내용 기반 제품 매칭] -> [${matchedProduct.displayName}] (슬러그: ${matchedProduct.slug})`);
 
     console.log(`[${timestamp}] 💬 [실시간 댓글 전송 준비] "${commentText}"`);
 
@@ -1391,6 +1427,12 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
           apiPublishStatus,
         }
       : null,
+    complianceNotice: {
+      title: '🚨 [필독] 쿠팡 파트너스 Google 검색 광고 운영 시 주의사항',
+      negativeKeywords: ['쿠팡', 'coupang', 'Coupang', 'COUPANG', '로켓배송', '로켓와우', '쿠팡와우', '쿠팡플레이', '쿠팡이츠'],
+      rule: '‘쿠팡’, ‘coupang’을 반드시 제외 키워드로 등록 / 이외 연관 브랜드 키워드를 활용한 광고 금지',
+      description: '쿠팡 파트너스에서는 "쿠팡" 및 쿠팡 브랜드 키워드를 활용한 검색 광고를 엄격하게 금지하고 있습니다. 제외 키워드를 등록하지 않을 경우 구글 확장 검색 로직에 의해 자동 매칭되어 상표권 침해로 서비스 해지 및 수익금 몰수 조치될 수 있습니다.',
+    },
     socialPosts: {
       naverBlog: {
         title: `[솔직후기] ${target.name} 실사용 장단점 & 쿠팡 로켓배송 최저가 혜택 총정리`,

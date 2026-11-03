@@ -44,6 +44,25 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
     }
   };
 
+  // 크리에이터명 이중/삼중 URL 인코딩 및 @ 기호 정규화
+  const displayCreatorId = (() => {
+    let id = (link.creatorId || 'official').trim();
+    for (let i = 0; i < 3; i++) {
+      if (id.includes('%')) {
+        try {
+          id = decodeURIComponent(id);
+        } catch {
+          break;
+        }
+      } else {
+        break;
+      }
+    }
+    return id.replace(/^@+/, '').trim() || 'official';
+  })();
+
+  const avatarLetter = displayCreatorId.charAt(0).toUpperCase();
+
   return (
     <div className="min-h-screen bg-[#F1F5F9] flex flex-col justify-between py-6 px-4">
       {/* Container (Mobile Optimized) */}
@@ -75,12 +94,12 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 via-rose-500 to-indigo-500 flex items-center justify-center text-white text-xs font-black shadow-xs">
-                {link.creatorId.substring(0, 1).toUpperCase()}
+                {avatarLetter}
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-extrabold text-slate-900 leading-tight">
-                    @{link.creatorId}
+                    @{displayCreatorId}
                   </span>
                   {link.channel && link.channel !== 'general' && (
                     <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-0.5">
