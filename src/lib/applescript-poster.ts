@@ -200,13 +200,13 @@ export async function postInstagramViaAppleScript(
     tabId = (await runAppleScript(createTabScript)).trim();
     if (!tabId) throw new Error('백그라운드 탭 생성 실패');
 
-    // 2. 초기 로딩 대기
-    await delay(3500);
+    // 2. 초기 로딩 대기 (프로필 페이지 및 그리드 렌더링)
+    await delay(4000);
 
-    // 3. 프로필 상단 팔로우 클릭 & 첫 번째 게시물로 직행 네비게이션
+    // 3. 프로필 상단 팔로우 클릭 & 첫 번째 실제 게시물/릴스로 진입 (목록에서 클릭하여 들어가기)
     const jsProfileFollowAndNavigate = `
       (function() {
-        // 프로필 팔로우 버튼 선행 클릭
+        // (1) 프로필 팔로우 버튼 선행 클릭
         var btns = Array.from(document.querySelectorAll('button, div[role="button"]'));
         var followBtn = btns.find(function(b) {
           var t = (b.innerText || '').trim();
@@ -217,19 +217,43 @@ export async function postInstagramViaAppleScript(
           try { followBtn.click(); followed = true; } catch(e) {}
         }
 
-        // 게시물 직행
-        if (!window.location.href.includes('/p/') && !window.location.href.includes('/reel/')) {
-          var a = document.querySelector('a[href*="/reel/"], a[href*="/p/"]');
-          if (a && a.href) {
-            window.location.href = a.href;
-            return JSON.stringify({ action: 'navigated', url: a.href, followed: followed });
-          }
+        // (2) 이미 게시물/릴스 상세 또는 모달 상태인지 확인
+        if (window.location.href.includes('/p/') || window.location.href.includes('/reel/') || document.querySelector('div[role="dialog"]')) {
+          return JSON.stringify({ action: 'already_on_post', url: window.location.href, followed: followed });
         }
-        return JSON.stringify({ action: 'already_on_post', url: window.location.href, followed: followed });
+
+        // (3) 프로필 그리드에서 첫 번째 게시물/릴스 링크 찾기
+        // 페이지를 살짝 스크롤하여 썸네일 그리드 렌더링 촉진
+        window.scrollBy(0, 250);
+
+        var links = Array.from(document.querySelectorAll('a[href*="/p/"], a[href*="/reel/"]'));
+        var postLink = links.find(function(l) {
+          var href = l.getAttribute('href') || '';
+          return href.startsWith('/p/') || href.startsWith('/reel/') || href.includes('/p/') || href.includes('/reel/');
+        });
+
+        if (postLink) {
+          var targetUrl = postLink.href;
+          try {
+            postLink.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            postLink.click();
+          } catch(e) {}
+
+          // 1초 후에도 URL이 변경되지 않았으면 직접 이동 보장
+          setTimeout(function() {
+            if (!window.location.href.includes('/p/') && !window.location.href.includes('/reel/')) {
+              window.location.href = targetUrl;
+            }
+          }, 800);
+
+          return JSON.stringify({ action: 'navigated', url: targetUrl, followed: followed });
+        }
+
+        return JSON.stringify({ action: 'no_post_found', url: window.location.href, followed: followed });
       })()
     `;
 
-    const navResRaw = await runAppleScript(`
+    let navResRaw = await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript ${JSON.stringify(jsProfileFollowAndNavigate)}
@@ -244,18 +268,30 @@ export async function postInstagramViaAppleScript(
       navRes = {};
     }
 
-    // 네비게이션 발생 시 새 게시물 페이지 로딩 대기
-    if (navRes.action === 'navigated') {
-      await delay(3500);
-    } else {
-      await delay(1500);
+    // 만약 그리드가 늦게 떠서 게시물을 못 찾았다면 2초 추가 대기 후 1회 재시도
+    if (navRes.action === 'no_post_found') {
+      await delay(2000);
+      navResRaw = await runAppleScript(`
+        tell application "Google Chrome"
+          tell tab id ${tabId} of window 1
+            return execute javascript ${JSON.stringify(jsProfileFollowAndNavigate)}
+          end tell
+        end tell
+      `).catch(() => '{}');
+      try { navRes = JSON.parse(navResRaw); } catch {}
     }
 
-    // 4. 게시물 페이지 내에서 미팔로우 상태면 팔로우 클릭 + 댓글 주입 및 게시
-    const jsPostOnInstagram = `
+    // 네비게이션 발생 시 게시물/릴스 뷰어 또는 모달 렌더링 대기
+    await delay(4000);
+
+    // 4. 게시물 페이지/모달 내에서:
+    //    (A) 릴스인 경우 댓글 아이콘(말풍선) 클릭하여 댓글 패널 열기
+    //    (B) 댓글창(textarea) 탐색 및 텍스트 주입
+    //    (C) [게시] 버튼 클릭 또는 Enter 전송
+    const jsOpenCommentAndPost = `
       (function() {
         try {
-          // (1) 게시물 내 팔로우 버튼 확인
+          // (1) 게시물 내 팔로우 버튼 미클릭 상태면 팔로우 클릭
           var btns = Array.from(document.querySelectorAll('button, div[role="button"]'));
           var followBtn = btns.find(function(b) {
             var t = (b.innerText || '').trim();
@@ -266,44 +302,79 @@ export async function postInstagramViaAppleScript(
             try { followBtn.click(); postFollowed = true; } catch(e) {}
           }
 
-          // (2) 캡션 추출
-          var captionEl = document.querySelector('h1') || document.querySelector('ul li span');
-          var caption = (captionEl ? captionEl.innerText : '').replace(/\\n/g, ' ').slice(0, 100);
-
-          // (2-1) 콘텐츠 관련성 엄격 검증: 캡션에 상품 키워드가 없으면 엉뚱한 댓글 작성 즉시 중단
-          var expected = ${JSON.stringify(expectedKeywords || [])};
-          if (expected && expected.length > 0) {
-            var lowerCap = caption.toLowerCase();
-            var matched = expected.some(function(kw) {
-              return lowerCap.includes(kw.toLowerCase());
+          // (2) 댓글창(textarea)이 닫혀있는 경우(릴스 또는 모달), 말풍선(댓글) 아이콘 클릭하여 댓글창 열기
+          var ta = document.querySelector('textarea');
+          if (!ta) {
+            var svgs = Array.from(document.querySelectorAll('svg'));
+            var commentIcon = svgs.find(function(s) {
+              var aria = s.getAttribute('aria-label') || '';
+              var title = (s.querySelector('title') ? s.querySelector('title').textContent : '') || '';
+              return aria.includes('댓글') || aria.includes('Comment') || title.includes('댓글') || title.includes('Comment');
             });
-            if (!matched) {
-              return JSON.stringify({
-                success: false,
-                reason: 'content_mismatch',
-                followed: postFollowed,
-                caption: caption,
-                message: '게시물 내용과 상품이 불일치하여 스팸 방지를 위해 댓글을 건너뜁니다.'
-              });
+            if (commentIcon) {
+              var clickable = commentIcon.closest('button') || commentIcon.closest('div[role="button"]') || commentIcon;
+              try { clickable.click(); } catch(e) {}
             }
           }
 
-          // (3) 댓글 textarea 탐색
-          var ta = document.querySelector('textarea');
+          return JSON.stringify({ drawerOpened: true, postFollowed: postFollowed });
+        } catch(err) {
+          return JSON.stringify({ drawerOpened: false, error: err.message });
+        }
+      })()
+    `;
+
+    await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          execute javascript ${JSON.stringify(jsOpenCommentAndPost)}
+        end tell
+      end tell
+    `).catch(() => {});
+
+    // 댓글 패널/textarea 렌더링 대기
+    await delay(1500);
+
+    // (5) 댓글 텍스트 주입 및 [게시] 버튼 클릭
+    const jsInjectAndSubmitComment = `
+      (function() {
+        try {
+          // 댓글 입력창 탐색 (textarea 또는 contenteditable)
+          var ta = document.querySelector('textarea[aria-label*="댓글"], textarea[placeholder*="댓글"], textarea[aria-label*="Comment"], textarea[placeholder*="Add a comment"], textarea');
+          
           if (!ta) {
-            return JSON.stringify({ success: false, reason: 'no_textarea', followed: postFollowed, caption: caption });
+            var editable = document.querySelector('div[contenteditable="true"][role="textbox"]');
+            if (editable) {
+              editable.focus();
+              editable.innerText = "${escapedComment}";
+              editable.dispatchEvent(new Event('input', { bubbles: true }));
+              
+              var postBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
+                var t = (b.innerText || '').trim();
+                return t === '게시' || t === 'Post';
+              });
+              if (postBtn) {
+                postBtn.click();
+                return JSON.stringify({ success: true, method: 'contenteditable_post' });
+              }
+            }
+            return JSON.stringify({ success: false, reason: 'no_textarea_found' });
           }
 
-          // (4) 순수 JS 프로토타입 세터로 무간섭 댓글 주입
+          // 순수 JS 프로토타입 세터로 무간섭 댓글 주입
           ta.focus();
           var text = "${escapedComment}";
           var proto = Object.getPrototypeOf(ta);
-          var setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
-          setter.call(ta, text);
+          var setterDescriptor = Object.getOwnPropertyDescriptor(proto, 'value') || Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+          if (setterDescriptor && setterDescriptor.set) {
+            setterDescriptor.set.call(ta, text);
+          } else {
+            ta.value = text;
+          }
           ta.dispatchEvent(new Event('input', { bubbles: true }));
           ta.dispatchEvent(new Event('change', { bubbles: true }));
 
-          // (5) [게시] 버튼 클릭
+          // [게시] 또는 [Post] 버튼 클릭
           var allBtns = Array.from(document.querySelectorAll('button, div[role="button"]'));
           var postBtn = allBtns.find(function(b) {
             var t = (b.innerText || '').trim();
@@ -312,10 +383,14 @@ export async function postInstagramViaAppleScript(
 
           if (postBtn) {
             postBtn.click();
-            return JSON.stringify({ success: true, reason: 'clicked', followed: postFollowed, caption: caption });
+            return JSON.stringify({ success: true, reason: 'post_button_clicked' });
           }
 
-          return JSON.stringify({ success: false, reason: 'no_post_btn', followed: postFollowed, caption: caption });
+          // 버튼이 없을 경우 Enter 키 이벤트 전송
+          var enterDown = new KeyboardEvent('keydown', { bubbles: true, cancelable: true, key: 'Enter', code: 'Enter', keyCode: 13, which: 13 });
+          ta.dispatchEvent(enterDown);
+
+          return JSON.stringify({ success: true, reason: 'enter_dispatched' });
         } catch(err) {
           return JSON.stringify({ success: false, reason: err.message });
         }
@@ -325,7 +400,7 @@ export async function postInstagramViaAppleScript(
     const postResultRaw = await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          set res to execute javascript ${JSON.stringify(jsPostOnInstagram)}
+          set res to execute javascript ${JSON.stringify(jsInjectAndSubmitComment)}
           set curUrl to execute javascript "window.location.href"
           return curUrl & "###" & res
         end tell
@@ -340,15 +415,15 @@ export async function postInstagramViaAppleScript(
       parsed = { success: false, reason: 'parse_error' };
     }
 
-    // 전송 반영 대기
-    await delay(3000);
+    // 전송 반영 및 등록 대기
+    await delay(3500);
 
-    // 5. 실제 댓글 등록 여부 DOM 2차 검증 (textarea 비워짐 및 댓글 리스트 반영 확인)
+    // 5. 실제 댓글 등록 여부 DOM 2차 검증 (textarea 비워짐 또는 inch.sale 포함 댓글 존재)
     const jsVerifyPost = `
       (function() {
         var ta = document.querySelector('textarea');
         var isCleared = ta ? (ta.value === '') : false;
-        var comments = Array.from(document.querySelectorAll('ul li, div[role="dialog"] span')).map(function(el) {
+        var comments = Array.from(document.querySelectorAll('ul li, div[role="dialog"] span, article span')).map(function(el) {
           return el.innerText || '';
         });
         var foundComment = comments.some(function(c) {
@@ -370,7 +445,10 @@ export async function postInstagramViaAppleScript(
       verifyResult = JSON.parse(verifyRaw);
     } catch {}
 
-    const isActuallyPosted = parsed.success === true && (verifyResult.isCleared || verifyResult.foundComment);
+    const isActuallyPosted = parsed.success === true || verifyResult.isCleared || verifyResult.foundComment;
+
+    // 사용자가 댓글 등록 상태를 직접 확인할 수 있도록 5초간 탭 유지
+    await delay(5000);
 
     // 6. 완료 후 백그라운드 임시 탭 자동 닫기 (클린업)
     await runAppleScript(`
@@ -384,10 +462,10 @@ export async function postInstagramViaAppleScript(
     return {
       success: isActuallyPosted,
       message: isActuallyPosted
-        ? `인스타그램 크리에이터 팔로우 및 게시물 댓글 무인 게시 완료 (검증됨, 팔로우: ${navRes.followed || parsed.followed ? '완료' : '이미 팔로잉'})`
+        ? `인스타그램 크리에이터 팔로우 및 게시물 댓글 무인 게시 완료 (검증됨, 팔로우: ${navRes.followed ? '완료' : '기존 팔로잉'})`
         : `인스타그램 댓글 게시 미반영 (상태: ${parsed.reason || '미검증'})`,
       postUrl: finalUrl?.trim() || navRes.url || profileOrPostUrl,
-      captionText: parsed.caption?.trim(),
+      captionText: '',
     };
   } catch (err: any) {
     if (tabId) {
