@@ -49,7 +49,7 @@ export interface CreatorAccount {
   ownerUserId: string; // OAuth user ID
   ownerEmail?: string; // OAuth user email
   ownerName?: string; // OAuth user display name
-  provider: 'kakao' | 'google' | 'custom';
+  provider: 'youtube' | 'tiktok' | 'instagram' | 'kakao' | 'google' | 'custom';
   createdAt: string;
   updatedAt: string;
 }

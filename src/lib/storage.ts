@@ -1042,7 +1042,7 @@ export function bindCreatorAccount(payload: {
   ownerUserId: string;
   ownerEmail?: string;
   ownerName?: string;
-  provider: 'kakao' | 'google' | 'custom';
+  provider: 'youtube' | 'tiktok' | 'instagram' | 'kakao' | 'google' | 'custom';
 }): { success: boolean; error?: string; account?: CreatorAccount } {
   const norm = normalizeCreatorHandle(payload.creatorId);
   if (!norm || norm === 'anonymous') {

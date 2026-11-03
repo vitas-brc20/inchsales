@@ -519,11 +519,15 @@ export async function postTikTokViaAppleScript(
     // 4. DraftEditor 에 텍스트 주입 및 게시 버튼 클릭 (100% 무인 전송)
     const scriptPasteAndPost = `
       tell application "Google Chrome"
+        activate
+        tell window 1
+          set active tab index to (count of tabs)
+        end tell
         tell tab id ${tabId} of window 1
+          -- (1) 드로어가 열려있는지 확인하고, 닫혀있으면 다시 한번 열기
           execute javascript "(function() {
             var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
             if (!editor) {
-              // 에디터가 아직 안 열렸으면 다시 한번 버튼 클릭 시도
               var icon = document.querySelector('[data-e2e=\\"comment-icon\\"]');
               if (icon) {
                 var btn = icon.querySelector('button') || icon;
@@ -534,32 +538,57 @@ export async function postTikTokViaAppleScript(
         end tell
       end tell
 
-      delay 1.0
+      delay 1.5
 
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
+          -- (2) 에디터 포커스 및 텍스트 주입
           execute javascript "(function() {
             var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
             if (editor) {
               editor.focus();
               document.execCommand('selectAll', false, null);
               document.execCommand('insertText', false, '${escapedComment}');
+              // Draft.js React 상태 갱신을 위해 미세 입력 후 삭제 트리거
+              document.execCommand('insertText', false, ' ');
+              document.execCommand('delete', false, null);
             }
           })()"
         end tell
       end tell
 
-      delay 0.8
+      delay 1.0
+
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript "(function() {
             var btn = document.querySelector('[data-e2e=\\"comment-post\\"]');
-            if (btn && !btn.hasAttribute('disabled')) {
+            if (!btn) return 'no_btn';
+            
+            // 만약 아직 disabled라면 한번 더 에디터 갱신 시도
+            if (btn.hasAttribute('disabled')) {
+              var editor = document.querySelector('.public-DraftEditor-content');
+              if (editor) {
+                editor.focus();
+                document.execCommand('insertText', false, '!');
+                document.execCommand('delete', false, null);
+              }
+            }
+            
+            if (!btn.hasAttribute('disabled')) {
               btn.focus();
               btn.click();
               return 'clicked_enabled';
             }
-            return btn ? 'btn_disabled' : 'no_btn';
+            
+            // 만약 그래도 disabled라면 disabled 강제 제거 후 클릭
+            try {
+              btn.removeAttribute('disabled');
+              btn.click();
+              return 'clicked_force';
+            } catch(e) {
+              return 'btn_disabled';
+            }
           })()"
         end tell
       end tell

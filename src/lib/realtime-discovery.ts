@@ -266,8 +266,13 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
     // 탭 클린업
     await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
 
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
+    if (!raw || raw.trim() === '' || raw.trim() === 'missing value') return [];
+    let parsed: any[] = [];
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return [];
+    }
     return parsed
       .map((p: any) => {
         const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
@@ -353,8 +358,13 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
     // 탭 클린업
     await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
 
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
+    if (!raw || raw.trim() === '' || raw.trim() === 'missing value') return [];
+    let parsed: any[] = [];
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      return [];
+    }
     return parsed
       .map((p: any) => {
         const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
