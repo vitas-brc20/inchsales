@@ -165,10 +165,11 @@ export async function postYouTubeCommentViaAppleScript(
 
 /**
  * 인스타그램 프로필 또는 게시물 페이지 진입 시:
- * - 100% 무간섭 백그라운드(Silent Background) 모드
- * - activate 없음 (사용자 작업 화면 가로채기 0%)
- * - System Events 키보드 가로채기 없음 (순수 JS Prototype Setter 주입)
- * - 작업 완료 후 임시 탭 자동 닫기 (탭 쌓임 방지)
+ * 1. 진입 즉시 '팔로우' 버튼 감지 및 자동 팔로우 클릭 (크리에이터 팔로우 알림 선행 발송)
+ * 2. 프로필일 경우 첫 번째 릴스/게시물로 direct 이동 (window.location.href = href)
+ * 3. 게시물 진입 후에도 미팔로우 상태면 팔로우 재확인
+ * 4. 댓글창(textarea)에 Prototype Setter 주입 & [게시] 버튼 클릭 (100% 무인 전송)
+ * 5. 완료 후 백그라운드 임시 탭 자동 클린업
  */
 export async function postInstagramViaAppleScript(
   profileOrPostUrl: string,
@@ -177,7 +178,11 @@ export async function postInstagramViaAppleScript(
 ): Promise<{ success: boolean; message: string; postUrl?: string; captionText?: string }> {
   let tabId = '';
   try {
-    const escapedComment = commentText.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const escapedComment = commentText
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '');
     
     // 1. 백그라운드 탭 생성 (activate 없이, 사용자 활성 탭 보존)
     const createTabScript = `
@@ -195,71 +200,129 @@ export async function postInstagramViaAppleScript(
     tabId = (await runAppleScript(createTabScript)).trim();
     if (!tabId) throw new Error('백그라운드 탭 생성 실패');
 
-    // 2. 프로필/게시물 페이지 로딩 대기
+    // 2. 초기 로딩 대기
     await delay(3500);
 
-    // 3. 프로필 목록일 경우 첫 번째 릴스/게시물 진입 (백그라운드 탭 내부 실행)
-    const jsOpenFirst = `
+    // 3. 프로필 상단 팔로우 클릭 & 첫 번째 게시물로 직행 네비게이션
+    const jsProfileFollowAndNavigate = `
       (function() {
-        if (window.location.href.includes('/p/') || window.location.href.includes('/reel/')) return window.location.href;
-        var a = document.querySelector('a[href*="/reel/"], a[href*="/p/"]');
-        if (a) {
-          a.click();
-          return a.href;
+        // 프로필 팔로우 버튼 선행 클릭
+        var btns = Array.from(document.querySelectorAll('button, div[role="button"]'));
+        var followBtn = btns.find(function(b) {
+          var t = (b.innerText || '').trim();
+          return t === '팔로우' || t === 'Follow';
+        });
+        var followed = false;
+        if (followBtn) {
+          try { followBtn.click(); followed = true; } catch(e) {}
         }
-        return window.location.href;
+
+        // 게시물 직행
+        if (!window.location.href.includes('/p/') && !window.location.href.includes('/reel/')) {
+          var a = document.querySelector('a[href*="/reel/"], a[href*="/p/"]');
+          if (a && a.href) {
+            window.location.href = a.href;
+            return JSON.stringify({ action: 'navigated', url: a.href, followed: followed });
+          }
+        }
+        return JSON.stringify({ action: 'already_on_post', url: window.location.href, followed: followed });
       })()
     `;
-    await runAppleScript(`
+
+    const navResRaw = await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          execute javascript ${JSON.stringify(jsOpenFirst)}
+          return execute javascript ${JSON.stringify(jsProfileFollowAndNavigate)}
         end tell
       end tell
-    `).catch(() => {});
+    `).catch(() => '{}');
 
-    await delay(3000);
+    let navRes: any = {};
+    try {
+      navRes = JSON.parse(navResRaw);
+    } catch {
+      navRes = {};
+    }
 
-    // 4. 본문 캡션 텍스트 추출 및 순수 JS Prototype setter로 댓글 주입 & 게시 (키보드 개입 0%)
-    const jsPostComment = `
+    // 네비게이션 발생 시 새 게시물 페이지 로딩 대기
+    if (navRes.action === 'navigated') {
+      await delay(3500);
+    } else {
+      await delay(1500);
+    }
+
+    // 4. 게시물 페이지 내에서 미팔로우 상태면 팔로우 클릭 + 댓글 주입 및 게시
+    const jsPostOnInstagram = `
       (function() {
-        var captionEl = document.querySelector('h1') || document.querySelector('ul li span');
-        var caption = captionEl ? captionEl.innerText : '';
-        
-        var ta = document.querySelector('textarea[aria-label*="댓글"], textarea[placeholder*="댓글"]');
-        if (!ta) return 'no_textarea|||' + caption;
-        
-        var text = "${escapedComment}";
-        var proto = Object.getPrototypeOf(ta);
-        var setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
-        setter.call(ta, text);
-        ta.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        var btn = Array.from(document.querySelectorAll('div[role="button"], button'))
-          .find(function(b) { return b.innerText && b.innerText.trim() === '게시'; });
-          
-        if (btn) {
-          btn.click();
-          return 'clicked|||' + caption;
+        try {
+          // (1) 게시물 내 팔로우 버튼 확인
+          var btns = Array.from(document.querySelectorAll('button, div[role="button"]'));
+          var followBtn = btns.find(function(b) {
+            var t = (b.innerText || '').trim();
+            return t === '팔로우' || t === 'Follow';
+          });
+          var postFollowed = false;
+          if (followBtn) {
+            try { followBtn.click(); postFollowed = true; } catch(e) {}
+          }
+
+          // (2) 캡션 추출
+          var captionEl = document.querySelector('h1') || document.querySelector('ul li span');
+          var caption = (captionEl ? captionEl.innerText : '').replace(/\\n/g, ' ').slice(0, 100);
+
+          // (3) 댓글 textarea 탐색
+          var ta = document.querySelector('textarea');
+          if (!ta) {
+            return JSON.stringify({ success: false, reason: 'no_textarea', followed: postFollowed, caption: caption });
+          }
+
+          // (4) 순수 JS 프로토타입 세터로 무간섭 댓글 주입
+          ta.focus();
+          var text = "${escapedComment}";
+          var proto = Object.getPrototypeOf(ta);
+          var setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+          setter.call(ta, text);
+          ta.dispatchEvent(new Event('input', { bubbles: true }));
+          ta.dispatchEvent(new Event('change', { bubbles: true }));
+
+          // (5) [게시] 버튼 클릭
+          var allBtns = Array.from(document.querySelectorAll('button, div[role="button"]'));
+          var postBtn = allBtns.find(function(b) {
+            var t = (b.innerText || '').trim();
+            return t === '게시' || t === 'Post';
+          });
+
+          if (postBtn) {
+            postBtn.click();
+            return JSON.stringify({ success: true, reason: 'clicked', followed: postFollowed, caption: caption });
+          }
+
+          return JSON.stringify({ success: false, reason: 'no_post_btn', followed: postFollowed, caption: caption });
+        } catch(err) {
+          return JSON.stringify({ success: false, reason: err.message });
         }
-        return 'no_post_btn|||' + caption;
       })()
     `;
 
-    const rawResult = await runAppleScript(`
+    const postResultRaw = await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          set res to execute javascript ${JSON.stringify(jsPostComment)}
+          set res to execute javascript ${JSON.stringify(jsPostOnInstagram)}
           set curUrl to execute javascript "window.location.href"
           return curUrl & "###" & res
         end tell
       end tell
-    `);
+    `).catch(() => '');
 
-    const [finalUrl, meta] = (rawResult || '').split('###');
-    const [status, caption] = (meta || '').split('|||');
+    const [finalUrl, jsonStr] = (postResultRaw || '').split('###');
+    let parsed: any = {};
+    try {
+      parsed = JSON.parse(jsonStr || '{}');
+    } catch {
+      parsed = { success: false, reason: 'parse_error' };
+    }
 
-    await delay(2500);
+    await delay(3000);
 
     // 5. 완료 후 백그라운드 임시 탭 자동 닫기 (클린업)
     await runAppleScript(`
@@ -271,12 +334,12 @@ export async function postInstagramViaAppleScript(
     `).catch(() => {});
 
     return {
-      success: status === 'clicked',
-      message: status === 'clicked' 
-        ? `인스타그램 릴스/게시물 완전 백그라운드 무인 댓글 게시 완료`
-        : `댓글 게시 시도 완료 (상태: ${status})`,
-      postUrl: finalUrl?.trim() || profileOrPostUrl,
-      captionText: caption?.trim(),
+      success: parsed.success === true,
+      message: parsed.success === true
+        ? `인스타그램 크리에이터 팔로우 및 게시물 댓글 무인 게시 완료 (팔로우: ${navRes.followed || parsed.followed ? '완료' : '이미 팔로잉'})`
+        : `인스타그램 댓글 시도 완료 (결과: ${parsed.reason})`,
+      postUrl: finalUrl?.trim() || navRes.url || profileOrPostUrl,
+      captionText: parsed.caption?.trim(),
     };
   } catch (err: any) {
     if (tabId) {
@@ -291,10 +354,12 @@ export async function postInstagramViaAppleScript(
 
 /**
  * 틱톡 프로필/영상 페이지 진입 시:
- * 1. 프로필 페이지일 경우 첫 번째 비디오(a[href*="/video/"])를 클릭하여 플레이어 진입
- * 2. 댓글 드로어([data-e2e="comment-icon"]) 활성화
- * 3. DraftEditor에 클립보드 붙여넣기 및 [게시] 버튼 클릭까지 100% 무인 전송
- * 4. 완료 후 임시 탭 자동 클린업
+ * 1. 진입 즉시 '팔로우' 버튼(data-e2e="follow-button" or "feed-follow") 자동 클릭하여 크리에이터 팔로우 선행
+ * 2. 프로필일 경우 첫 번째 비디오/포토(a[href*="/video/"], a[href*="/photo/"])로 직행 (window.location.href)
+ * 3. 비디오/포토 진입 후 미팔로우 상태면 feed-follow 재확인 클릭
+ * 4. 댓글 드로어([data-e2e="comment-icon"]) 활성화
+ * 5. DraftEditor에 클립보드 붙여넣기 및 [게시] 버튼 클릭까지 100% 무인 전송
+ * 6. 완료 후 임시 탭 자동 클린업
  */
 export async function postTikTokViaAppleScript(
   searchOrProfileUrl: string,
@@ -302,7 +367,11 @@ export async function postTikTokViaAppleScript(
 ): Promise<{ success: boolean; message: string; videoUrl?: string }> {
   let tabId = '';
   try {
-    const escapedComment = commentText.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const escapedComment = commentText
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '');
 
     // 1. 임시 탭 생성
     const createTabScript = `
@@ -329,19 +398,79 @@ export async function postTikTokViaAppleScript(
 
     await delay(3500);
 
-    // 2. 비디오 진입 및 댓글 아이콘 클릭
+    // 2. 프로필 상단 팔로우 버튼 선행 클릭 & 비디오/포토 직행 네비게이션
+    const jsFollowAndNavigate = `
+      (function() {
+        // (1) 프로필 페이지 팔로우 버튼 클릭
+        var followBtn = document.querySelector('[data-e2e="follow-button"]');
+        if (!followBtn) {
+          followBtn = Array.from(document.querySelectorAll('button, div[role="button"]')).find(function(b) {
+            var t = (b.innerText || '').trim();
+            return t === '팔로우' || t === 'Follow';
+          });
+        }
+        var followed = false;
+        if (followBtn && (followBtn.innerText || '').trim() !== '팔로잉' && (followBtn.innerText || '').trim() !== 'Following') {
+          try { followBtn.click(); followed = true; } catch(e) {}
+        }
+
+        // (2) 현재 페이지가 비디오나 포토가 아니면 첫 번째 비디오/포토로 직행
+        if (!window.location.href.includes('/video/') && !window.location.href.includes('/photo/')) {
+          var a = document.querySelector('a[href*="/video/"], a[href*="/photo/"]');
+          if (a && a.href) {
+            window.location.href = a.href;
+            return JSON.stringify({ action: 'navigated', url: a.href, followed: followed });
+          }
+        }
+        return JSON.stringify({ action: 'already_on_video', url: window.location.href, followed: followed });
+      })()
+    `;
+
+    const navResRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(jsFollowAndNavigate)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
+    let navRes: any = {};
+    try {
+      navRes = JSON.parse(navResRaw);
+    } catch {
+      navRes = {};
+    }
+
+    if (navRes.action === 'navigated') {
+      await delay(3500);
+    } else {
+      await delay(1500);
+    }
+
+    // 3. 비디오/포토 페이지 내에서 feed-follow 클릭 및 댓글 아이콘 클릭
     const jsOpenVideoAndDrawer = `
       (function() {
-        if (!window.location.href.includes('/video/')) {
-          var a = document.querySelector('a[href*="/video/"]');
-          if (a) a.click();
+        // 비디오 내 feed-follow(팔로우 플러스) 버튼이 있으면 클릭
+        var feedFollowBtn = document.querySelector('[data-e2e="feed-follow"][data-key-interaction="action_follow"]')
+          || document.querySelector('[data-e2e="cinema-video-info-follow"]')
+          || Array.from(document.querySelectorAll('button')).find(function(b) {
+            var t = (b.innerText || '').trim();
+            return t === '팔로우' || t === 'Follow';
+          });
+        var videoFollowed = false;
+        if (feedFollowBtn) {
+          try { feedFollowBtn.click(); videoFollowed = true; } catch(e) {}
         }
+
+        // 댓글 아이콘 클릭하여 댓글창 열기
         var icon = document.querySelector('[data-e2e="comment-icon"]');
-        if (icon) icon.click();
+        if (icon) {
+          try { icon.click(); } catch(e) {}
+        }
         
-        var editor = document.querySelector('.public-DraftEditor-content');
+        var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable="true"]');
         if (editor) editor.focus();
-        return window.location.href;
+        return JSON.stringify({ videoFollowed: videoFollowed, hasEditor: !!editor });
       })()
     `;
     await runAppleScript(`
@@ -352,14 +481,14 @@ export async function postTikTokViaAppleScript(
       end tell
     `).catch(() => {});
 
-    await delay(2500);
+    await delay(2000);
 
-    // 3. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭
+    // 4. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭
     const scriptPasteAndPost = `
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           execute javascript "(function() {
-            var editor = document.querySelector('.public-DraftEditor-content');
+            var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
             if (editor) {
               editor.focus();
               document.execCommand('selectAll', false, null);
@@ -379,6 +508,7 @@ export async function postTikTokViaAppleScript(
           return execute javascript "(function() {
             var btn = document.querySelector('[data-e2e=\\"comment-post\\"]');
             if (btn) {
+              btn.removeAttribute('disabled');
               btn.focus();
               btn.click();
               return 'clicked';
@@ -392,7 +522,7 @@ export async function postTikTokViaAppleScript(
     const postResult = await runAppleScript(scriptPasteAndPost).catch(() => 'no_btn');
     await delay(2500);
 
-    // 4. 원래 탭으로 복구 및 임시 탭 닫기
+    // 5. 원래 탭으로 복구 및 임시 탭 닫기
     await runAppleScript(`
       tell application "Google Chrome"
         try
@@ -406,8 +536,10 @@ export async function postTikTokViaAppleScript(
 
     return {
       success: postResult.includes('clicked'),
-      message: `TikTok 영상 무인 댓글 게시 완료 (${searchOrProfileUrl})`,
-      videoUrl: searchOrProfileUrl,
+      message: postResult.includes('clicked')
+        ? `TikTok 크리에이터 팔로우 및 영상 댓글 무인 게시 완료 (${navRes.url || searchOrProfileUrl})`
+        : `TikTok 게시 시도 (결과: ${postResult})`,
+      videoUrl: navRes.url || searchOrProfileUrl,
     };
   } catch (err: any) {
     if (tabId) {

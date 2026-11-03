@@ -67,26 +67,26 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
       }
     }
 
-    // 2) 인스타그램: 프로필 목록 대신 첫 번째 실제 릴스/게시물로 즉시 직행 및 댓글창 포커스
+    // 2) 인스타그램: 팔로우 선행 클릭 + 프로필 목록 대신 첫 번째 실제 릴스/게시물로 즉시 직행 및 댓글 무인 게시
     if (task.platform === 'instagram') {
       const igRes = await postInstagramViaAppleScript(task.targetUrl, task.commentText);
       if (igRes.success) {
         const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
         const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "첫 릴스/게시물 직행 완료! (Cmd+V 로 등록)" with title "📸 [인스타 직행] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "📸 [인스타 팔로우+댓글 완료] @${cleanHandle}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[인스타그램 릴스/게시물 직행 성공] @${task.creatorHandle} 첫 번째 영상 직행: ${igRes.postUrl || task.targetUrl}`,
+          details: `[인스타그램 팔로우+댓글 무인 전송 완료] @${task.creatorHandle} 팔로우 완료 및 게시물 댓글 등록: ${igRes.postUrl || task.targetUrl}`,
         };
       }
     }
 
-    // 3) 틱톡: 404 방지 및 첫 번째 실제 영상으로 즉시 직행
+    // 3) 틱톡: 팔로우 선행 클릭 + 첫 번째 실제 영상 직행 및 댓글 무인 게시
     if (task.platform === 'tiktok') {
       const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText);
       console.log('TikTok post result message:', ttRes.message);
@@ -94,14 +94,14 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
         const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
         const cleanProduct = task.productName.replace(/["'\\]/g, ' ');
         const notifScript = `
-          display notification "첫 숏폼 영상 직행 완료! (Cmd+V 로 등록)" with title "🎵 [틱톡 영상 직행] @${cleanHandle}" subtitle "${cleanProduct}"
+          display notification "크리에이터 팔로우 및 댓글 자동 등록 완료!" with title "🎵 [틱톡 팔로우+댓글 완료] @${cleanHandle}" subtitle "${cleanProduct}"
         `;
         await execAsync(`osascript -e '${notifScript}'`).catch(() => {});
 
         return {
           success: true,
           method: 'APPLESCRIPT_FULL_AUTO',
-          details: `[틱톡 첫 번째 영상 직행 성공] @${task.creatorHandle} 실제 영상 직행: ${ttRes.videoUrl || task.targetUrl}`,
+          details: `[틱톡 팔로우+댓글 무인 전송 완료] @${task.creatorHandle} 팔로우 완료 및 영상 댓글 등록: ${ttRes.videoUrl || task.targetUrl}`,
         };
       }
     }
