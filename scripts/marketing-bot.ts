@@ -1289,10 +1289,11 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
         // tiktok (404 원천 차단: 검증된 핸들 또는 실제 검색어 직행)
         const shortProductName = PRODUCT_VIDEO_CONTEXTS[target.slug]?.shortName || target.slug;
         if (matchedCreator.tiktokHandle) {
-          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle)}`;
+          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.tiktokHandle.replace(/^@/, ''))}`;
+        } else if (matchedCreator.handle) {
+          targetUrl = `https://www.tiktok.com/@${encodeURIComponent(matchedCreator.handle.replace(/^@/, ''))}`;
         } else {
-          const query = `${matchedCreator.channelName} ${shortProductName}`.trim();
-          targetUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+          targetUrl = `https://www.tiktok.com/foryou`;
         }
         creatorOutreachBundle = generateCreatorCommentBundle(
           matchedCreator,

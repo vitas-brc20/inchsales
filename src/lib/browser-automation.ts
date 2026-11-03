@@ -89,6 +89,7 @@ export async function dispatchBrowserOutreach(task: BrowserOutreachTask): Promis
     // 3) 틱톡: 404 방지 및 첫 번째 실제 영상으로 즉시 직행
     if (task.platform === 'tiktok') {
       const ttRes = await postTikTokViaAppleScript(task.targetUrl, task.commentText);
+      console.log('TikTok post result message:', ttRes.message);
       if (ttRes.success) {
         const cleanHandle = task.creatorHandle.replace(/["'\\]/g, ' ');
         const cleanProduct = task.productName.replace(/["'\\]/g, ' ');

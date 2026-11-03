@@ -2,7 +2,7 @@ import https from 'https';
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { runAppleScript, delay } from './applescript-poster';
+import { runAppleScript, delay } from './applescript-utils';
 import { getLinkBySlug, getAllLinks, createProductLink } from './storage';
 
 export interface RealtimeVideoTarget {
@@ -246,15 +246,22 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript "(function() {
+            var videoA = document.querySelector('a[href*=\\"/video/\\"]');
             var authorAnchor = Array.from(document.querySelectorAll('a'))
               .find(a => a.href.includes('/@') && !a.href.includes('/@inchsale'));
-            var handle = authorAnchor ? authorAnchor.href.split('/@')[1] : '';
-            var desc = document.querySelector('[data-e2e=\\"browse-video-desc\\"]') || document.querySelector('h1') || document.querySelector('h2');
+            var handle = authorAnchor ? authorAnchor.href.split('/@')[1].split('/')[0].split('?')[0] : '';
+            
+            var desc = document.querySelector('[data-e2e=\\"browse-video-desc\\"], [data-e2e=\\"video-desc\\"]');
             var descText = desc ? desc.innerText.trim() : '';
+            if (descText === '알림' || descText === 'TikTok' || descText.length < 3) {
+              descText = 'TikTok 숏폼 트렌드 추천템';
+            }
+            
+            var targetVideoUrl = videoA ? videoA.href : (handle ? ('https://www.tiktok.com/@' + handle) : 'https://www.tiktok.com/foryou');
             
             return JSON.stringify({
-              videoUrl: window.location.href,
-              title: descText || 'TikTok 인기 추천 영상',
+              videoUrl: targetVideoUrl,
+              title: descText,
               caption: descText,
               creatorName: handle || 'tiktok_creator',
               creatorHandle: handle ? ('@' + handle) : '@tiktok_creator'

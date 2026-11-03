@@ -1,24 +1,6 @@
-import { spawn } from 'child_process';
+import { runAppleScript, delay } from './applescript-utils';
 
-function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function runAppleScript(script: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const proc = spawn('osascript');
-    let stdout = '';
-    let stderr = '';
-    proc.stdout.on('data', (d) => (stdout += d.toString()));
-    proc.stderr.on('data', (d) => (stderr += d.toString()));
-    proc.on('close', (code) => {
-      if (code === 0) resolve(stdout.trim());
-      else reject(new Error(stderr.trim() || `AppleScript exited with code ${code}`));
-    });
-    proc.stdin.write(script, 'utf8');
-    proc.stdin.end();
-  });
-}
+export { runAppleScript, delay };
 
 /**
  * Google Chrome의 'Apple Events의 자바스크립트 허용' 기능을 활용하여
@@ -309,10 +291,10 @@ export async function postInstagramViaAppleScript(
 
 /**
  * 틱톡 프로필/영상 페이지 진입 시:
- * - 100% 무간섭 백그라운드(Silent Background) 모드
- * - activate 없음 (화면 뺏김 0%)
- * - System Events 키보드 가로채기 없음 (순수 JS 이벤트 주입)
- * - 완료 후 백그라운드 탭 자동 닫기
+ * 1. 프로필 페이지일 경우 첫 번째 비디오(a[href*="/video/"])를 클릭하여 플레이어 진입
+ * 2. 댓글 드로어([data-e2e="comment-icon"]) 활성화
+ * 3. DraftEditor에 클립보드 붙여넣기 및 [게시] 버튼 클릭까지 100% 무인 전송
+ * 4. 완료 후 임시 탭 자동 클린업
  */
 export async function postTikTokViaAppleScript(
   searchOrProfileUrl: string,
@@ -322,81 +304,101 @@ export async function postTikTokViaAppleScript(
   try {
     const escapedComment = commentText.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 
-    // 1. 백그라운드 탭 생성 (activate 없음)
+    // 1. 임시 탭 생성
     const createTabScript = `
+      set commentText to "${escapedComment}"
+      set the clipboard to commentText
+
       tell application "Google Chrome"
         if (count of windows) is 0 then
           make new window
         end if
         tell window 1
+          set savedIndex to active tab index
           set newTab to make new tab with properties {URL:"${searchOrProfileUrl}"}
-          return id of newTab
+          set active tab index to (count of tabs)
+          return (id of newTab as string) & "###" & (savedIndex as string)
         end tell
       end tell
     `;
 
-    tabId = (await runAppleScript(createTabScript)).trim();
-    if (!tabId) throw new Error('TikTok 백그라운드 탭 생성 실패');
+    const rawInit = await runAppleScript(createTabScript);
+    const [rawTabId, savedIndex] = (rawInit || '').split('###');
+    tabId = (rawTabId || '').trim();
+    if (!tabId) throw new Error('TikTok 탭 생성 실패');
 
     await delay(3500);
 
-    // 2. 프로필/검색일 경우 첫 번째 비디오 클릭 진입 (백그라운드)
-    const jsOpenFirstVideo = `
+    // 2. 비디오 진입 및 댓글 아이콘 클릭
+    const jsOpenVideoAndDrawer = `
       (function() {
-        if (window.location.href.includes('/video/')) return window.location.href;
-        var a = document.querySelector('a[href*="/video/"]');
-        if (a) {
-          a.click();
-          return a.href;
+        if (!window.location.href.includes('/video/')) {
+          var a = document.querySelector('a[href*="/video/"]');
+          if (a) a.click();
         }
+        var icon = document.querySelector('[data-e2e="comment-icon"]');
+        if (icon) icon.click();
+        
+        var editor = document.querySelector('.public-DraftEditor-content');
+        if (editor) editor.focus();
         return window.location.href;
       })()
     `;
     await runAppleScript(`
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
-          execute javascript ${JSON.stringify(jsOpenFirstVideo)}
+          execute javascript ${JSON.stringify(jsOpenVideoAndDrawer)}
         end tell
       end tell
     `).catch(() => {});
 
-    await delay(3000);
-
-    // 3. DraftEditor 순수 JS 텍스트 주입 & 게시 버튼 클릭 (키보드 시뮬레이션 0%)
-    const jsTypeAndPost = `
-      (function() {
-        var editor = document.querySelector('.public-DraftEditor-content');
-        if (!editor) return 'no_editor';
-        
-        editor.focus();
-        document.execCommand('selectAll', false, null);
-        document.execCommand('insertText', false, "${escapedComment}");
-        editor.dispatchEvent(new Event('input', { bubbles: true }));
-        
-        var btn = document.querySelector('[data-e2e="comment-post"]');
-        if (btn) {
-          btn.focus();
-          btn.click();
-          return 'clicked';
-        }
-        return 'no_btn';
-      })()
-    `;
-
-    const postResult = await runAppleScript(`
-      tell application "Google Chrome"
-        tell tab id ${tabId} of window 1
-          return execute javascript ${JSON.stringify(jsTypeAndPost)}
-        end tell
-      end tell
-    `).catch(() => 'no_btn');
-
     await delay(2500);
 
-    // 4. 완료 후 백그라운드 탭 자동 닫기 (클린업)
+    // 3. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭
+    const scriptPasteAndPost = `
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          execute javascript "(function() {
+            var editor = document.querySelector('.public-DraftEditor-content');
+            if (editor) {
+              editor.focus();
+              document.execCommand('selectAll', false, null);
+            }
+          })()"
+        end tell
+      end tell
+
+      delay 0.4
+      tell application "System Events"
+        keystroke "v" using command down
+      end tell
+
+      delay 0.8
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript "(function() {
+            var btn = document.querySelector('[data-e2e=\\"comment-post\\"]');
+            if (btn) {
+              btn.focus();
+              btn.click();
+              return 'clicked';
+            }
+            return 'no_btn';
+          })()"
+        end tell
+      end tell
+    `;
+
+    const postResult = await runAppleScript(scriptPasteAndPost).catch(() => 'no_btn');
+    await delay(2500);
+
+    // 4. 원래 탭으로 복구 및 임시 탭 닫기
     await runAppleScript(`
       tell application "Google Chrome"
         try
+          if "${savedIndex}" is not "" then
+            set active tab index of window 1 to (${savedIndex} as integer)
+          end if
           close tab id ${tabId} of window 1
         end try
       end tell
@@ -404,7 +406,7 @@ export async function postTikTokViaAppleScript(
 
     return {
       success: postResult.includes('clicked'),
-      message: `TikTok 영상 완전 백그라운드 무인 댓글 게시 완료 (${searchOrProfileUrl})`,
+      message: `TikTok 영상 무인 댓글 게시 완료 (${searchOrProfileUrl})`,
       videoUrl: searchOrProfileUrl,
     };
   } catch (err: any) {
@@ -413,7 +415,7 @@ export async function postTikTokViaAppleScript(
     }
     return {
       success: false,
-      message: `TikTok 백그라운드 댓글 게시 실패: ${err.message}`,
+      message: `TikTok 댓글 게시 실패: ${err.message}`,
     };
   }
 }
