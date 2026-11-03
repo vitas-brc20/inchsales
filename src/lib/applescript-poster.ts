@@ -492,10 +492,13 @@ export async function postTikTokViaAppleScript(
           try { feedFollowBtn.click(); videoFollowed = true; } catch(e) {}
         }
 
-        // 댓글 아이콘 클릭하여 댓글창 열기
+        // 댓글 아이콘 내부 버튼을 클릭하여 댓글창 열기 (바깥 div가 아닌 내부 button.click() 필수)
         var icon = document.querySelector('[data-e2e="comment-icon"]');
         if (icon) {
-          try { icon.click(); } catch(e) {}
+          try {
+            var innerBtn = icon.querySelector('button') || icon;
+            innerBtn.click();
+          } catch(e) {}
         }
         
         var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable="true"]');
@@ -513,8 +516,26 @@ export async function postTikTokViaAppleScript(
 
     await delay(2000);
 
-    // 4. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭 시도
+    // 4. DraftEditor 에 텍스트 주입 및 게시 버튼 클릭 (100% 무인 전송)
     const scriptPasteAndPost = `
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          execute javascript "(function() {
+            var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
+            if (!editor) {
+              // 에디터가 아직 안 열렸으면 다시 한번 버튼 클릭 시도
+              var icon = document.querySelector('[data-e2e=\\"comment-icon\\"]');
+              if (icon) {
+                var btn = icon.querySelector('button') || icon;
+                btn.click();
+              }
+            }
+          })()"
+        end tell
+      end tell
+
+      delay 1.0
+
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           execute javascript "(function() {
@@ -528,7 +549,7 @@ export async function postTikTokViaAppleScript(
         end tell
       end tell
 
-      delay 0.5
+      delay 0.8
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript "(function() {
