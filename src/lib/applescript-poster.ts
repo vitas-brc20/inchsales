@@ -477,10 +477,14 @@ export async function postTikTokViaAppleScript(
       await delay(1500);
     }
 
-    // 3. 비디오/포토 페이지 내에서 feed-follow 클릭 및 댓글 아이콘 클릭
+    // 3. 비디오/포토 페이지 내에서 feed-follow 클릭 및 비디오 정지 + 댓글 드로어 열기
     const jsOpenVideoAndDrawer = `
       (function() {
-        // 비디오 내 feed-follow(팔로우 플러스) 버튼이 있으면 클릭
+        // (1) 비디오 즉시 일시정지 (자동 스크롤 및 렌더링 리셋 방지)
+        var v = document.querySelector('video');
+        if (v) v.pause();
+
+        // (2) 비디오 내 feed-follow(팔로우 플러스) 버튼이 있으면 클릭
         var feedFollowBtn = document.querySelector('[data-e2e="feed-follow"][data-key-interaction="action_follow"]')
           || document.querySelector('[data-e2e="cinema-video-info-follow"]')
           || Array.from(document.querySelectorAll('button')).find(function(b) {
@@ -492,13 +496,19 @@ export async function postTikTokViaAppleScript(
           try { feedFollowBtn.click(); videoFollowed = true; } catch(e) {}
         }
 
-        // 댓글 아이콘 내부 버튼을 클릭하여 댓글창 열기 (바깥 div가 아닌 내부 button.click() 필수)
-        var icon = document.querySelector('[data-e2e="comment-icon"]');
+        // (3) 댓글 아이콘 내부 버튼을 3단계 마우스 이벤트로 클릭하여 드로어 열기
+        var c = document.querySelector('[data-e2e="recommend-list-item-container"]') || document;
+        var icon = c.querySelector('[data-e2e="comment-icon"]') || document.querySelector('[data-e2e="comment-icon"]');
         if (icon) {
+          var btn = icon.querySelector('button') || icon;
           try {
-            var innerBtn = icon.querySelector('button') || icon;
-            innerBtn.click();
-          } catch(e) {}
+            var opts = { bubbles: true, cancelable: true, view: window };
+            btn.dispatchEvent(new MouseEvent('mousedown', opts));
+            btn.dispatchEvent(new MouseEvent('mouseup', opts));
+            btn.dispatchEvent(new MouseEvent('click', opts));
+          } catch(e) {
+            btn.click();
+          }
         }
         
         var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable="true"]');
@@ -514,44 +524,21 @@ export async function postTikTokViaAppleScript(
       end tell
     `).catch(() => {});
 
-    await delay(2000);
+    await delay(2500);
 
-    // 4. DraftEditor 에 텍스트 주입 및 게시 버튼 클릭 (100% 무인 전송)
+    // 4. DraftEditor 에 텍스트 주입 및 [게시] 버튼 클릭 (100% 무인 전송)
     const scriptPasteAndPost = `
       tell application "Google Chrome"
-        activate
-        tell window 1
-          set active tab index to (count of tabs)
-        end tell
         tell tab id ${tabId} of window 1
-          -- (1) 드로어가 열려있는지 확인하고, 닫혀있으면 다시 한번 열기
+          -- 1) 비디오 일시정지 재확인 및 드로어 미오픈 시 재시도
           execute javascript "(function() {
-            var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
+            var v = document.querySelector('video');
+            if (v) v.pause();
+            var editor = document.querySelector('.public-DraftEditor-content');
             if (!editor) {
               var icon = document.querySelector('[data-e2e=\\"comment-icon\\"]');
-              if (icon) {
-                var btn = icon.querySelector('button') || icon;
-                btn.click();
-              }
-            }
-          })()"
-        end tell
-      end tell
-
-      delay 1.5
-
-      tell application "Google Chrome"
-        tell tab id ${tabId} of window 1
-          -- (2) 에디터 포커스 및 텍스트 주입
-          execute javascript "(function() {
-            var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
-            if (editor) {
-              editor.focus();
-              document.execCommand('selectAll', false, null);
-              document.execCommand('insertText', false, '${escapedComment}');
-              // Draft.js React 상태 갱신을 위해 미세 입력 후 삭제 트리거
-              document.execCommand('insertText', false, ' ');
-              document.execCommand('delete', false, null);
+              var btn = icon ? (icon.querySelector('button') || icon) : null;
+              if (btn) btn.click();
             }
           })()"
         end tell
@@ -561,33 +548,36 @@ export async function postTikTokViaAppleScript(
 
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
+          -- 2) 텍스트 주입 및 React State 활성화 트리거
           return execute javascript "(function() {
+            var editor = document.querySelector('.public-DraftEditor-content') || document.querySelector('[contenteditable=\\"true\\"]');
+            if (!editor) return 'no_editor';
+            
+            editor.focus();
+            document.execCommand('selectAll', false, null);
+            document.execCommand('insertText', false, '${escapedComment}');
+            
+            // Draft.js 이벤트 트리거
+            editor.dispatchEvent(new InputEvent('input', { bubbles: true, cancelable: true }));
+
             var btn = document.querySelector('[data-e2e=\\"comment-post\\"]');
-            if (!btn) return 'no_btn';
+            if (!btn) return 'no_post_btn';
             
-            // 만약 아직 disabled라면 한번 더 에디터 갱신 시도
             if (btn.hasAttribute('disabled')) {
-              var editor = document.querySelector('.public-DraftEditor-content');
-              if (editor) {
-                editor.focus();
-                document.execCommand('insertText', false, '!');
-                document.execCommand('delete', false, null);
-              }
+              // disabled 풀기 위한 추가 insertText
+              document.execCommand('insertText', false, ' ');
+              document.execCommand('delete', false, null);
             }
-            
+
             if (!btn.hasAttribute('disabled')) {
               btn.focus();
               btn.click();
               return 'clicked_enabled';
-            }
-            
-            // 만약 그래도 disabled라면 disabled 강제 제거 후 클릭
-            try {
+            } else {
+              // 강제 제거 후 클릭 fallback
               btn.removeAttribute('disabled');
               btn.click();
               return 'clicked_force';
-            } catch(e) {
-              return 'btn_disabled';
             }
           })()"
         end tell
@@ -625,7 +615,11 @@ export async function postTikTokViaAppleScript(
 
     const isActuallyPosted = verifyResult.verified === true;
 
-    // 6. 원래 탭으로 복구 및 임시 탭 닫기
+    // 6. 사용자가 게시된 댓글을 확인할 수 있도록 5초간 대기 후 원래 탭 복구
+    if (isActuallyPosted) {
+      await delay(5000);
+    }
+
     await runAppleScript(`
       tell application "Google Chrome"
         try
