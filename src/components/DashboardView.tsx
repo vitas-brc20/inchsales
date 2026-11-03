@@ -393,7 +393,7 @@ export default function DashboardView({ link }: DashboardViewProps) {
                   <div className="flex items-center justify-between pb-4 border-b border-slate-100">
                     <div>
                       <h3 className="text-xl font-black text-slate-900">정산금 출금 신청</h3>
-                      <p className="text-xs text-slate-500 mt-0.5">최소 100원부터 토스/계좌로 즉시 신청 가능합니다.</p>
+                      <p className="text-xs text-slate-500 mt-0.5">쿠팡 파트너스 채널 파라미터(subId) 통계 기반 100% 실적 정산</p>
                     </div>
                     <button
                       onClick={() => setWithdrawModalOpen(false)}

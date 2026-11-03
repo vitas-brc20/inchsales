@@ -40,6 +40,24 @@ const INSTAGRAM_TAGS = [
 ];
 
 /**
+ * 유튜브 조회수 텍스트를 숫자로 파싱하여 마이크로/중소형 크리에이터 우선 순위 산출
+ */
+function parseViewCount(viewsText?: string): number {
+  if (!viewsText) return 500;
+  const t = viewsText.replace(/,/g, '');
+  if (t.includes('만')) {
+    const num = parseFloat(t.replace(/[^0-9.]/g, '')) || 1;
+    return num * 10000;
+  }
+  if (t.includes('천')) {
+    const num = parseFloat(t.replace(/[^0-9.]/g, '')) || 1;
+    return num * 1000;
+  }
+  const match = t.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 500;
+}
+
+/**
  * 1. YouTube 실시간 급상승/최신 영상 탐색 (Node HTTPS 요청으로 0.5초 즉시 완료)
  * - 최근 1주일/오늘 업로드된 실시간 영상 중 롱폼 정규 영상만 필터링
  */
@@ -102,6 +120,15 @@ export async function fetchRealtimeYouTubeVideos(query?: string): Promise<Realti
           }
 
           scan(json);
+
+          // 인기 좀 없는 마이크로/루키 크리에이터 우선 지원 정렬
+          // (조회수가 너무 높은 메가 크리에이터보다, 100~15,000회 수준의 중소형 크리에이터가 댓글 반응률과 수익화 참여율이 압도적임)
+          results.sort((a, b) => {
+            const va = parseViewCount(a.viewsText);
+            const vb = parseViewCount(b.viewsText);
+            return va - vb;
+          });
+
           resolve(results);
         } catch {
           resolve([]);

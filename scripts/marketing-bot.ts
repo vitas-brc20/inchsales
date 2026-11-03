@@ -494,8 +494,8 @@ export function matchCreatorSafely(
   const microEligible = eligible.filter((c) => c.tier === 'micro');
   const megaEligible = eligible.filter((c) => c.tier !== 'micro');
 
-  // 소형 크리에이터가 존재할 경우 65% 확률로 소형 우선 배정
-  if (microEligible.length > 0 && (megaEligible.length === 0 || Math.random() < 0.65)) {
+  // 소형/마이크로 크리에이터(인기 적은 크리에이터)가 존재할 경우 90% 이상 최우선 지원 배정
+  if (microEligible.length > 0 && (megaEligible.length === 0 || Math.random() < 0.90)) {
     return microEligible[Math.floor(Math.random() * microEligible.length)];
   }
 
@@ -616,8 +616,8 @@ export function generateCreatorCommentBundle(
   // 틱톡 숏폼 댓글 (친절한 존댓말 톤)
   const tiktokComment = `오 영상에 나왔던 [${productDisplayName}] 최저가 찾았어요 ! ✨\n${tiktokUrl}`;
 
-  // 인스타그램 DM 협업 제안 전문 (영상 제목 직접 인용)
-  const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 '${videoTitle}' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${productDisplayName}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 수익 실시간 확인 & 100원부터 즉시 계좌 출금\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
+  // 인스타그램 DM 협업 제안 전문 (영상 제목 직접 인용 & 파트너스 실제 통계 정산 정책 명시)
+  const instaDm = `안녕하세요 @${creator.handle} 크리에이터님! ${creator.channelName} 채널의 '${videoTitle}' 콘텐츠 항상 너무 즐겁게 챙겨보고 있습니다 ✨\n\n이번 영상에 소개해주신 [${productDisplayName}] 상품에 대해 팬분들의 구매 문의가 쇄도할 것 같아, 번거로운 제휴 가입 절차 없이 바로 수익화하실 수 있도록 @${creator.handle}님 전용 정산 링크를 미리 생성해 두었습니다.\n\n🔗 @${creator.handle}님 전용 정산 링크:\n${instaUrl}\n\n💡 핵심 혜택:\n1. 쿠팡 파트너스 별도 가입 불필요 (링크만 게시하면 즉시 유효)\n2. 플랫폼 최고 수준의 투명한 크리에이터 수익 정산\n3. ${baseDomain} 에서 '@${creator.handle}' 입력 시 누적 클릭 및 실시간 통계 확인 가능\n* 정산 기준: 대시보드의 클릭당 금액은 활동 지원 예상 추정치이며, 실제 정산은 쿠팡 파트너스 공식 리포트 화면의 @${creator.handle}님 채널 파라미터(subId) 통계에 기록된 실구매 매출액 및 정산 수수료를 1원 단위까지 100% 투명하게 확인하여 정산해 드립니다.\n\n팬분들과의 소통과 채널 수익화에 든든한 날개가 되었으면 좋겠습니다. 항상 응원하겠습니다! 😊`;
 
   return {
     creatorHandle: creator.handle,
