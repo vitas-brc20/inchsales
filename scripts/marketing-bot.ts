@@ -10,6 +10,7 @@ import {
   fetchRealtimeInstagramPosts,
   fetchRealtimeTikTokVideos,
   analyzeAndMatchProduct,
+  safeDecodeHandle,
 } from '../src/lib/realtime-discovery';
 import { getPostedCommentRecords } from '../src/lib/storage';
 
@@ -252,19 +253,24 @@ async function isYouTubeShort(id: string): Promise<boolean> {
  * (쇼츠는 댓글 링크 클릭이 유튜브에 의해 차단되므로, 링크가 100% 클릭 가능한 일반 가로 롱폼 영상만 엄격 선별)
  */
 export async function resolveFirstYouTubeVideo(
-  query: string
+  query: string,
+  alreadyCommentedUrls?: Set<string>
 ): Promise<{ videoUrl: string; videoTitle?: string; videoId?: string; channelName?: string; channelHandle?: string } | null> {
   try {
-    // 1차: 일반 롱폼 동영상 후보군 추출
+    // 1차: 일반 롱폼 동영상 후보군 추출 (검색 결과에서 최신 영상들 스캔)
     const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-    const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o '"videoId":"[a-zA-Z0-9_-]\\{11\\}"' | head -n 10`;
+    const cmd = `curl -s -L --max-time 6 -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36" "${url}" | grep -o '"videoId":"[a-zA-Z0-9_-]\\{11\\}"' | head -n 15`;
     const { stdout } = await execAsync(cmd);
     const videoMatches = Array.from(stdout.matchAll(/"videoId":"([a-zA-Z0-9_-]{11})"/g)).map((m) => m[1]);
     const uniqueIds = Array.from(new Set(videoMatches));
 
-    // 쇼츠가 아닌 정규 롱폼 비디오만 필터링 (댓글 하이퍼링크 100% 활성화 보장)
+    // 쇼츠가 아니고 + 아직 댓글을 달지 않은 새로운 롱폼 비디오만 필터링
     let chosenId = '';
     for (const id of uniqueIds) {
+      const candidateUrl = `https://www.youtube.com/watch?v=${id}`;
+      if (alreadyCommentedUrls && alreadyCommentedUrls.has(candidateUrl)) {
+        continue; // 이미 댓글을 단 영상은 건너뜀
+      }
       const shortCheck = await isYouTubeShort(id);
       if (!shortCheck) {
         chosenId = id;
@@ -272,9 +278,6 @@ export async function resolveFirstYouTubeVideo(
       }
     }
 
-    if (!chosenId && uniqueIds.length > 0) {
-      chosenId = uniqueIds[0];
-    }
     if (!chosenId) return null;
 
     const videoId = chosenId;
@@ -318,7 +321,7 @@ export async function resolveFirstYouTubeVideo(
   }
 }
 
-// 1. 기존 검증된 핵심 상품 풀
+// 1. 기존 검증된 핵심 상품 풀 (각 상품별 전용 검색 쿼리 및 인스타 태그 연결)
 const INITIAL_TARGET_POOL = [
   {
     slug: '제로콜라',
@@ -326,6 +329,8 @@ const INITIAL_TARGET_POOL = [
     category: '식음료/음료',
     priceHint: '19,900원 (캔당 820원)',
     shortUrl: 'https://link.coupang.com/a/ikoqLZW3zg',
+    searchQuery: '코카콜라 제로 캔 리뷰',
+    instaTag: '제로콜라',
     hook: '🔥 [핫딜] 쿠팡 로켓배송 코카콜라 제로 캔당 820원대 특가 떴습니다',
     description: '다이어터 필수템 코카콜라 제로 355ml 24캔이 지금 쿠팡 와우회원 특가로 떴네요! 캔당 820원꼴이라 편의점 1+1보다 훨씬 쌉니다.',
   },
@@ -335,6 +340,8 @@ const INITIAL_TARGET_POOL = [
     category: '간식/디저트',
     priceHint: '15,280원 (43% 특가 로켓배송)',
     shortUrl: 'https://link.coupang.com/a/ik4aZWyRZA',
+    searchQuery: '두바이 쫀득 쿠키 리뷰',
+    instaTag: '두바이쿠키',
     hook: '🍪 틱톡 150만뷰 두바이 초콜릿 쫀득 쿠키 15,280원 로켓배송 특가!',
     description: '아직도 두바이 쿠키 못 드셔보신 분? 카다이프 피스타치오 가득 들어간 화제의 그 두쫀쿠 쿠팡 43% 특가로 풀렸습니다!',
   },
@@ -349,6 +356,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '39,600원 (24% 특가 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9367416965&itemId=27716021235&vendorItemId=94764729984&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9367416965&itemId=27716021235&vendorItemId=94764729984&lptag=AF5232288',
+    searchQuery: '카다이프 두바이 쿠키 후기',
+    instaTag: '두바이초콜릿',
     imageUrl: 'https://thumbnail11.coupangcdn.com/thumbnails/remote/212x212ex/image/vendor_inventory/image_audit/stage/manual/a3f17383-2f59-4de5-a98a-41d0176c9553_1774937117592.jpeg',
     tagline: '틱톡 200만뷰 화제의 카다이프 피스타치오 두쫀쿠 실시간 재고 확보!',
     hook: '🍪 [품절임박] 틱톡 200만뷰 두바이 카다이프 쿠키 로켓배송 바로가기!',
@@ -361,6 +370,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '38,900원 (팩당 970원대 특가)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8243670605&itemId=130889429&vendorItemId=3121718413&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8243670605&itemId=130889429&vendorItemId=3121718413&lptag=AF5232288',
+    searchQuery: '굽네 오븐구이 닭가슴살 추천',
+    instaTag: '닭가슴살추천',
     imageUrl: 'https://thumbnail8.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2024/05/10/14/4/6c85e3b5-3d5f-4d37-885d-ef7579cf653b.jpg',
     tagline: '100% 국산 닭가슴살! 부드럽고 촉촉한 식단관리 필수템 로켓배송',
     hook: '💪 [식단특가] 헬스/다이어터 필수템 굽네 닭가슴살 40팩 팩당 970원대 특가!',
@@ -373,6 +384,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '14,800원 (캔당 490원대 특가)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8279872054&itemId=23665748009&vendorItemId=74157319832&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8279872054&itemId=23665748009&vendorItemId=74157319832&lptag=AF5232288',
+    searchQuery: '펩시 제로 라임 캔 후기',
+    instaTag: '펩시제로',
     imageUrl: 'https://thumbnail9.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2023/09/20/15/0/0733a1e1-e945-4235-86f3-93d395d85c08.jpg',
     tagline: '탄산 러버들 종결템! 라임향 톡 쏘는 펩시 제로 로켓배송 최저가',
     hook: '🥤 [초특가] 캔당 490원대! 펩시 제로 라임 30캔 로켓배송 최저가 떴습니다',
@@ -385,6 +398,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '249,000원 (로켓배송 무료배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8674824737&vendorItemId=93467707435&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=8674824737&vendorItemId=93467707435&lptag=AF5232288',
+    searchQuery: '샥즈 오픈핏 이어폰 사용 후기',
+    instaTag: '샥즈',
     imageUrl: 'https://thumbnail10.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/2024/08/22/10/1/4096c14c-eec4-4e2a-a92c-5dfc1e556dfc.jpg',
     tagline: '귀가 편안한 초경량 오픈형 이어폰! 러닝/운동/업무 최강자 로켓배송',
     hook: '🎧 [음질종결] 귀 안 아픈 무선 이어폰 끝판왕 샥즈 오픈핏 2+ 로켓배송!',
@@ -397,6 +412,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '11,000원 (과산화수소 2.8% 집중미백 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=339848193&itemId=1082271085&vendorItemId=5585251715&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=339848193&itemId=1082271085&vendorItemId=5585251715&lptag=AF5232288',
+    searchQuery: '오스템 뷰센 28 미백치약 후기',
+    instaTag: '미백치약',
     imageUrl: 'https://thumbnail8.coupangcdn.com/thumbnails/remote/492x492ex/image/retail/images/272776546096053-fc419bca-d55c-437d-b34c-8ab897272f04.jpg',
     tagline: '커피·흡연 치아 착색 종결! 오스템임플란트 연구진 개발 전문 치아미백제',
     hook: '🦷 [치과미백효과] 누런 이 고민 끝! 오스템 뷰센 28 미백치약 로켓배송 특가',
@@ -409,6 +426,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '16,880원 (누적 3,000만병 승무원 물광보습 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9304025604&itemId=15280462262&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9304025604&itemId=15280462262&lptag=AF5232288',
+    searchQuery: '달바 화이트 트러플 미스트 세럼 솔직후기',
+    instaTag: '달바미스트',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/1025_amir_coupang_oct_80k/2970/cd1098f237e3b55777e2c95b3c455258867666a7917fd09615f9a72d3d6e.jpg',
     tagline: '뿌리는 즉시 도자기 물광 피부 완성! 3,000만병 돌파 승무원 필수 보습 세럼',
     hook: '✨ [물광피부] 건조할 틈 없는 여배우/승무원 원조 물광 스프레이 세럼 최저가!',
@@ -421,6 +440,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '29,520원 (올리브영 1위 24시간 묻어남 없는 미백 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=28253537&itemId=19166818084&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=28253537&itemId=19166818084&lptag=AF5232288',
+    searchQuery: '코스노리 화이트닝 톤업크림 후기',
+    instaTag: '코스노리',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/357249001906818-a69e797f-5867-48cd-ac37-f3c77fcc2cf4.jpg',
     tagline: '옷에 묻어남 없이 24시간 맑고 투명한 피부톤! 올리브영 1위 미백 톤업크림',
     hook: '🌸 [자연스런 쌩얼미백] 파데프리 종결템! 코스노리 화이트닝 톤업크림 1+1 기획',
@@ -433,18 +454,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
-    imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
-    tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
-    hook: '💇‍♀️ [개털탈출] 빗자루 모발도 10초 만에 찰랑이는 물미역 머릿결! 모레모 미라클 10',
-    description: '바르고 10초 방치 후 헹구면 끝! 고농축 미세 단백질이 큐티클 사이사이 침투해 즉각적인 실크 머릿결을 선사합니다.',
-  },
-  {
-    slug: '물미역트리트먼트',
-    name: '모레모 미라클 10 워터 트리트먼트 200ml (10초 물미역 헤어에센스)',
-    category: '헤어/바디',
-    priceHint: '21,500원 (10초 완성 실크 물미역 머릿결 로켓배송)',
-    shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
-    queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9240387387&itemId=19575559037&lptag=AF5232288',
+    searchQuery: '모레모 워터 트리트먼트 미라클 10 후기',
+    instaTag: '모레모',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/195100722581669-260e3f45-530a-43f6-9026-8e4d73c702bc.jpg',
     tagline: '빗자루 개털 머리도 10초 만에 찰랑이는 물미역으로 변신하는 기적의 헤어케어',
     hook: '💇‍♀️ [개털탈출] 빗자루 모발도 10초 만에 찰랑이는 물미역 머릿결! 모레모 미라클 10',
@@ -457,6 +468,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '7,100원 (국민 1위 피지/블랙헤드 올킬 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=25470019&itemId=931146193&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=25470019&itemId=931146193&lptag=AF5232288',
+    searchQuery: '미팩토리 3단 돼지코팩 블랙헤드 후기',
+    instaTag: '돼지코팩',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/866149354384480-4b6d8891-536b-4d7a-8eb3-403cbb7eaf60.jpg',
     tagline: '딸기코 탈출! 모공 속 묵은 블랙헤드와 피지를 뿌리째 뽑아주는 3단 코팩',
     hook: '🐽 [피지폭발주의] 딸기코 구원투수! 3단 돼지코팩으로 블랙헤드 뿌리뽑기',
@@ -469,6 +482,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '48,900원 (풍성한 솔잎 리얼 전나무 트리 풀세트 로켓배송)',
     shortUrl: 'https://www.coupang.com/np/search?q=%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84+%EB%A6%AC%EC%96%BC+%EC%A0%84%EB%82%98%EB%AC%B4+%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4+%ED%8A%B8%EB%A6%AC+%ED%92%80%EC%84%B8%ED%8A%B8&channel=user&lptag=AF5232288',
     queryOrUrl: 'https://www.coupang.com/np/search?q=%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84+%EB%A6%AC%EC%96%BC+%EC%A0%84%EB%82%98%EB%AC%B4+%ED%81%AC%EB%A6%AC%EC%8A%A4%EB%A7%88%EC%8A%A4+%ED%8A%B8%EB%A6%AC+%ED%92%80%EC%84%B8%ED%8A%B8&channel=user&lptag=AF5232288',
+    searchQuery: '크리스마스 전나무 트리 추천 후기',
+    instaTag: '크리스마스트리',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/2023/11/06/15/4/19bf2e2d-3cb8-48b0-a0a5-29c488ad5319.jpg',
     tagline: '올겨울 완벽한 연말 분위기! 풍성하고 고급스러운 프리미엄 전나무 크리스마스 트리',
     hook: '🎄 [얼리버드특가] 품절 전 준비하는 연말 필수템! 프리미엄 전나무 크리스마스 트리 풀세트',
@@ -481,6 +496,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '32,900원 (스타벅스 시그니처 한정판 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=226277604&itemId=716893557&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=226277604&itemId=716893557&lptag=AF5232288',
+    searchQuery: '스타벅스 데비 텀블러 내돈내산',
+    instaTag: '스타벅스텀블러',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/2021/04/16/16/4/3ff94b00-349f-4318-ae71-29ad3ecb3d29.jpg',
     tagline: '품절 대란 스타벅스 한정판 텀블러! 압도적인 보온 보냉력과 고급스러운 감성',
     hook: '☕ [한정수량] 매장 품절 대란 스타벅스 데비 스테인리스 텀블러 로켓배송 긴급 입고!',
@@ -493,6 +510,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '195,020원 (Apple 공식 브랜드관 쿠팡 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9729244277&itemId=29114723176&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9729244277&itemId=29114723176&lptag=AF5232288',
+    searchQuery: '에어팟 4 노이즈캔슬링 후기',
+    instaTag: '에어팟',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/2026/09/10/7/7/ce512298-9be6-447c-ab11-3cbcd8c346d2.jpg',
     tagline: 'Apple 공식 정품! 압도적인 액티브 노이즈 캔슬링과 공간 음향',
     hook: '🍏 [Apple특가] 액티브 노이즈 캔슬링 탑재! Apple 정품 에어팟 카드할인 특가 로켓배송',
@@ -505,6 +524,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '18,900원 (SNS 품절대란 먼작귀 모찌 쿠션 로켓배송)',
     shortUrl: 'https://link.coupang.com/a/ifZPWVBdHE',
     queryOrUrl: 'https://link.coupang.com/a/ifZPWVBdHE',
+    searchQuery: '치이카와 인형 쿠션 언박싱 후기',
+    instaTag: '치이카와',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/vendor_inventory/a933/bceb3ea0f058cfeb774e1d51a660a5d21469e7f82e1858a2e1d7494a44a1.jpg',
     tagline: 'SNS 품절 대란! 말랑쫀득 심쿵 비주얼 치이카와 먼작귀 빅사이즈 인형 쿠션',
     hook: '🧸 [심쿵주의] SNS 품절 대란! 말랑쫀득 치이카와 빅사이즈 모찌 인형 쿠션 특가',
@@ -517,6 +538,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '1,900,000원 (Apple 공식 브랜드관 카드할인 로켓배송)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9024167604&itemId=26462330388&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9024167604&itemId=26462330388&lptag=AF5232288',
+    searchQuery: '아이폰 17 프로 맥스 언박싱 리뷰',
+    instaTag: '아이폰',
     imageUrl: 'https://thumbnail.coupangcdn.com/thumbnails/remote/490x490ex/image/retail/images/24819336320112-e9791646-a8bb-42c0-a5cf-4b48458187f8.jpg',
     tagline: 'Apple 최신 플래그십! A19 Pro 칩셋과 5배 광학 줌 티타늄 디자인 쿠팡 공식 로켓배송',
     hook: '📱 [Apple플래그십] 영롱한 티타늄! Apple 정품 아이폰 17 Pro Max 자급제 로켓배송',
@@ -529,6 +552,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '529,000원 (Apple 공식 브랜드관 로켓배송 최저가)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=6912124565&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=6912124565&lptag=AF5232288',
+    searchQuery: '아이패드 10세대 솔직후기',
+    instaTag: '아이패드',
     imageUrl: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=600&q=80',
     tagline: '인강·필기·영상 감상 가성비 원탑! 올 스크린 디자인 Liquid Retina 로켓배송',
     hook: '🖊️ [가성비태블릿] 대학생·직장인 필수! Apple 2024 아이패드 10세대 10.9 로켓배송 특가',
@@ -541,6 +566,8 @@ const AUTO_DISCOVERY_QUEUE = [
     priceHint: '2,390,000원 (Apple 정품 M5 프로 로켓배송 최대할인)',
     shortUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9140128274&itemId=27961799025&vendorItemId=94919837754&lptag=AF5232288',
     queryOrUrl: 'https://link.coupang.com/re/AFFSDP?pageKey=9140128274&itemId=27961799025&vendorItemId=94919837754&lptag=AF5232288',
+    searchQuery: '맥북 프로 M5 언박싱 리뷰',
+    instaTag: '맥북프로',
     imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80',
     tagline: '전문가를 위한 압도적인 연산 퍼포먼스! M5 칩 탑재 Liquid Retina XDR 로켓배송',
     hook: '💻 [프로종결템] 차원이 다른 퍼포먼스! Apple 정품 맥북 프로 14 M5 로켓배송 즉시출고',
@@ -699,178 +726,180 @@ export async function runMarketingCycle(forcedPlatform?: PlatformType) {
   // 4. 캠페인 포스팅 번들 저장 (다채널 6대 홍보 채널 자동 생성)
   const campaignFile = path.join(CAMPAIGN_DIR, `campaign_${Date.now()}.json`);
 
-  // 4-1. [실시간 핫 트렌드 크리에이터 발굴 엔진] (1순위)
-  // 고정 목록에 의존하지 않고, 지금 유튜브/인스타/틱톡 실시간 급상승 및 추천 피드를 스크랩하여 핫 크리에이터를 즉시 발굴
-  let realtimeTarget: any = null;
-  let matchedProduct: any = null;
+  // 4-1. [상품 검색 기반 실시간 최신 영상 진입 및 크리에이터 발굴 엔진]
+  // 고정 채널 목록을 쓰지 않고, 타깃 상품의 검색어로 플랫폼에서 직접 검색하여
+  // 최신 영상 중 아직 댓글을 달지 않은 새로운 영상에 진입하여 댓글을 작성합니다.
+  let discoveredTarget: {
+    videoUrl: string;
+    title: string;
+    creatorName: string;
+    creatorHandle: string;
+  } | null = null;
   let creatorOutreachBundle: any = null;
   let apiPublishStatus: any = null;
   let browserTaskResult: any = null;
 
-  try {
-    const alreadyCommented = getAlreadyCommentedUrls();
+  const searchQuery = target.searchQuery || `${target.name.replace(/\(.*?\)/g, '').trim()} 후기`;
+  const cleanProdName = target.name.replace(/\(.*?\)/g, '').trim();
+  const instaTag = target.instaTag || target.slug;
+  const alreadyCommented = getAlreadyCommentedUrls();
 
+  console.log(`[${timestamp}] 🔍 [실시간 검색 엔진 가동] 타깃 상품: [${cleanProdName}] | 검색어: "${searchQuery}" | 플랫폼: ${selectedPlatform.toUpperCase()}`);
+
+  try {
     if (selectedPlatform === 'youtube') {
-      const liveVideos = await fetchRealtimeYouTubeVideos();
-      for (const v of liveVideos) {
-        if (alreadyCommented.has(v.videoUrl.trim())) {
-          console.log(`[${timestamp}] ⏭️ [이미 작성된 영상 스킵] ${v.videoUrl}`);
-          continue;
-        }
-        const prod = await analyzeAndMatchProduct(v.title, v.caption);
-        if (prod) {
-          realtimeTarget = v;
-          matchedProduct = prod;
+      // 1순위: 타깃 상품 검색어로 유튜브 실시간 롱폼 정규 영상 검색
+      const searchResults = await fetchRealtimeYouTubeVideos(searchQuery);
+      for (const v of searchResults) {
+        if (!alreadyCommented.has(v.videoUrl.trim())) {
+          discoveredTarget = v;
           break;
+        } else {
+          console.log(`[${timestamp}] ⏭️ [이미 댓글 작성된 유튜브 영상 스킵] ${v.videoUrl}`);
+        }
+      }
+
+      // 2순위: 혹시 비어있으면 롱폼 폴백 검색
+      if (!discoveredTarget) {
+        const fallbackV = await resolveFirstYouTubeVideo(searchQuery, alreadyCommented);
+        if (fallbackV) {
+          discoveredTarget = {
+            videoUrl: fallbackV.videoUrl,
+            title: fallbackV.videoTitle || target.name,
+            creatorName: fallbackV.channelName || '유튜브 크리에이터',
+            creatorHandle: fallbackV.channelHandle ? `@${fallbackV.channelHandle}` : '@youtube_creator',
+          };
         }
       }
     } else if (selectedPlatform === 'instagram') {
-      const livePosts = await fetchRealtimeInstagramPosts();
-      for (const p of livePosts) {
-        if (alreadyCommented.has(p.videoUrl.trim())) {
-          console.log(`[${timestamp}] ⏭️ [이미 작성된 게시물 스킵] ${p.videoUrl}`);
-          continue;
-        }
-        const prod = await analyzeAndMatchProduct(p.title, p.caption);
-        if (prod) {
-          realtimeTarget = p;
-          matchedProduct = prod;
+      const searchResults = await fetchRealtimeInstagramPosts(instaTag);
+      for (const p of searchResults) {
+        if (!alreadyCommented.has(p.videoUrl.trim())) {
+          discoveredTarget = p;
           break;
+        } else {
+          console.log(`[${timestamp}] ⏭️ [이미 댓글 작성된 인스타 게시물 스킵] ${p.videoUrl}`);
         }
       }
     } else {
-      const liveTikToks = await fetchRealtimeTikTokVideos();
-      for (const t of liveTikToks) {
-        if (alreadyCommented.has(t.videoUrl.trim())) {
-          console.log(`[${timestamp}] ⏭️ [이미 작성된 틱톡 영상 스킵] ${t.videoUrl}`);
-          continue;
-        }
-        const prod = await analyzeAndMatchProduct(t.title, t.caption);
-        if (prod) {
-          realtimeTarget = t;
-          matchedProduct = prod;
+      // tiktok
+      const searchResults = await fetchRealtimeTikTokVideos(searchQuery);
+      for (const t of searchResults) {
+        if (!alreadyCommented.has(t.videoUrl.trim())) {
+          discoveredTarget = t;
           break;
+        } else {
+          console.log(`[${timestamp}] ⏭️ [이미 댓글 작성된 틱톡 영상 스킵] ${t.videoUrl}`);
         }
       }
     }
   } catch (err) {
-    console.warn(`[${timestamp}] 실시간 피드 탐색 경고:`, err);
+    console.warn(`[${timestamp}] 실시간 플랫폼 검색 중 경고:`, err);
   }
 
-  // 실시간 발굴 성공 시 -> 실시간 영상과 핫 크리에이터에 즉시 타깃팅!
-  if (realtimeTarget && matchedProduct) {
-    let cleanH = (realtimeTarget.creatorHandle || '').trim();
-    for (let i = 0; i < 3; i++) {
-      if (cleanH.includes('%')) {
-        try { cleanH = decodeURIComponent(cleanH); } catch { break; }
-      } else { break; }
-    }
+  // 발굴된 영상이 있으면 크리에이터 정보 정규화 및 블랙리스트 검사
+  if (discoveredTarget) {
+    let cleanH = safeDecodeHandle(discoveredTarget.creatorHandle || '');
     cleanH = cleanH.replace(/^@+/, '').trim();
+    if (!cleanH) cleanH = safeDecodeHandle(discoveredTarget.creatorName).replace(/[\s\-_]+/g, '');
+    if (!cleanH) cleanH = `${selectedPlatform}_creator`;
 
-    if (isCreatorExcluded(cleanH) || isCreatorExcluded(realtimeTarget.creatorName)) {
-      console.log(`[${timestamp}] 🚫 [제외 크리에이터 감지 건너뜀] ${cleanH} (${realtimeTarget.creatorName})`);
-      realtimeTarget = null;
-    }
-  }
+    if (isCreatorExcluded(cleanH) || isCreatorExcluded(discoveredTarget.creatorName)) {
+      console.log(`[${timestamp}] 🚫 [제외 크리에이터 감지 스킵] ${cleanH} (${discoveredTarget.creatorName})`);
+      discoveredTarget = null;
+    } else {
+      const fullHandle = `@${cleanH}`;
+      const targetUrl = discoveredTarget.videoUrl;
+      const prodLandingUrl = `${BASE_URL}/p/${encodeURIComponent(target.slug)}?ref=${encodeURIComponent(fullHandle)}&ch=${selectedPlatform}`;
+      const commentText = `오 영상에 나왔던 [${cleanProdName}] 최저가 찾았어요 ! ✨\n${prodLandingUrl}`;
 
-  if (realtimeTarget && matchedProduct) {
-    let cleanH = (realtimeTarget.creatorHandle || '').trim();
-    for (let i = 0; i < 3; i++) {
-      if (cleanH.includes('%')) {
-        try { cleanH = decodeURIComponent(cleanH); } catch { break; }
-      } else { break; }
-    }
-    cleanH = cleanH.replace(/^@+/, '').trim();
-    const fullHandle = `@${cleanH}`;
-    const targetUrl = realtimeTarget.videoUrl;
-    const prodLandingUrl = `${BASE_URL}/p/${encodeURIComponent(matchedProduct.slug)}?ref=${encodeURIComponent(fullHandle)}&ch=${selectedPlatform}`;
-    const commentText = `오 영상에 나왔던 [${matchedProduct.displayName}] 최저가 찾았어요 ! ✨\n${prodLandingUrl}`;
+      console.log(`[${timestamp}] 🔥 [검색 기반 타깃 영상 발굴 성공!]`);
+      console.log(`   - 플랫폼: ${selectedPlatform.toUpperCase()}`);
+      console.log(`   - 영상 제목: "${discoveredTarget.title}"`);
+      console.log(`   - 영상 URL: ${targetUrl}`);
+      console.log(`   - 채널/작성자: ${discoveredTarget.creatorName} (${fullHandle})`);
+      console.log(`   - 타깃 상품: [${cleanProdName}] (/p/${target.slug})`);
+      console.log(`   - 전용 수익 링크: ${prodLandingUrl}`);
+      console.log(`   - 작성할 댓글 본문:`);
+      console.log(`     "${commentText}"`);
 
-    console.log(`[${timestamp}] 🔥 [실시간 핫 크리에이터 발굴 성공!] 플랫폼: ${selectedPlatform.toUpperCase()} | 채널: ${realtimeTarget.creatorName} (${fullHandle}) | 영상: "${realtimeTarget.title}"`);
-    console.log(`[${timestamp}] 🎯 [영상 내용 기반 제품 매칭] -> [${matchedProduct.displayName}] (슬러그: ${matchedProduct.slug})`);
-
-    console.log(`[${timestamp}] 💬 [실시간 댓글 전송 준비] "${commentText}"`);
-
-    creatorOutreachBundle = {
-      creatorHandle: fullHandle,
-      creatorName: realtimeTarget.creatorName,
-      creatorTier: 'realtime_trending',
-      creatorCategory: '실시간핫트렌드',
-      videoTitle: realtimeTarget.title,
-      targetVideoUrl: targetUrl,
-      productDisplayName: matchedProduct.displayName,
-      targetProductSlug: matchedProduct.slug,
-      targetProductName: matchedProduct.displayName,
-      landingUrl: prodLandingUrl,
-      commentText,
-      ytComment: commentText,
-      instaComment: commentText,
-      tiktokComment: commentText,
-    };
-
-    // 공식 API 백그라운드 전송 시도
-    try {
-      const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(fullHandle, commentText) : null;
-      const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(fullHandle, commentText) : null;
-      const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(fullHandle, commentText) : null;
-      apiPublishStatus = { youtube: ytResult, instagram: igResult, tiktok: ttResult };
-    } catch (e) {
-      console.warn('API publish check warning:', e);
-    }
-
-    // Chrome 브라우저 자동화 무인 전송
-    try {
-      const keywords = [
-        matchedProduct.displayName,
-        matchedProduct.slug,
-        matchedProduct.name,
-      ].filter(Boolean);
-
-      browserTaskResult = await dispatchBrowserOutreach({
-        platform: selectedPlatform,
+      creatorOutreachBundle = {
         creatorHandle: fullHandle,
-        creatorName: realtimeTarget.creatorName,
-        targetUrl,
+        creatorName: discoveredTarget.creatorName,
+        creatorTier: 'search_matched',
+        creatorCategory: target.category,
+        videoTitle: discoveredTarget.title,
+        targetVideoUrl: targetUrl,
+        productDisplayName: cleanProdName,
+        targetProductSlug: target.slug,
+        targetProductName: cleanProdName,
+        landingUrl: prodLandingUrl,
         commentText,
-        productName: matchedProduct.displayName,
-        expectedKeywords: keywords,
-      });
-    } catch (e) {
-      console.warn('Browser outreach dispatch error:', e);
-    }
-
-    // outreach-queue.json 기록
-    try {
-      let currentOutreach: any = { targets: [] };
-      if (fs.existsSync(OUTREACH_FILE)) {
-        currentOutreach = JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8'));
-      }
-      currentOutreach.generatedAt = timestamp;
-      currentOutreach.latestAutoMatch = {
-        ...creatorOutreachBundle,
-        selectedPlatform,
-        targetUrl,
-        apiPublishStatus,
-        browserTaskResult,
+        ytComment: commentText,
+        instaComment: commentText,
+        tiktokComment: commentText,
       };
-      if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
-      currentOutreach.targets = [
-        {
+
+      // 1. 공식 API 백그라운드 전송 시도
+      try {
+        const ytResult = selectedPlatform === 'youtube' ? await publishYouTubeComment(fullHandle, commentText) : null;
+        const igResult = selectedPlatform === 'instagram' ? await publishInstagramComment(fullHandle, commentText) : null;
+        const ttResult = selectedPlatform === 'tiktok' ? await publishTikTokComment(fullHandle, commentText) : null;
+        apiPublishStatus = { youtube: ytResult, instagram: igResult, tiktok: ttResult };
+      } catch (e) {
+        console.warn('API publish check warning:', e);
+      }
+
+      // 2. Chrome 브라우저 자동화 무인 전송 (실제 해당 영상 URL로 진입하여 댓글 작성 및 게시 버튼 클릭)
+      try {
+        const keywords = [cleanProdName, target.slug, target.name].filter(Boolean);
+        browserTaskResult = await dispatchBrowserOutreach({
+          platform: selectedPlatform,
+          creatorHandle: fullHandle,
+          creatorName: discoveredTarget.creatorName,
+          targetUrl,
+          commentText,
+          productName: cleanProdName,
+          expectedKeywords: keywords,
+        });
+        console.log(`[${timestamp}] 🖥️ [브라우저 자동화 전송 결과]`, browserTaskResult?.details || '완료');
+      } catch (e) {
+        console.warn('Browser outreach dispatch error:', e);
+      }
+
+      // 3. outreach-queue.json 기록 업데이트
+      try {
+        let currentOutreach: any = { targets: [] };
+        if (fs.existsSync(OUTREACH_FILE)) {
+          currentOutreach = JSON.parse(fs.readFileSync(OUTREACH_FILE, 'utf8'));
+        }
+        currentOutreach.generatedAt = timestamp;
+        currentOutreach.latestAutoMatch = {
           ...creatorOutreachBundle,
           selectedPlatform,
           targetUrl,
           apiPublishStatus,
           browserTaskResult,
-        },
-        ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== fullHandle),
-      ].slice(0, 20);
+        };
+        if (!Array.isArray(currentOutreach.targets)) currentOutreach.targets = [];
+        currentOutreach.targets = [
+          {
+            ...creatorOutreachBundle,
+            selectedPlatform,
+            targetUrl,
+            apiPublishStatus,
+            browserTaskResult,
+          },
+          ...currentOutreach.targets.filter((t: any) => t.creatorHandle !== fullHandle),
+        ].slice(0, 20);
 
-      fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
-    } catch (e) {
-      console.warn('Failed to update outreach queue:', e);
+        fs.writeFileSync(OUTREACH_FILE, JSON.stringify(currentOutreach, null, 2), 'utf8');
+      } catch (e) {
+        console.warn('Failed to update outreach queue:', e);
+      }
     }
   } else {
-    console.log();
+    console.log(`[${timestamp}] ⚠️ [안내] "${searchQuery}" 검색 결과에서 새로운 영상을 찾지 못하여 다음 사이클로 이관됩니다.`);
   }
 
   const campaignData = {
@@ -984,15 +1013,23 @@ export async function start10MinScheduler() {
   }, INTERVAL_MS);
 }
 
-// CLI 실행 처리
-const cliArgs = process.argv.slice(2);
-const platformFlag = cliArgs.find((a, i) => a === '--platform' && cliArgs[i + 1])
-  ? (cliArgs[cliArgs.indexOf('--platform') + 1] as PlatformType)
-  : undefined;
-const isSchedulerMode = cliArgs.includes('--scheduler') || cliArgs.includes('-s') || cliArgs.includes('--daemon');
+// CLI 직접 실행 시에만 사이클 또는 스케줄러 실행
+const isDirectRun = process.argv[1] && (
+  process.argv[1].endsWith('marketing-bot.ts') ||
+  process.argv[1].endsWith('marketing-bot.js') ||
+  process.argv[1].endsWith('marketing-bot')
+);
 
-if (isSchedulerMode) {
-  start10MinScheduler().catch(console.error);
-} else {
-  runMarketingCycle(platformFlag).catch(console.error);
+if (isDirectRun) {
+  const cliArgs = process.argv.slice(2);
+  const platformFlag = cliArgs.find((a, i) => a === '--platform' && cliArgs[i + 1])
+    ? (cliArgs[cliArgs.indexOf('--platform') + 1] as PlatformType)
+    : undefined;
+  const isSchedulerMode = cliArgs.includes('--scheduler') || cliArgs.includes('-s') || cliArgs.includes('--daemon');
+
+  if (isSchedulerMode) {
+    start10MinScheduler().catch(console.error);
+  } else {
+    runMarketingCycle(platformFlag).catch(console.error);
+  }
 }

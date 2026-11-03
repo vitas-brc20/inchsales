@@ -125,85 +125,97 @@ function parseViewCount(viewsText?: string): number {
 
 /**
  * 1. YouTube 실시간 급상승/최신 영상 탐색 (Node HTTPS 요청으로 0.5초 즉시 완료)
- * - 최근 1주일/오늘 업로드된 실시간 영상 중 롱폼 정규 영상만 필터링
+ * - 1차: 최근 1주일 업로드된 실시간 영상 탐색
+ * - 2차: 검색 결과가 없을 경우 일반 관련도 검색으로 폭넓게 롱폼 영상 수집
  */
 export async function fetchRealtimeYouTubeVideos(query?: string): Promise<RealtimeVideoTarget[]> {
   const selectedQuery = query || YOUTUBE_SEARCH_QUERIES[Math.floor(Math.random() * YOUTUBE_SEARCH_QUERIES.length)];
-  const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(selectedQuery)}&sp=EgIIAw%253D%253D&hl=ko&gl=KR`;
 
-  return new Promise((resolve) => {
-    const headers = {
-      'User-Agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      'Accept-Language': 'ko-KR,ko;q=0.9',
-    };
+  async function executeSearch(withFilter: boolean): Promise<RealtimeVideoTarget[]> {
+    const url = withFilter
+      ? `https://www.youtube.com/results?search_query=${encodeURIComponent(selectedQuery)}&sp=EgIIAw%253D%253D&hl=ko&gl=KR`
+      : `https://www.youtube.com/results?search_query=${encodeURIComponent(selectedQuery)}&hl=ko&gl=KR`;
 
-    const req = https.get(url, { headers }, (res) => {
-      let data = '';
-      res.on('data', (c) => (data += c));
-      res.on('end', () => {
-        const match = data.match(/var ytInitialData = ({.*?});<\/script>/);
-        if (!match) return resolve([]);
-        try {
-          const json = JSON.parse(match[1]);
-          const results: RealtimeVideoTarget[] = [];
-          
-          function scan(obj: any) {
-            if (!obj || typeof obj !== 'object') return;
-            if (obj.videoRenderer) {
-              const v = obj.videoRenderer;
-              const videoId = v.videoId;
-              const title = v.title?.runs?.map((r: any) => r.text).join('') || v.title?.simpleText || '';
-              const channelName = v.ownerText?.runs?.[0]?.text || '';
-              const handleUrl = v.ownerText?.runs?.[0]?.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url || '';
-              let handle = '';
-              if (handleUrl.includes('/@')) {
-                const rawHandle = handleUrl.split('/@')[1].split('/')[0];
-                handle = '@' + safeDecodeHandle(rawHandle);
-              } else if (channelName) {
-                handle = `@${safeDecodeHandle(channelName).replace(/[\s\-_]+/g, '')}`;
+    return new Promise((resolve) => {
+      const headers = {
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9',
+      };
+
+      const req = https.get(url, { headers }, (res) => {
+        let data = '';
+        res.on('data', (c) => (data += c));
+        res.on('end', () => {
+          const match = data.match(/var ytInitialData = ({.*?});<\/script>/);
+          if (!match) return resolve([]);
+          try {
+            const json = JSON.parse(match[1]);
+            const results: RealtimeVideoTarget[] = [];
+
+            function scan(obj: any) {
+              if (!obj || typeof obj !== 'object') return;
+              if (obj.videoRenderer) {
+                const v = obj.videoRenderer;
+                const videoId = v.videoId;
+                const title = v.title?.runs?.map((r: any) => r.text).join('') || v.title?.simpleText || '';
+                const channelName = v.ownerText?.runs?.[0]?.text || '';
+                const handleUrl = v.ownerText?.runs?.[0]?.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url || '';
+                let handle = '';
+                if (handleUrl.includes('/@')) {
+                  const rawHandle = handleUrl.split('/@')[1].split('/')[0];
+                  handle = '@' + safeDecodeHandle(rawHandle);
+                } else if (channelName) {
+                  handle = `@${safeDecodeHandle(channelName).replace(/[\s\-_]+/g, '')}`;
+                }
+                const published = v.publishedTimeText?.simpleText || '';
+                const views = v.viewCountText?.simpleText || '';
+
+                if (videoId && title && !isBlacklisted(handle) && !isBlacklisted(channelName)) {
+                  results.push({
+                    platform: 'youtube',
+                    videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+                    title,
+                    creatorName: channelName || handle,
+                    creatorHandle: handle.startsWith('@') ? handle : `@${handle}`,
+                    publishedTime: published,
+                    viewsText: views,
+                  });
+                }
               }
-              const published = v.publishedTimeText?.simpleText || '';
-              const views = v.viewCountText?.simpleText || '';
-
-              if (videoId && title && !isBlacklisted(handle) && !isBlacklisted(channelName)) {
-                results.push({
-                  platform: 'youtube',
-                  videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
-                  title,
-                  creatorName: channelName || handle,
-                  creatorHandle: handle.startsWith('@') ? handle : `@${handle}`,
-                  publishedTime: published,
-                  viewsText: views,
-                });
-              }
+              for (const k of Object.keys(obj)) scan(obj[k]);
             }
-            for (const k of Object.keys(obj)) scan(obj[k]);
+
+            scan(json);
+
+            // 마이크로/루키 크리에이터 우선 지원 정렬
+            results.sort((a, b) => {
+              const va = parseViewCount(a.viewsText);
+              const vb = parseViewCount(b.viewsText);
+              return va - vb;
+            });
+
+            resolve(results);
+          } catch {
+            resolve([]);
           }
+        });
+      });
 
-          scan(json);
-
-          // 인기 좀 없는 마이크로/루키 크리에이터 우선 지원 정렬
-          // (조회수가 너무 높은 메가 크리에이터보다, 100~15,000회 수준의 중소형 크리에이터가 댓글 반응률과 수익화 참여율이 압도적임)
-          results.sort((a, b) => {
-            const va = parseViewCount(a.viewsText);
-            const vb = parseViewCount(b.viewsText);
-            return va - vb;
-          });
-
-          resolve(results);
-        } catch {
-          resolve([]);
-        }
+      req.on('error', () => resolve([]));
+      req.setTimeout(6000, () => {
+        req.destroy();
+        resolve([]);
       });
     });
+  }
 
-    req.on('error', () => resolve([]));
-    req.setTimeout(6000, () => {
-      req.destroy();
-      resolve([]);
-    });
-  });
+  // 1차 최신 필터 검색
+  const firstTry = await executeSearch(true);
+  if (firstTry.length > 0) return firstTry;
+
+  // 2차 전체 검색
+  return await executeSearch(false);
 }
 
 /**
@@ -294,12 +306,12 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
 
 /**
  * 3. TikTok 실시간 추천 피드/탐색 스크랩 (Chrome 백그라운드 탭 & 무간섭)
- * - 단순 일상/셀카 피드가 뜨는 foryou 대신, 실제 [올영추천템 / 내돈내산리뷰] 검색 피드에서 쇼핑 의도 100% 확실한 영상만 수집
+ * - 상품 관련 검색어 또는 [올영추천템 / 내돈내산리뷰] 검색 피드에서 쇼핑 의도 100% 확실한 영상만 수집
  */
-export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]> {
+export async function fetchRealtimeTikTokVideos(customQuery?: string): Promise<RealtimeVideoTarget[]> {
   let tabId = '';
   const searchQueries = ['올영추천템', '내돈내산추천', '화장품솔직후기', '올영세일꿀템'];
-  const query = searchQueries[Math.floor(Math.random() * searchQueries.length)];
+  const query = customQuery || searchQueries[Math.floor(Math.random() * searchQueries.length)];
   const searchUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
 
   try {
