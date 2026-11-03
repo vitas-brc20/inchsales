@@ -1,5 +1,37 @@
 [
   {
+    "id": "comment_1793692078879_32u0v",
+    "timestamp": "2026-11-03T07:47:58.879Z",
+    "platform": "tiktok",
+    "creatorHandle": "@muk_kingkong",
+    "creatorName": "muk_kingkong",
+    "productName": "펩시 제로슈거 라임향 250ml 30캔",
+    "targetUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
+    "commentText": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "inchSaleUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "success": false,
+    "verified": false,
+    "verifiedMethod": "DOM_STRICT_VERIFIED",
+    "postUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
+    "message": "TikTok 댓글 게시 미반영 (제출시도: false, 사후검증실패: 댓글 목록 미출력)"
+  },
+  {
+    "id": "comment_1793691464144_2gqfh",
+    "timestamp": "2026-11-03T07:37:44.144Z",
+    "platform": "youtube",
+    "creatorHandle": "@SoraSalon",
+    "creatorName": "소살 Sora Salon",
+    "productName": "코스노리 화이트닝 드레스 톤업크림 50ml 2개",
+    "targetUrl": "https://www.youtube.com/watch?v=t4xOpeBR89g",
+    "commentText": "오 영상에 나왔던 [코스노리 화이트닝 드레스 톤업크림 50ml 2개] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+    "inchSaleUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+    "success": true,
+    "verified": true,
+    "verifiedMethod": "DOM_STRICT_VERIFIED",
+    "postUrl": "https://www.youtube.com/watch?v=t4xOpeBR89g",
+    "message": "YouTube 댓글 작성 및 [댓글] 버튼 클릭 완료 (백그라운드 100% 무인 전송)"
+  },
+  {
     "id": "comment_1793690880591_p1a3q",
     "timestamp": "2026-11-03T07:28:00.591Z",
     "platform": "instagram",

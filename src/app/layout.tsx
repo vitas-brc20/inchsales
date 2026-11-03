@@ -8,6 +8,12 @@ export const metadata: Metadata = {
   keywords: ['크리에이터 쇼핑 링크', '쿠팡 파트너스', '인스타 릴스 공구', '틱톡 추천템', '서브 어필리에이트'],
   verification: {
     google: 'LBW5pnmqvikg5Xl2m0_EVeYRqSm735Bfh_VFml3dvYM',
+    other: {
+      'tiktok-developers-site-verification': [
+        'GGxBzP9JGhXQdFZcrrv75HEmgsRFSsgW',
+        'tiktok-developers-site-verification=GGxBzP9JGhXQdFZcrrv75HEmgsRFSsgW',
+      ],
+    },
   },
   icons: {
     icon: [

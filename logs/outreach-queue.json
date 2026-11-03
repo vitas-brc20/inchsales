@@ -1,7 +1,75 @@
 {
-  "generatedAt": "2026-11-03T07:27:26.431Z",
+  "generatedAt": "2026-11-03T07:47:26.438Z",
   "totalTargetCreators": 5,
   "targets": [
+    {
+      "creatorHandle": "@muk_kingkong",
+      "creatorName": "muk_kingkong",
+      "creatorTier": "search_matched",
+      "creatorCategory": "식음료/음료",
+      "videoTitle": "봄신상 제로탄산 펩시제로 피치향 솔직후기",
+      "targetVideoUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
+      "productDisplayName": "펩시 제로슈거 라임향 250ml 30캔",
+      "targetProductSlug": "펩시제로",
+      "targetProductName": "펩시 제로슈거 라임향 250ml 30캔",
+      "landingUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+      "commentText": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+      "ytComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+      "instaComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+      "tiktokComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+      "selectedPlatform": "tiktok",
+      "targetUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
+      "apiPublishStatus": {
+        "youtube": null,
+        "instagram": null,
+        "tiktok": {
+          "platform": "tiktok",
+          "targetHandle": "@muk_kingkong",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        }
+      },
+      "browserTaskResult": {
+        "success": false,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[틱톡 댓글 미반영] TikTok 댓글 게시 미반영 (제출시도: false, 사후검증실패: 댓글 목록 미출력) (영상 URL: https://www.tiktok.com/@muk_kingkong/video/7622369553560997137)"
+      }
+    },
+    {
+      "creatorHandle": "@SoraSalon",
+      "creatorName": "소살 Sora Salon",
+      "creatorTier": "search_matched",
+      "creatorCategory": "뷰티/메이크업",
+      "videoTitle": "[SUB] 내돈내산🇰🇷1등 톤업크림 8개 비교 진짜 1등은?🏆진짜 좋아? 맞춤 추천부터 바르는법까지🔥KR the best 8 tone-up creams.",
+      "targetVideoUrl": "https://www.youtube.com/watch?v=t4xOpeBR89g",
+      "productDisplayName": "코스노리 화이트닝 드레스 톤업크림 50ml 2개",
+      "targetProductSlug": "미백크림",
+      "targetProductName": "코스노리 화이트닝 드레스 톤업크림 50ml 2개",
+      "landingUrl": "https://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+      "commentText": "오 영상에 나왔던 [코스노리 화이트닝 드레스 톤업크림 50ml 2개] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+      "ytComment": "오 영상에 나왔던 [코스노리 화이트닝 드레스 톤업크림 50ml 2개] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+      "instaComment": "오 영상에 나왔던 [코스노리 화이트닝 드레스 톤업크림 50ml 2개] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+      "tiktokComment": "오 영상에 나왔던 [코스노리 화이트닝 드레스 톤업크림 50ml 2개] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AF%B8%EB%B0%B1%ED%81%AC%EB%A6%BC?ref=%40SoraSalon&ch=youtube",
+      "selectedPlatform": "youtube",
+      "targetUrl": "https://www.youtube.com/watch?v=t4xOpeBR89g",
+      "apiPublishStatus": {
+        "youtube": {
+          "platform": "youtube",
+          "targetHandle": "@SoraSalon",
+          "success": true,
+          "status": "TOKEN_REQUIRED",
+          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+        },
+        "instagram": null,
+        "tiktok": null
+      },
+      "browserTaskResult": {
+        "success": true,
+        "method": "APPLESCRIPT_FULL_AUTO",
+        "details": "[100% 완전 자동 전송 완료] @SoraSalon 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료! URL: https://www.youtube.com/watch?v=t4xOpeBR89g"
+      }
+    },
     {
       "creatorHandle": "@ssonggram",
       "creatorName": "ssonggram",
@@ -613,108 +681,40 @@
         "method": "APPLESCRIPT_FULL_AUTO",
         "details": "[틱톡 댓글 미반영] TikTok 댓글 게시 미반영 (버튼클릭: false, 사후검증실패: 댓글 목록 미출력) (영상 URL: https://www.tiktok.com/@aramjjang/video/7404048995409988882)"
       }
-    },
-    {
-      "creatorHandle": "@_just_milking",
-      "creatorName": "_just_milking",
-      "creatorTier": "search_matched",
-      "creatorCategory": "뷰티/스킨케어",
-      "videoTitle": "다이소 추천템 #미팩토리돼지코팩",
-      "targetVideoUrl": "https://www.tiktok.com/@_just_milking/video/7422957361163144456",
-      "productDisplayName": "미팩토리 3단 돼지 코팩",
-      "targetProductSlug": "블랙헤드제거",
-      "targetProductName": "미팩토리 3단 돼지 코팩",
-      "landingUrl": "https://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40_just_milking&ch=tiktok",
-      "commentText": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40_just_milking&ch=tiktok",
-      "ytComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40_just_milking&ch=tiktok",
-      "instaComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40_just_milking&ch=tiktok",
-      "tiktokComment": "오 영상에 나왔던 [미팩토리 3단 돼지 코팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%B8%94%EB%9E%99%ED%97%A4%EB%93%9C%EC%A0%9C%EA%B1%B0?ref=%40_just_milking&ch=tiktok",
-      "selectedPlatform": "tiktok",
-      "targetUrl": "https://www.tiktok.com/@_just_milking/video/7422957361163144456",
-      "apiPublishStatus": {
-        "youtube": null,
-        "instagram": null,
-        "tiktok": {
-          "platform": "tiktok",
-          "targetHandle": "@_just_milking",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        }
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_FULL_AUTO",
-        "details": "[틱톡 팔로우+댓글 무인 전송 완료] @_just_milking 팔로우 완료 및 영상 댓글 등록: https://www.tiktok.com/@_just_milking/video/7422957361163144456"
-      }
-    },
-    {
-      "creatorHandle": "@도던_official",
-      "creatorName": "도던",
-      "creatorTier": "search_matched",
-      "creatorCategory": "헬스/단백질",
-      "videoTitle": "닭가슴살, 제발 2,000원 주고 사지 마세요. (가성비 식단 초급~고급자 총정리)",
-      "targetVideoUrl": "https://www.youtube.com/watch?v=7vmCluz92_w",
-      "productDisplayName": "굽네 오븐구이 통 닭가슴살 40팩",
-      "targetProductSlug": "굽네닭가슴살",
-      "targetProductName": "굽네 오븐구이 통 닭가슴살 40팩",
-      "landingUrl": "https://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%40%EB%8F%84%EB%8D%98_official&ch=youtube",
-      "commentText": "오 영상에 나왔던 [굽네 오븐구이 통 닭가슴살 40팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%40%EB%8F%84%EB%8D%98_official&ch=youtube",
-      "ytComment": "오 영상에 나왔던 [굽네 오븐구이 통 닭가슴살 40팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%40%EB%8F%84%EB%8D%98_official&ch=youtube",
-      "instaComment": "오 영상에 나왔던 [굽네 오븐구이 통 닭가슴살 40팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%40%EB%8F%84%EB%8D%98_official&ch=youtube",
-      "tiktokComment": "오 영상에 나왔던 [굽네 오븐구이 통 닭가슴살 40팩] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EA%B5%BD%EB%84%A4%EB%8B%AD%EA%B0%80%EC%8A%B4%EC%82%B4?ref=%40%EB%8F%84%EB%8D%98_official&ch=youtube",
-      "selectedPlatform": "youtube",
-      "targetUrl": "https://www.youtube.com/watch?v=7vmCluz92_w",
-      "apiPublishStatus": {
-        "youtube": {
-          "platform": "youtube",
-          "targetHandle": "@도던_official",
-          "success": true,
-          "status": "TOKEN_REQUIRED",
-          "error": "YOUTUBE_OAUTH_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-        },
-        "instagram": null,
-        "tiktok": null
-      },
-      "browserTaskResult": {
-        "success": true,
-        "method": "APPLESCRIPT_FULL_AUTO",
-        "details": "[100% 완전 자동 전송 완료] @도던_official 영상에 댓글 작성 및 [댓글] 버튼 클릭 완료! URL: https://www.youtube.com/watch?v=7vmCluz92_w"
-      }
     }
   ],
   "latestAutoMatch": {
-    "creatorHandle": "@ssonggram",
-    "creatorName": "ssonggram",
+    "creatorHandle": "@muk_kingkong",
+    "creatorName": "muk_kingkong",
     "creatorTier": "search_matched",
-    "creatorCategory": "뷰티/스킨케어",
-    "videoTitle": "Instagram",
-    "targetVideoUrl": "https://www.instagram.com/p/DKRarP1x8ML/",
-    "productDisplayName": "달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml",
-    "targetProductSlug": "물광피부로션",
-    "targetProductName": "달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml",
-    "landingUrl": "https://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=%40ssonggram&ch=instagram",
-    "commentText": "오 영상에 나왔던 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=%40ssonggram&ch=instagram",
-    "ytComment": "오 영상에 나왔던 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=%40ssonggram&ch=instagram",
-    "instaComment": "오 영상에 나왔던 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=%40ssonggram&ch=instagram",
-    "tiktokComment": "오 영상에 나왔던 [달바 화이트 트러플 프리미엄 퍼스트 스프레이 세럼 100ml] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%EB%AC%BC%EA%B4%91%ED%94%BC%EB%B6%80%EB%A1%9C%EC%85%98?ref=%40ssonggram&ch=instagram",
-    "selectedPlatform": "instagram",
-    "targetUrl": "https://www.instagram.com/p/DKRarP1x8ML/",
+    "creatorCategory": "식음료/음료",
+    "videoTitle": "봄신상 제로탄산 펩시제로 피치향 솔직후기",
+    "targetVideoUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
+    "productDisplayName": "펩시 제로슈거 라임향 250ml 30캔",
+    "targetProductSlug": "펩시제로",
+    "targetProductName": "펩시 제로슈거 라임향 250ml 30캔",
+    "landingUrl": "https://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "commentText": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "ytComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "instaComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "tiktokComment": "오 영상에 나왔던 [펩시 제로슈거 라임향 250ml 30캔] 최저가 찾았어요 ! ✨\nhttps://inch.sale/p/%ED%8E%A9%EC%8B%9C%EC%A0%9C%EB%A1%9C?ref=%40muk_kingkong&ch=tiktok",
+    "selectedPlatform": "tiktok",
+    "targetUrl": "https://www.tiktok.com/@muk_kingkong/video/7622369553560997137",
     "apiPublishStatus": {
       "youtube": null,
-      "instagram": {
-        "platform": "instagram",
-        "targetHandle": "@ssonggram",
+      "instagram": null,
+      "tiktok": {
+        "platform": "tiktok",
+        "targetHandle": "@muk_kingkong",
         "success": true,
         "status": "TOKEN_REQUIRED",
-        "error": "INSTAGRAM_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
-      },
-      "tiktok": null
+        "error": "TIKTOK_ACCESS_TOKEN 환경변수가 설정되지 않아 대기 큐에 보관되었습니다."
+      }
     },
     "browserTaskResult": {
-      "success": true,
+      "success": false,
       "method": "APPLESCRIPT_FULL_AUTO",
-      "details": "[인스타그램 팔로우+댓글 무인 전송 완료] @ssonggram 팔로우 완료 및 게시물 댓글 등록: https://www.instagram.com/p/DKRarP1x8ML/"
+      "details": "[틱톡 댓글 미반영] TikTok 댓글 게시 미반영 (제출시도: false, 사후검증실패: 댓글 목록 미출력) (영상 URL: https://www.tiktok.com/@muk_kingkong/video/7622369553560997137)"
     }
   }
 }
