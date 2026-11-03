@@ -322,9 +322,39 @@ export async function postInstagramViaAppleScript(
       parsed = { success: false, reason: 'parse_error' };
     }
 
+    // 전송 반영 대기
     await delay(3000);
 
-    // 5. 완료 후 백그라운드 임시 탭 자동 닫기 (클린업)
+    // 5. 실제 댓글 등록 여부 DOM 2차 검증 (textarea 비워짐 및 댓글 리스트 반영 확인)
+    const jsVerifyPost = `
+      (function() {
+        var ta = document.querySelector('textarea');
+        var isCleared = ta ? (ta.value === '') : false;
+        var comments = Array.from(document.querySelectorAll('ul li, div[role="dialog"] span')).map(function(el) {
+          return el.innerText || '';
+        });
+        var foundComment = comments.some(function(c) {
+          return c.includes('inch.sale') || c.includes('최저가');
+        });
+        return JSON.stringify({ isCleared: isCleared, foundComment: foundComment });
+      })()
+    `;
+    const verifyRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(jsVerifyPost)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
+    let verifyResult: any = {};
+    try {
+      verifyResult = JSON.parse(verifyRaw);
+    } catch {}
+
+    const isActuallyPosted = parsed.success === true && (verifyResult.isCleared || verifyResult.foundComment);
+
+    // 6. 완료 후 백그라운드 임시 탭 자동 닫기 (클린업)
     await runAppleScript(`
       tell application "Google Chrome"
         try
@@ -334,10 +364,10 @@ export async function postInstagramViaAppleScript(
     `).catch(() => {});
 
     return {
-      success: parsed.success === true,
-      message: parsed.success === true
-        ? `인스타그램 크리에이터 팔로우 및 게시물 댓글 무인 게시 완료 (팔로우: ${navRes.followed || parsed.followed ? '완료' : '이미 팔로잉'})`
-        : `인스타그램 댓글 시도 완료 (결과: ${parsed.reason})`,
+      success: isActuallyPosted,
+      message: isActuallyPosted
+        ? `인스타그램 크리에이터 팔로우 및 게시물 댓글 무인 게시 완료 (검증됨, 팔로우: ${navRes.followed || parsed.followed ? '완료' : '이미 팔로잉'})`
+        : `인스타그램 댓글 게시 미반영 (상태: ${parsed.reason || '미검증'})`,
       postUrl: finalUrl?.trim() || navRes.url || profileOrPostUrl,
       captionText: parsed.caption?.trim(),
     };
@@ -483,7 +513,7 @@ export async function postTikTokViaAppleScript(
 
     await delay(2000);
 
-    // 4. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭
+    // 4. DraftEditor 에 텍스트 붙여넣기 및 게시 버튼 클릭 시도
     const scriptPasteAndPost = `
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
@@ -492,37 +522,60 @@ export async function postTikTokViaAppleScript(
             if (editor) {
               editor.focus();
               document.execCommand('selectAll', false, null);
+              document.execCommand('insertText', false, '${escapedComment}');
             }
           })()"
         end tell
       end tell
 
-      delay 0.4
-      tell application "System Events"
-        keystroke "v" using command down
-      end tell
-
-      delay 0.8
+      delay 0.5
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript "(function() {
             var btn = document.querySelector('[data-e2e=\\"comment-post\\"]');
-            if (btn) {
-              btn.removeAttribute('disabled');
+            if (btn && !btn.hasAttribute('disabled')) {
               btn.focus();
               btn.click();
-              return 'clicked';
+              return 'clicked_enabled';
             }
-            return 'no_btn';
+            return btn ? 'btn_disabled' : 'no_btn';
           })()"
         end tell
       end tell
     `;
 
     const postResult = await runAppleScript(scriptPasteAndPost).catch(() => 'no_btn');
-    await delay(2500);
+    await delay(3000);
 
-    // 5. 원래 탭으로 복구 및 임시 탭 닫기
+    // 5. 실제 틱톡 댓글 등록 여부 DOM 정밀 검증 (댓글 목록에 내 댓글이 나타났는지 확인)
+    const jsVerifyTikTokComment = `
+      (function() {
+        var comments = Array.from(document.querySelectorAll('[data-e2e=\\"comment-level-1\\"], div[class*=\\"DivCommentItem\\"]')).map(function(el) {
+          return el.innerText || '';
+        });
+        var found = comments.some(function(c) {
+          return c.includes('inch.sale') || c.includes('최저가');
+        });
+        return JSON.stringify({ verified: found, count: comments.length });
+      })()
+    `;
+
+    const verifyRaw = await runAppleScript(`
+      tell application "Google Chrome"
+        tell tab id ${tabId} of window 1
+          return execute javascript ${JSON.stringify(jsVerifyTikTokComment)}
+        end tell
+      end tell
+    `).catch(() => '{}');
+
+    let verifyResult: any = {};
+    try {
+      verifyResult = JSON.parse(verifyRaw);
+    } catch {}
+
+    const isActuallyPosted = verifyResult.verified === true;
+
+    // 6. 원래 탭으로 복구 및 임시 탭 닫기
     await runAppleScript(`
       tell application "Google Chrome"
         try
@@ -535,10 +588,10 @@ export async function postTikTokViaAppleScript(
     `).catch(() => {});
 
     return {
-      success: postResult.includes('clicked'),
-      message: postResult.includes('clicked')
-        ? `TikTok 크리에이터 팔로우 및 영상 댓글 무인 게시 완료 (${navRes.url || searchOrProfileUrl})`
-        : `TikTok 게시 시도 (결과: ${postResult})`,
+      success: isActuallyPosted,
+      message: isActuallyPosted
+        ? `TikTok 크리에이터 팔로우 및 영상 댓글 무인 게시 완료 (검증됨: ${navRes.url || searchOrProfileUrl})`
+        : `TikTok 댓글 게시 미반영 (상태: ${postResult}, 검증실패: 실제 댓글 목록 미출력)`,
       videoUrl: navRes.url || searchOrProfileUrl,
     };
   } catch (err: any) {

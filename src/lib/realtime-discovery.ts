@@ -8,6 +8,46 @@ import { getLinkBySlug, getAllLinks, createProductLink } from './storage';
 // 제외 크리에이터 블랙리스트 (유트루 등)
 const BLACKLIST_IDENTIFIERS = ['yootrue', 'yootrue5502', 'yootrue_beauty', '유트루'];
 
+// 반드시 포함되어야 하는 쇼핑/리뷰/상품 카테고리 화이트리스트 키워드
+const REQUIRED_SHOPPING_KEYWORDS = [
+  // 1. 리뷰/쇼핑 명시적 키워드
+  '내돈내산', '올영', '올리브영', '추천템', '꿀템', '리뷰', '후기', '솔직후기',
+  '하울', '언박싱', '공구', '인생템', '정착템', '비교', '가성비', '장단점', '세일',
+  // 2. 구체적 상품군/성분
+  '앰플', '세럼', '크림', '토너', '에센스', '트리트먼트', '린스', '샴푸', '선크림',
+  '쿠션', '파데', '파운데이션', '틴트', '립스틱', '립밤', '마스크팩', '패드', '코팩',
+  '블랙헤드', '모공', '미백', 'pdrn', '나이아신', '레티놀', '시카', '수분크림',
+  '이어폰', '에어팟', '헤드폰', '키보드', '마우스', '거치대', '충전기', '케이스',
+  '아이폰', '맥북', '아이패드', '갤캠스', '태블릿', '노트북',
+  '닭가슴살', '단백질', '프로틴', '쉐이크', '다이어트식단', '쿠키', '두바이', '카다이프',
+  '제로콜라', '펩시제로', '치약', '미백치약', '칫솔'
+];
+
+// 일상/셀카/친목/댄스 등 상품과 무관한 피드 엄격 배제 키워드
+const IRRELEVANT_CONTENT_KEYWORDS = [
+  '셀카', '일상', '친구', '친목', '학교', '중딩', '고딩', '09', '08', '07', '06',
+  '광주', '서울', '부산', '대구', '대전', '동창', '체육복', '남친', '여친', '연애',
+  '소통', '맞팔', '선팔', '좋반', 'fyp', '추천떠라', '기절', '웃긴', '개웃김',
+  '챌린지', '댄스', '커버댄스', '노래', '아이돌', '직캠', '오운완', '심심'
+];
+
+export function hasStrictShoppingOrReviewIntent(text: string): boolean {
+  if (!text || text.length < 2) return false;
+  const lower = text.toLowerCase();
+  
+  // (1) 실제 상품/리뷰 키워드가 하나라도 있는지 확인
+  const hasShoppingWord = REQUIRED_SHOPPING_KEYWORDS.some((kw) => lower.includes(kw));
+  if (!hasShoppingWord) return false;
+
+  // (2) 일상 키워드만 있고 제품명이 희미한 경우 차단
+  const irrelevantMatchCount = IRRELEVANT_CONTENT_KEYWORDS.filter((kw) => lower.includes(kw)).length;
+  if (irrelevantMatchCount >= 2 && !lower.includes('리뷰') && !lower.includes('내돈내산') && !lower.includes('추천템')) {
+    return false;
+  }
+
+  return true;
+}
+
 export function isBlacklisted(str?: string): boolean {
   if (!str) return false;
   const lower = str.toLowerCase().replace(/[@\s_\-]/g, '');
@@ -249,9 +289,14 @@ export async function fetchRealtimeInstagramPosts(tag?: string): Promise<Realtim
 
 /**
  * 3. TikTok 실시간 추천 피드/탐색 스크랩 (Chrome 백그라운드 탭 & 무간섭)
+ * - 단순 일상/셀카 피드가 뜨는 foryou 대신, 실제 [올영추천템 / 내돈내산리뷰] 검색 피드에서 쇼핑 의도 100% 확실한 영상만 수집
  */
 export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]> {
   let tabId = '';
+  const searchQueries = ['올영추천템', '내돈내산추천', '화장품솔직후기', '올영세일꿀템'];
+  const query = searchQueries[Math.floor(Math.random() * searchQueries.length)];
+  const searchUrl = `https://www.tiktok.com/search?q=${encodeURIComponent(query)}`;
+
   try {
     const createScript = `
       tell application "Google Chrome"
@@ -259,7 +304,7 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
           make new window
         end if
         tell window 1
-          set newTab to make new tab with properties {URL:"https://www.tiktok.com/foryou"}
+          set newTab to make new tab with properties {URL:"${searchUrl}"}
           return id of newTab
         end tell
       end tell
@@ -274,26 +319,30 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
       tell application "Google Chrome"
         tell tab id ${tabId} of window 1
           return execute javascript "(function() {
-            var videoA = document.querySelector('a[href*=\\"/video/\\"]');
-            var authorAnchor = Array.from(document.querySelectorAll('a'))
-              .find(a => a.href.includes('/@') && !a.href.includes('/@inchsale'));
-            var handle = authorAnchor ? authorAnchor.href.split('/@')[1].split('/')[0].split('?')[0] : '';
-            
-            var desc = document.querySelector('[data-e2e=\\"browse-video-desc\\"], [data-e2e=\\"video-desc\\"]');
-            var descText = desc ? desc.innerText.trim() : '';
-            if (descText === '알림' || descText === 'TikTok' || descText.length < 3) {
-              descText = 'TikTok 숏폼 트렌드 추천템';
+            var cards = Array.from(document.querySelectorAll('[data-e2e=\\"search_video-item\\"], div[class*=\\"DivItemContainer\\"]'));
+            var results = [];
+            for (var card of cards) {
+              var a = card.querySelector('a[href*=\\"/video/\\"]');
+              if (!a) continue;
+              
+              var descEl = card.querySelector('[data-e2e=\\"search-card-video-caption\\"], div[class*=\\"DivCaption\\"]');
+              var desc = descEl ? descEl.innerText.trim() : '';
+              if (!desc || desc.length < 5) continue;
+              
+              var authorA = card.querySelector('a[href*=\\"/@\\"]');
+              var handle = authorA ? authorA.href.split('/@')[1].split('/')[0].split('?')[0] : '';
+              var authorName = authorA ? authorA.innerText.trim() : handle;
+              
+              results.push({
+                videoUrl: a.href,
+                title: desc.slice(0, 100),
+                caption: desc,
+                creatorName: authorName || handle || 'tiktok_creator',
+                creatorHandle: handle ? ('@' + handle) : '@tiktok_creator'
+              });
+              if (results.length >= 6) break;
             }
-            
-            var targetVideoUrl = videoA ? videoA.href : (handle ? ('https://www.tiktok.com/@' + handle) : 'https://www.tiktok.com/foryou');
-            
-            return JSON.stringify({
-              videoUrl: targetVideoUrl,
-              title: descText,
-              caption: descText,
-              creatorName: handle || 'tiktok_creator',
-              creatorHandle: handle ? ('@' + handle) : '@tiktok_creator'
-            });
+            return JSON.stringify(results);
           })()"
         end tell
       end tell
@@ -306,14 +355,21 @@ export async function fetchRealtimeTikTokVideos(): Promise<RealtimeVideoTarget[]
 
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    const cleanHandle = safeDecodeHandle(parsed.creatorHandle || '');
-    if (!cleanHandle || cleanHandle === '@') return [];
-    if (isBlacklisted(cleanHandle) || isBlacklisted(parsed.creatorName)) return [];
-    return [{
-      platform: 'tiktok',
-      ...parsed,
-      creatorHandle: `@${cleanHandle}`,
-    }];
+    return parsed
+      .map((p: any) => {
+        const cleanHandle = safeDecodeHandle(p.creatorHandle || '');
+        return {
+          ...p,
+          creatorHandle: cleanHandle ? `@${cleanHandle}` : '@tiktok_creator',
+          platform: 'tiktok' as const,
+        };
+      })
+      .filter((p: any) => {
+        if (!p.creatorHandle || p.creatorHandle === '@') return false;
+        if (isBlacklisted(p.creatorHandle) || isBlacklisted(p.creatorName)) return false;
+        // 쇼핑/리뷰 의도 검증
+        return hasStrictShoppingOrReviewIntent(p.caption || p.title);
+      });
   } catch (err) {
     if (tabId) {
       await runAppleScript(`tell application "Google Chrome" to try close tab id ${tabId} of window 1`).catch(() => {});
@@ -331,6 +387,12 @@ export async function analyzeAndMatchProduct(
   caption?: string
 ): Promise<{ slug: string; displayName: string; isNewAutoCreated?: boolean } | null> {
   const fullText = `${title} ${caption || ''}`.toLowerCase();
+
+  // 0. 상품/쇼핑/리뷰 의도가 전혀 없는 단순 일상/셀카/인물 피드는 100% 즉시 거절!
+  if (!hasStrictShoppingOrReviewIntent(fullText)) {
+    return null;
+  }
+
   const allProducts = getAllLinks();
 
   // 1차: 기존 카탈로그의 슬러그 또는 제품명과 직접 매칭
@@ -370,7 +432,6 @@ export async function analyzeAndMatchProduct(
 
   for (const [kw, info] of Object.entries(KEYWORD_MAP)) {
     if (fullText.includes(kw)) {
-      // 만약 storage에 없으면 즉시 등록
       if (!getLinkBySlug(info.slug)) {
         createProductLink({
           creatorId: 'official',
@@ -386,29 +447,6 @@ export async function analyzeAndMatchProduct(
     }
   }
 
-  // 3차: 특정 제품명이 직접적으로 파악되지 않는 경우, 영상 제목에서 핵심 명사구를 추출해 신규 동적 슬러그 생성!
-  const cleanedTitle = title
-    .replace(/[\[\(【].*?[\]\)】]/g, '')
-    .replace(/[!?,~★🔥✨❌❓]/g, '')
-    .trim();
-  const words = cleanedTitle.split(/\s+/).filter(w => w.length >= 2 && !['리뷰', '추천', '솔직', '영상', '내돈내산', '광고', '솔직리뷰'].includes(w));
-  if (words.length > 0) {
-    const dynamicKeyword = words.slice(0, 2).join(' ');
-    const dynamicSlug = words.slice(0, 2).join('-');
-    const displayName = `${dynamicKeyword} 추천템`;
-
-    createProductLink({
-      creatorId: 'official',
-      customSlug: dynamicSlug,
-      productName: displayName,
-      category: '실시간핫트렌드',
-      tagline: `영상에 등장한 바로 그 ${dynamicKeyword}! 쿠팡 로켓배송 최저가 좌표`,
-      queryOrUrl: `https://www.coupang.com/np/search?component=&q=${encodeURIComponent(dynamicKeyword)}`,
-      priceHint: '쿠팡 로켓배송 실시간 최저가',
-    });
-
-    return { slug: dynamicSlug, displayName, isNewAutoCreated: true };
-  }
-
+  // 매칭되는 구체적 상품이 없는 경우, 절대 억지 댓글을 달지 않고 null 반환!
   return null;
 }
