@@ -1,7 +1,7 @@
 import Header from '@/components/Header';
 import Studio from '@/components/Studio';
 import ProductCardView from '@/components/ProductCardView';
-import { getAllLinks, getProductBySlugOrQuery, upsertProduct, buildCoupangLinkWithRef } from '@/lib/storage';
+import { getAllLinks, getProductBySlugOrQuery, upsertProduct, buildCoupangLinkWithRef, getRankedCreatorFeeds } from '@/lib/storage';
 import { ProductLink } from '@/lib/types';
 
 interface PageProps {
@@ -43,14 +43,15 @@ export default async function HomePage(props: PageProps) {
     return <ProductCardView link={link} />;
   }
 
-  // 기본 홈 화면 (링크 생성 스튜디오)
+  // 기본 홈 화면 (링크 생성 스튜디오 & 실시간 클릭 랭킹 인플루언서 피드)
   const links = getAllLinks();
+  const rankedFeeds = getRankedCreatorFeeds(6);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans selection:bg-blue-100 selection:text-blue-900">
       <Header />
       <main className="flex-1">
-        <Studio initialLinks={links} />
+        <Studio initialLinks={links} rankedFeeds={rankedFeeds} />
       </main>
     </div>
   );

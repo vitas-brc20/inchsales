@@ -54,6 +54,19 @@ export interface CreatorAccount {
   updatedAt: string;
 }
 
+export interface RankedCreatorFeed {
+  rank: number;
+  productName: string;
+  slug: string;
+  priceHint?: string;
+  clicks: number;
+  creatorHandle: string;
+  creatorName: string;
+  feedUrl: string;
+  platform: 'youtube' | 'instagram' | 'tiktok';
+  inchSaleUrl: string;
+}
+
 export interface ProductLink {
   slug: string;
   productName: string;

@@ -1,9 +1,17 @@
 import { notFound } from 'next/navigation';
-import { getLinkBySlug } from '@/lib/storage';
+import { getLinkBySlug, getRankedCreatorFeeds } from '@/lib/storage';
 import ProductCardView from '@/components/ProductCardView';
 import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+function safeDecodeSlug(slug: string): string {
+  try {
+    return decodeURIComponent(slug);
+  } catch {
+    return slug;
+  }
+}
 
 function safeDecodeCreatorId(ref?: string): string {
   if (!ref) return 'official';
@@ -29,7 +37,7 @@ export async function generateMetadata(
   }
 ): Promise<Metadata> {
   const params = await props.params;
-  const decodedSlug = decodeURIComponent(params.slug);
+  const decodedSlug = safeDecodeSlug(params.slug);
   const searchParams = await props.searchParams;
   const rawCreatorId = searchParams.ref || searchParams.id;
   const creatorId = safeDecodeCreatorId(rawCreatorId);
@@ -39,19 +47,38 @@ export async function generateMetadata(
   if (!link) {
     return {
       title: '상품을 찾을 수 없습니다 | inchsales',
+      openGraph: {
+        title: '상품을 찾을 수 없습니다 | inchsales',
+        description: '요청하신 상품 페이지를 찾을 수 없습니다.',
+        type: 'website',
+        siteName: 'inchsales',
+        locale: 'ko_KR',
+      },
     };
   }
 
   const cleanCreator = (creatorId || '').replace(/^@+/, '');
   const creatorPrefix = cleanCreator && cleanCreator !== 'official' ? `@${cleanCreator} 님의 추천 - ` : '';
+  const ogTitle = `${creatorPrefix}${link.productName}`;
+  const pageUrl = `https://inch.sale/p/${encodeURIComponent(link.slug)}`;
 
   return {
-    title: `${creatorPrefix}${link.productName} 최저가 바로가기 | inchsales`,
+    title: `${ogTitle} 최저가 바로가기 | inchsales`,
     description: link.tagline,
     openGraph: {
-      title: `${creatorPrefix}${link.productName}`,
+      title: ogTitle,
       description: link.tagline,
+      url: pageUrl,
+      siteName: 'inchsales',
+      locale: 'ko_KR',
       type: 'website',
+      ...(link.imageUrl ? { images: [{ url: link.imageUrl, alt: link.productName }] } : {}),
+    },
+    twitter: {
+      card: link.imageUrl ? 'summary_large_image' : 'summary',
+      title: ogTitle,
+      description: link.tagline,
+      ...(link.imageUrl ? { images: [link.imageUrl] } : {}),
     },
   };
 }
@@ -63,7 +90,7 @@ export default async function ProductPage(
   }
 ) {
   const params = await props.params;
-  const decodedSlug = decodeURIComponent(params.slug);
+  const decodedSlug = safeDecodeSlug(params.slug);
   const searchParams = await props.searchParams;
   const rawCreatorId = searchParams.ref || searchParams.id;
   const creatorId = safeDecodeCreatorId(rawCreatorId);
@@ -75,5 +102,8 @@ export default async function ProductPage(
     notFound();
   }
 
-  return <ProductCardView link={link} />;
+  // 실시간 클릭수 랭킹 기반 인플루언서 피드 및 역홍보 목록
+  const topFeeds = getRankedCreatorFeeds(3).filter((f) => f.slug !== decodedSlug);
+
+  return <ProductCardView link={link} topFeeds={topFeeds} />;
 }

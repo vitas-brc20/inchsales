@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ExternalLink, ShieldCheck, ShoppingCart, Zap, Heart, Share2, Check, ArrowLeft } from 'lucide-react';
+import { ExternalLink, ShieldCheck, ShoppingCart, Zap, Heart, Share2, Check, ArrowLeft, Flame, PlayCircle } from 'lucide-react';
 import Link from 'next/link';
-import { ProductLink } from '@/lib/types';
+import { ProductLink, RankedCreatorFeed } from '@/lib/types';
 import ProductVisual from './ProductVisual';
 
 interface ProductCardViewProps {
   link: ProductLink;
+  topFeeds?: RankedCreatorFeed[];
 }
 
-export default function ProductCardView({ link }: ProductCardViewProps) {
+export default function ProductCardView({ link, topFeeds }: ProductCardViewProps) {
   const [clicked, setClicked] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
 
@@ -184,6 +185,85 @@ export default function ProductCardView({ link }: ProductCardViewProps) {
           </div>
 
         </div>
+
+        {/* 실시간 클릭 급상승 BEST 핫딜 & 인플루언서 피드 역홍보 섹션 (Cross-Promotion) */}
+        {topFeeds && topFeeds.length > 0 && (
+          <div className="mt-4 p-4 rounded-3xl bg-white/95 border border-slate-200/90 shadow-sm">
+            <div className="flex items-center justify-between mb-3 px-1">
+              <div className="flex items-center gap-1.5">
+                <Flame className="w-4 h-4 text-rose-500 fill-rose-500" />
+                <span className="text-xs font-black text-slate-900 tracking-tight">실시간 클릭 랭킹 & 큐레이터 피드</span>
+              </div>
+              <span className="text-[10px] text-rose-600 font-extrabold bg-rose-50 px-2 py-0.5 rounded-full border border-rose-100">
+                인기 피드 역주행 🔥
+              </span>
+            </div>
+
+            <div className="space-y-2.5">
+              {topFeeds.map((item) => (
+                <div
+                  key={item.slug}
+                  className="p-3 rounded-2xl bg-slate-50 border border-slate-100/90 hover:border-slate-200 transition-all flex flex-col gap-2"
+                >
+                  {/* 상단: 상품명 & 랭킹 & 클릭수 */}
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black shrink-0 ${
+                        item.rank === 1 ? 'bg-amber-400 text-amber-950 shadow-xs' :
+                        item.rank === 2 ? 'bg-slate-200 text-slate-700' :
+                        'bg-slate-100 text-slate-500'
+                      }`}>
+                        {item.rank}
+                      </span>
+                      <Link
+                        href={`/p/${encodeURIComponent(item.slug)}${link.creatorId ? `?ref=${encodeURIComponent(link.creatorId)}` : ''}`}
+                        className="text-xs font-bold text-slate-900 truncate hover:text-blue-600 transition-colors"
+                      >
+                        {item.productName}
+                      </Link>
+                    </div>
+                    <span className="text-[10px] font-extrabold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded shrink-0 border border-blue-100">
+                      {item.clicks.toLocaleString()}회 클릭
+                    </span>
+                  </div>
+
+                  {/* 하단: 추천 인플루언서 홍보 & 원본 피드 바로가기 링크 */}
+                  <div className="flex items-center justify-between pt-1.5 border-t border-slate-200/50 text-[11px]">
+                    <div className="flex items-center gap-1.5 text-slate-600 truncate">
+                      <span className="text-[10px] px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 font-bold border border-indigo-100 shrink-0">
+                        {item.platform === 'youtube' && '🎬 유튜브'}
+                        {item.platform === 'instagram' && '📸 인스타'}
+                        {item.platform === 'tiktok' && '🎵 틱톡'}
+                      </span>
+                      <span className="font-extrabold text-slate-800 truncate">{item.creatorHandle}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {item.feedUrl && (
+                        <a
+                          href={item.feedUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10.5px] font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50/70 hover:bg-indigo-100 px-2 py-1 rounded-lg transition-colors border border-indigo-100"
+                        >
+                          <PlayCircle className="w-3 h-3 text-indigo-500" />
+                          <span>피드 보기</span>
+                        </a>
+                      )}
+                      <Link
+                        href={`/p/${encodeURIComponent(item.slug)}${link.creatorId ? `?ref=${encodeURIComponent(link.creatorId)}` : ''}`}
+                        className="inline-flex items-center gap-0.5 text-[10.5px] font-extrabold text-white bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-lg transition-colors shadow-2xs"
+                      >
+                        <span>최저가</span>
+                        <ExternalLink className="w-2.5 h-2.5" />
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Legal Disclaimer Box */}
         <div className="mt-4 px-4 py-3 rounded-2xl bg-white/80 border border-slate-200/80 text-center text-[10px] text-slate-500 leading-normal">

@@ -358,6 +358,100 @@ function writeProducts(data: Record<string, ProductItem>): void {
   }
 }
 
+/**
+ * 현재 실시간 클릭수가 가장 높은 인기 상품 목록을 조회합니다 (역홍보 및 우선 타깃용)
+ */
+export function getTopClickedProducts(limit = 4, excludeSlug?: string): ProductItem[] {
+  const products = readProducts();
+  const list = Object.values(products);
+
+  // 중복 상품명 정리 및 클릭수 내림차순 정렬
+  const uniqueMap = new Map<string, ProductItem>();
+  for (const item of list) {
+    if (excludeSlug && item.slug.toLowerCase() === excludeSlug.toLowerCase()) continue;
+    const existing = uniqueMap.get(item.name);
+    if (!existing || (item.totalClicks || 0) > (existing.totalClicks || 0)) {
+      uniqueMap.set(item.name, item);
+    }
+  }
+
+  const sorted = Array.from(uniqueMap.values()).sort((a, b) => (b.totalClicks || 0) - (a.totalClicks || 0));
+  return sorted.slice(0, limit);
+}
+
+import { RankedCreatorFeed } from './types';
+export type { RankedCreatorFeed };
+
+/**
+ * 실시간 클릭수 순위 기반 인플루언서 피드 랭킹 목록 조회
+ * (우리 페이지에서 상위 클릭 상품을 추천한 인플루언서와 원본 피드/영상 링크를 역홍보)
+ */
+export function getRankedCreatorFeeds(limit = 6): RankedCreatorFeed[] {
+  const products = readProducts();
+  const postedComments = getAllPostedCommentRecords();
+
+  // 상품별 최신 크리에이터 및 원본 피드 매핑
+  const productFeedMap = new Map<string, {
+    creatorHandle: string;
+    creatorName: string;
+    feedUrl: string;
+    platform: 'youtube' | 'instagram' | 'tiktok';
+  }>();
+
+  for (const comment of postedComments) {
+    if (!comment.targetUrl || !comment.creatorHandle) continue;
+    const cleanProd = comment.productName.replace(/\(.*?\)/g, '').trim().toLowerCase();
+    if (!productFeedMap.has(cleanProd)) {
+      productFeedMap.set(cleanProd, {
+        creatorHandle: comment.creatorHandle,
+        creatorName: comment.creatorName || comment.creatorHandle.replace(/^@+/, ''),
+        feedUrl: comment.targetUrl,
+        platform: comment.platform,
+      });
+    }
+  }
+
+  const productList = Object.values(products);
+  const uniqueProducts = new Map<string, (typeof productList)[0]>();
+  for (const p of productList) {
+    const existing = uniqueProducts.get(p.name);
+    if (!existing || (p.totalClicks || 0) > (existing.totalClicks || 0)) {
+      uniqueProducts.set(p.name, p);
+    }
+  }
+
+  const sorted = Array.from(uniqueProducts.values()).sort((a, b) => (b.totalClicks || 0) - (a.totalClicks || 0));
+
+  const result: RankedCreatorFeed[] = [];
+  let rank = 1;
+  for (const p of sorted) {
+    const cleanName = p.name.replace(/\(.*?\)/g, '').trim().toLowerCase();
+    const feedInfo = productFeedMap.get(cleanName) || {
+      creatorHandle: '@inchsales',
+      creatorName: '공식 큐레이터',
+      feedUrl: `https://inch.sale/p/${encodeURIComponent(p.slug)}`,
+      platform: 'youtube' as const,
+    };
+
+    result.push({
+      rank,
+      productName: p.name,
+      slug: p.slug,
+      priceHint: p.priceHint,
+      clicks: p.totalClicks || 0,
+      creatorHandle: feedInfo.creatorHandle,
+      creatorName: feedInfo.creatorName,
+      feedUrl: feedInfo.feedUrl,
+      platform: feedInfo.platform,
+      inchSaleUrl: `/p/${encodeURIComponent(p.slug)}?ref=${encodeURIComponent(feedInfo.creatorHandle)}&ch=${feedInfo.platform}`,
+    });
+    rank++;
+    if (result.length >= limit) break;
+  }
+
+  return result;
+}
+
 function readStats(): Record<string, CreatorStat> {
   try {
     if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -1161,6 +1255,77 @@ export function savePostedCommentRecord(record: Omit<PostedCommentRecord, 'id' |
   } catch {}
 
   return completeRecord;
+}
+
+/**
+ * SNS 게시물 고유 키(Platform + ID)를 정규화하여 추출합니다.
+ * (URL 파라미터, 슬래시, 프로토콜 차이로 인한 중복 타깃팅을 100% 원천 차단)
+ */
+export function extractPostKey(url?: string): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+
+  // YouTube: watch?v=ID, youtu.be/ID, shorts/ID, embed/ID
+  const ytMatch = trimmed.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/|v\/|embed\/))([a-zA-Z0-9_-]{11})/i);
+  if (ytMatch) return `yt:${ytMatch[1]}`;
+
+  // Instagram: /p/SHORTCODE, /reel/SHORTCODE, /reels/SHORTCODE
+  const igMatch = trimmed.match(/instagram\.com\/(?:p|reel|reels)\/([a-zA-Z0-9_-]+)/i);
+  if (igMatch) return `ig:${igMatch[1]}`;
+
+  // TikTok: /video/ID
+  const ttMatch = trimmed.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/i);
+  if (ttMatch) return `tt:${ttMatch[1]}`;
+
+  // 기타: 쿼리스트링 및 trailing slash 제거 후 정규화
+  const clean = trimmed.split('?')[0].replace(/\/+$/, '');
+  return clean || null;
+}
+
+/**
+ * 실제로 작성된 댓글 링크 전체 목록을 조회합니다 (제한 없음).
+ */
+export function getAllPostedCommentRecords(): PostedCommentRecord[] {
+  if (!fs.existsSync(POSTED_COMMENTS_FILE)) return [];
+  try {
+    const list: PostedCommentRecord[] = JSON.parse(fs.readFileSync(POSTED_COMMENTS_FILE, 'utf8'));
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * 이미 댓글을 게시했거나 시도한 게시물의 고유 키 집합을 반환합니다.
+ */
+export function getAlreadyCommentedPostKeys(): Set<string> {
+  const keys = new Set<string>();
+  const list = getAllPostedCommentRecords();
+  for (const item of list) {
+    const k1 = extractPostKey(item.targetUrl);
+    if (k1) keys.add(k1);
+    const k2 = extractPostKey(item.postUrl);
+    if (k2) keys.add(k2);
+  }
+  return keys;
+}
+
+/**
+ * 최근 N시간 이내에 이미 댓글을 작성했거나 시도한 크리에이터 핸들 목록을 반환합니다.
+ * (동일 크리에이터에게 단기간 연속 도배 시 발생하는 플랫폼 제재 원천 차단)
+ */
+export function getRecentlyCommentedCreators(withinHours = 24): Set<string> {
+  const set = new Set<string>();
+  const cutoff = Date.now() - withinHours * 60 * 60 * 1000;
+  const list = getAllPostedCommentRecords();
+  for (const item of list) {
+    const itemTime = new Date(item.timestamp).getTime();
+    if (itemTime >= cutoff && item.creatorHandle) {
+      const clean = item.creatorHandle.toLowerCase().replace(/[@\s_\-]/g, '');
+      if (clean) set.add(clean);
+    }
+  }
+  return set;
 }
 
 /**

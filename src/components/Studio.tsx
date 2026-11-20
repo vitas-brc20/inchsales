@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import PhoneMockup from './PhoneMockup';
-import { Sparkles, Copy, Check, ExternalLink, ArrowRight, DollarSign, BarChart3, Users, Zap, CheckCircle2, Link2, Share2 } from 'lucide-react';
+import { Sparkles, Copy, Check, ExternalLink, ArrowRight, DollarSign, BarChart3, Users, Zap, CheckCircle2, Link2, Share2, Flame, PlayCircle, Trophy } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import Link from 'next/link';
 import { STANDARD_CATEGORIES, inferCategory } from '@/lib/categories';
+import { RankedCreatorFeed } from '@/lib/types';
 
 interface StudioProps {
   initialLinks: Array<{
@@ -19,6 +20,7 @@ interface StudioProps {
     clicks: number;
     estimatedEarnings: number;
   }>;
+  rankedFeeds?: RankedCreatorFeed[];
 }
 
 const CHANNELS = [
@@ -30,7 +32,7 @@ const CHANNELS = [
   { id: 'general', name: '공통 (통합)', shortName: '공통', icon: '🌐', desc: '기본 통합 링크' },
 ] as const;
 
-export default function Studio({ initialLinks }: StudioProps) {
+export default function Studio({ initialLinks, rankedFeeds }: StudioProps) {
   // Form State
   const [productName, setProductName] = useState('코카콜라 제로 355ml 24캔');
   const [category, setCategory] = useState('식음료/음료');
@@ -949,6 +951,118 @@ export default function Studio({ initialLinks }: StudioProps) {
           </div>
         </div>
       </section>
+
+      {/* 실시간 클릭수 순위 & 추천 인플루언서 피드 역홍보 쇼케이스 */}
+      {rankedFeeds && rankedFeeds.length > 0 && (
+        <section id="ranked-feeds" className="py-14 px-4 max-w-5xl mx-auto border-t border-slate-200/60">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-8">
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-black mb-2">
+                <Flame className="w-3.5 h-3.5 fill-rose-500" />
+                <span>실시간 클릭 순위 & 인플루언서 피드 쇼케이스</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                지금 구매자 클릭 1위! 화제의 상품 & 큐레이터
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+                inchsales를 통해 가장 높은 클릭과 구매를 이끌어낸 인기 상품과 해당 인플루언서의 원본 피드를 소개합니다.
+              </p>
+            </div>
+            <span className="text-xs font-bold text-slate-400 self-start sm:self-auto">
+              실시간 자동 갱신
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {rankedFeeds.map((feed) => (
+              <div
+                key={feed.slug}
+                className="p-5 rounded-2xl bg-white border border-slate-200/90 hover:border-blue-400 transition-all shadow-xs hover:shadow-md flex flex-col justify-between group"
+              >
+                <div>
+                  {/* 상단 뱃지: 순위 & 클릭수 */}
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black shadow-xs ${
+                        feed.rank === 1 ? 'bg-amber-400 text-amber-950 ring-2 ring-amber-300' :
+                        feed.rank === 2 ? 'bg-slate-200 text-slate-800' :
+                        feed.rank === 3 ? 'bg-amber-100 text-amber-800' :
+                        'bg-slate-100 text-slate-600'
+                      }`}>
+                        {feed.rank === 1 ? '🥇' : feed.rank === 2 ? '🥈' : feed.rank === 3 ? '🥉' : feed.rank}
+                      </span>
+                      <span className="text-[11px] font-extrabold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-100">
+                        누적 {feed.clicks.toLocaleString()}회 클릭
+                      </span>
+                    </div>
+
+                    <span className="text-[10px] font-extrabold px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-100">
+                      {feed.platform === 'youtube' && '🎬 유튜브'}
+                      {feed.platform === 'instagram' && '📸 인스타'}
+                      {feed.platform === 'tiktok' && '🎵 틱톡'}
+                    </span>
+                  </div>
+
+                  {/* 상품명 */}
+                  <h4 className="font-black text-slate-900 text-sm sm:text-base line-clamp-1 group-hover:text-blue-600 transition-colors">
+                    {feed.productName}
+                  </h4>
+                  <p className="text-xs font-extrabold text-blue-600 mt-1">
+                    {feed.priceHint || '특가 로켓배송'}
+                  </p>
+
+                  {/* 큐레이션 인플루언서 정보 */}
+                  <div className="mt-3 p-2.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between">
+                    <div className="min-w-0">
+                      <span className="text-[10px] text-slate-400 block font-medium">추천 큐레이터</span>
+                      <span className="text-xs font-black text-slate-800 block truncate">
+                        {feed.creatorHandle}
+                      </span>
+                    </div>
+                    {feed.feedUrl && (
+                      <a
+                        href={feed.feedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-[11px] font-extrabold text-indigo-600 hover:text-indigo-800 bg-white px-2.5 py-1.5 rounded-lg border border-indigo-200 hover:border-indigo-300 transition-all shadow-2xs shrink-0"
+                      >
+                        <PlayCircle className="w-3.5 h-3.5 text-indigo-500" />
+                        <span>원본 피드</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+
+                {/* 하단 액션 버튼 */}
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <Link
+                    href={`/p/${encodeURIComponent(feed.slug)}`}
+                    className="flex-1 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black text-center transition-colors shadow-xs flex items-center justify-center gap-1"
+                  >
+                    <span>쿠팡 최저가 보러가기</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setProductName(feed.productName);
+                      setTagline(`${feed.productName} 실시간 최저가 로켓배송`);
+                      setPriceHint(feed.priceHint || '15,000원');
+                      setQueryOrUrl(feed.productName);
+                      window.scrollTo({ top: 350, behavior: 'smooth' });
+                    }}
+                    className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors shrink-0"
+                    title="이 상품으로 내 전용 수익 링크 생성"
+                  >
+                    링크 생성
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Trending Products */}
       <section id="trending" className="py-14 px-4 max-w-5xl mx-auto border-t border-slate-200/60">
