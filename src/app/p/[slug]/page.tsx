@@ -60,7 +60,9 @@ export async function generateMetadata(
   const cleanCreator = (creatorId || '').replace(/^@+/, '');
   const creatorPrefix = cleanCreator && cleanCreator !== 'official' ? `@${cleanCreator} 님의 추천 - ` : '';
   const ogTitle = `${creatorPrefix}${link.productName}`;
-  const pageUrl = `https://inch.sale/p/${encodeURIComponent(link.slug)}`;
+  const encodedSlug = encodeURIComponent(link.slug);
+  const pageUrl = `https://inch.sale/p/${encodedSlug}`;
+  const ogImageUrl = link.imageUrl || `https://inch.sale/p/${encodedSlug}/opengraph-image`;
 
   return {
     title: `${ogTitle} 최저가 바로가기 | inchsales`,
@@ -72,13 +74,20 @@ export async function generateMetadata(
       siteName: 'inchsales',
       locale: 'ko_KR',
       type: 'website',
-      ...(link.imageUrl ? { images: [{ url: link.imageUrl, alt: link.productName }] } : {}),
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: link.productName,
+        },
+      ],
     },
     twitter: {
-      card: link.imageUrl ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title: ogTitle,
       description: link.tagline,
-      ...(link.imageUrl ? { images: [link.imageUrl] } : {}),
+      images: [ogImageUrl],
     },
   };
 }
