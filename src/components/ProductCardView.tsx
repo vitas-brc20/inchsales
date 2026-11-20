@@ -1,10 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ExternalLink, ShieldCheck, ShoppingCart, Zap, Heart, Share2, Check, ArrowLeft, Flame, PlayCircle } from 'lucide-react';
+import React, { useState, useSyncExternalStore } from 'react';
+import { ExternalLink, ShieldCheck, Zap, Share2, Check, ArrowLeft, Flame, PlayCircle, Smartphone } from 'lucide-react';
 import Link from 'next/link';
 import { ProductLink, RankedCreatorFeed } from '@/lib/types';
+import {
+  detectInAppBrowser,
+  getExternalBrowserUrl,
+  navigateOutOfInApp,
+} from '@/lib/inapp';
 import ProductVisual from './ProductVisual';
+
+const emptySubscribe = () => () => {};
 
 interface ProductCardViewProps {
   link: ProductLink;
@@ -14,6 +21,8 @@ interface ProductCardViewProps {
 export default function ProductCardView({ link, topFeeds }: ProductCardViewProps) {
   const [clicked, setClicked] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
+  const isClient = useSyncExternalStore(emptySubscribe, () => true, () => false);
+  const inAppInfo = isClient ? detectInAppBrowser() : null;
 
   const handleClickCoupang = async () => {
     setClicked(true);
@@ -33,8 +42,19 @@ export default function ProductCardView({ link, topFeeds }: ProductCardViewProps
       // 무시
     }
 
-    // 쿠팡으로 즉시 이동 (새 탭 또는 현재 창)
-    window.location.href = link.coupangUrl;
+    // 인앱 브라우저일 때는 외부 브라우저 또는 coupang:// 앱 딥링크로 이동
+    navigateOutOfInApp(link.coupangUrl, { productName: link.productName });
+
+    // 앱 전환 취소/실패 후 복귀 시 재클릭 가능하도록 잠금 해제
+    window.setTimeout(() => setClicked(false), 2000);
+  };
+
+  const handleOpenExternalPage = () => {
+    if (typeof window === 'undefined' || !inAppInfo) return;
+    const externalUrl = getExternalBrowserUrl(window.location.href, inAppInfo);
+    if (externalUrl) {
+      window.location.href = externalUrl;
+    }
   };
 
   const handleShare = () => {
@@ -87,6 +107,29 @@ export default function ProductCardView({ link, topFeeds }: ProductCardViewProps
             {shareCopied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4" />}
           </button>
         </div>
+
+        {/* In-App Browser Notice Banner */}
+        {inAppInfo?.isInApp && (
+          <div className="mb-3 px-3.5 py-2.5 rounded-2xl bg-blue-50/90 border border-blue-200/80 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 min-w-0">
+              <Smartphone className="w-4 h-4 text-blue-600 shrink-0" />
+              <p className="text-[11px] font-semibold text-blue-900 leading-snug">
+                {inAppInfo.appName === 'kakao' || inAppInfo.platform === 'android'
+                  ? '외부 브라우저로 열면 쿠팡 앱과 더 빠르게 연결돼요.'
+                  : '버튼 클릭 시 쿠팡 앱으로 연결됩니다. (우측 ⋯ → 브라우저 열기 가능)'}
+              </p>
+            </div>
+            {(inAppInfo.appName === 'kakao' || inAppInfo.platform === 'android') && (
+              <button
+                type="button"
+                onClick={handleOpenExternalPage}
+                className="shrink-0 px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold transition-colors cursor-pointer"
+              >
+                브라우저 열기
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Main Card */}
         <div className="bg-white rounded-3xl border border-slate-200/90 shadow-lg shadow-slate-200/50 overflow-hidden p-6">
