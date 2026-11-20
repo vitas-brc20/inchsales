@@ -115,7 +115,7 @@ export default function ProductCardView({ link, topFeeds }: ProductCardViewProps
               <Smartphone className="w-4 h-4 text-blue-600 shrink-0" />
               <p className="text-[11px] font-semibold text-blue-900 leading-snug">
                 {inAppInfo.appName === 'kakao' || inAppInfo.platform === 'android'
-                  ? '외부 브라우저로 열면 쿠팡 앱과 더 빠르게 연결돼요.'
+                  ? '버튼 클릭 시 쿠팡 앱으로 바로 연결됩니다. 안 열리면 외부 브라우저로 열어주세요.'
                   : '버튼 클릭 시 쿠팡 앱으로 연결됩니다. (우측 ⋯ → 브라우저 열기 가능)'}
               </p>
             </div>

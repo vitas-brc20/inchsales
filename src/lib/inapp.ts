@@ -113,8 +113,20 @@ export function getExternalBrowserUrl(
 }
 
 /**
- * 인앱 브라우저 환경에서 외부 브라우저 또는 coupang:// 앱 딥링크로 이동합니다.
- * 앱/외부 브라우저 전환에 실패해 페이지에 남아 있으면 기본 웹 URL로 fallback합니다.
+ * Android 인앱 브라우저에서 쿠팡 앱을 우선 실행하기 위한 intent:// URL을 생성합니다.
+ * 쿠팡 앱이 미설치된 경우 S.browser_fallback_url로 안전하게 폴백합니다.
+ */
+export function getAndroidCoupangIntentUrl(
+  coupangAppUrl: string,
+  fallbackUrl: string
+): string {
+  const stripped = coupangAppUrl.replace(/^coupang:\/\//i, '');
+  return `intent://${stripped}#Intent;scheme=coupang;package=com.coupang.mobile;S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+}
+
+/**
+ * 인앱 브라우저 환경에서 coupang:// 앱 딥링크를 최우선으로 시도하고,
+ * 실행 실패 시 외부 브라우저 또는 기본 웹 URL로 fallback합니다.
  */
 export function navigateOutOfInApp(
   targetUrl: string,
@@ -129,11 +141,21 @@ export function navigateOutOfInApp(
   }
 
   const externalUrl = getExternalBrowserUrl(targetUrl, info);
-  const destination =
-    externalUrl ??
-    (options?.preferExternalOnly
-      ? targetUrl
-      : buildCoupangAppUrl(targetUrl, options?.productName));
+
+  let destination: string;
+  let fallbackUrl: string;
+
+  if (options?.preferExternalOnly) {
+    destination = externalUrl ?? targetUrl;
+    fallbackUrl = targetUrl;
+  } else {
+    const coupangAppUrl = buildCoupangAppUrl(targetUrl, options?.productName);
+    destination =
+      info.platform === 'android'
+        ? getAndroidCoupangIntentUrl(coupangAppUrl, targetUrl)
+        : coupangAppUrl;
+    fallbackUrl = externalUrl ?? targetUrl;
+  }
 
   if (destination === targetUrl) {
     window.location.href = targetUrl;
@@ -162,7 +184,7 @@ export function navigateOutOfInApp(
   fallbackTimer = window.setTimeout(() => {
     if (!settled && document.visibilityState === 'visible') {
       cleanup();
-      window.location.href = targetUrl;
+      window.location.href = fallbackUrl;
     }
   }, 1500);
 
